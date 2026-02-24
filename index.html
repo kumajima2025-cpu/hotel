@@ -45,7 +45,7 @@
   <div class="wrap">
     <h1>基本資料表</h1>
     <div class="hint">
-      *請於住宿前填寫完成本資料表!
+      請於住宿前填寫完成本資料表!
     </div>
 
     <div class="card">
@@ -107,14 +107,15 @@
         </div>
 
         <div>
-          <label>出生年份</label>
-          <input
-            id="pet_birth_year"
-            inputmode="numeric"
-            pattern="[0-9]*"
-            maxlength="4"
-            placeholder="例：2021"
-          />
+         <label>出生日期</label>
+<input
+  id="pet_birth_date"
+  inputmode="numeric"
+  pattern="[0-9]*"
+  maxlength="10"
+  placeholder="例：2021/02/14"
+/>
+<div class="small">格式：YYYY/MM/DD（可直接輸入 8 碼數字，系統會自動補斜線）</div>
         </div>
 
         <div>
@@ -148,7 +149,7 @@
         </div>
         <div>
           <label>狂犬疫苗注射時間</label>
-          <input id="pet_rabies" placeholder="例：2023/06/11" />
+          <input id="pet_rabies" inputmode="numeric" placeholder="例：2023/06/11" />
         </div>
       </div>
 
@@ -242,6 +243,7 @@
 
   const canvas = document.getElementById('sig');
   const ctx = canvas.getContext('2d');
+  
   function resizeCanvas(){
     const rect = canvas.getBoundingClientRect();
     const ratio = Math.max(window.devicePixelRatio || 1, 1);
@@ -287,6 +289,7 @@
     drawing = false;
     last = null;
   }
+  
 
   canvas.addEventListener('mousedown', start);
   canvas.addEventListener('mousemove', move);
@@ -317,7 +320,25 @@
     el.textContent = msg;
     el.className = "status " + (ok ? "ok":"bad");
   }
+function formatDateSlash(v){
+  const digits = (v || "").replace(/\D/g, "").slice(0, 8);
+  const y = digits.slice(0, 4);
+  const m = digits.slice(4, 6);
+  const dd = digits.slice(6, 8);
 
+  if(digits.length <= 4) return y;
+  if(digits.length <= 6) return `${y}/${m}`;
+  return `${y}/${m}/${dd}`;
+}
+
+const birthInput = document.getElementById("pet_birth_date");
+if(birthInput){
+  birthInput.addEventListener("input", (e)=>{
+    const formatted = formatDateSlash(e.target.value);
+    e.target.value = formatted;
+  });
+}
+  
   document.getElementById('submitBtn').addEventListener('click', async ()=>{
     try{
       const required = [
@@ -349,7 +370,7 @@
           pet_name: val("pet_name"),
           pet_sex: val("pet_sex"),
           pet_breed: val("pet_breed"),
-          pet_birth_year: val("pet_birth_year"),
+          pet_birth_date: val("pet_birth_date"),
           pet_neutered: val("pet_neutered"),
           pet_deworm: val("pet_deworm"),
           pet_chip: val("pet_chip"),
