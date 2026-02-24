@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CAMA CAMA｜住宿回家確認</title>
+
+<style>
+:root{
+  --bg:#f6f6f6;
+  --card:#ffffff;
+  --line:#dcdcdc;
+  --header:#3a3a3a;
+  --text:#222;
+  --muted:#777;
+}
+
+body{
+  margin:0;
+  background:var(--bg);
+  font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+  color:var(--text);
+}
+
+.wrap{
+  max-width:760px;
+  margin:0 auto;
+  padding:20px;
+}
+
+.logo{
+  text-align:center;
+  font-weight:700;
+  margin-bottom:10px;
+}
+
+.mainTitle{
+  background:var(--header);
+  color:#fff;
+  text-align:center;
+  padding:12px;
+  font-size:18px;
+  letter-spacing:2px;
+}
+
+.block{
+  background:var(--card);
+  border:1px solid var(--line);
+  margin-top:18px;
+}
+
+.tableHead{
+  display:grid;
+  grid-template-columns:120px 1fr 120px;
+  background:#efefef;
+  font-weight:700;
+  border-bottom:1px solid var(--line);
+}
+
+.tableHead div{
+  padding:10px;
+  border-right:1px solid var(--line);
+}
+
+.tableHead div:last-child{
+  border-right:none;
+}
+
+.dayRow{
+  display:grid;
+  grid-template-columns:120px 1fr 120px;
+  border-bottom:1px solid var(--line);
+}
+
+.dayRow div{
+  padding:12px;
+  border-right:1px solid var(--line);
+}
+
+.dayRow div:last-child{
+  border-right:none;
+}
+
+.checkGroup{
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+  margin-bottom:6px;
+  font-size:14px;
+}
+
+.sectionTitle{
+  background:#efefef;
+  padding:10px;
+  font-weight:700;
+  border-bottom:1px solid var(--line);
+}
+
+.feeBox{
+  padding:14px;
+}
+
+input{
+  border:1px solid var(--line);
+  padding:8px;
+  border-radius:6px;
+  width:100%;
+  box-sizing:border-box;
+}
+
+textarea{
+  width:100%;
+  min-height:80px;
+  border:1px solid var(--line);
+  padding:8px;
+  border-radius:6px;
+  box-sizing:border-box;
+}
+
+.sigArea{
+  margin-top:20px;
+  border-top:1px solid var(--line);
+  padding-top:15px;
+}
+
+canvas{
+  width:100%;
+  height:180px;
+  border:1px solid var(--line);
+  border-radius:6px;
+}
+
+button{
+  margin-top:12px;
+  padding:10px 14px;
+  border:none;
+  background:#222;
+  color:#fff;
+  border-radius:8px;
+  cursor:pointer;
+}
+
+.small{
+  font-size:12px;
+  color:var(--muted);
+}
+
+.status{
+  margin-top:10px;
+  font-size:14px;
+}
+</style>
+</head>
+
+<body>
+<div class="wrap">
+
+<div class="logo">CAMA CAMA</div>
+
+<div class="mainTitle">— 活動紀錄 —</div>
+
+<div class="block">
+
+<div class="tableHead">
+  <div>日期</div>
+  <div>日常紀錄</div>
+  <div>提醒</div>
+</div>
+
+<!-- Day 1 -->
+<div class="dayRow">
+  <div><input placeholder="日期"></div>
+  <div>
+    <div class="checkGroup">
+      早：
+      <label><input type="radio" name="d1a">良好</label>
+      <label><input type="radio" name="d1a">普通</label>
+      <label><input type="radio" name="d1a">不吃</label>
+    </div>
+    <div class="checkGroup">
+      排尿：
+      <label><input type="radio" name="d1b">3次以上</label>
+      <label><input type="radio" name="d1b">1-3次</label>
+      <label><input type="radio" name="d1b">無</label>
+    </div>
+  </div>
+  <div><textarea placeholder="備註"></textarea></div>
+</div>
+
+<!-- 可自行複製第二天第三天 -->
+
+</div>
+
+<!-- 費用明細 -->
+<div class="block">
+<div class="sectionTitle">費用明細</div>
+
+<div class="feeBox">
+
+<div style="display:grid;grid-template-columns:1fr 120px 120px;gap:10px;">
+  <input placeholder="項目">
+  <input placeholder="單價">
+  <input placeholder="小計">
+</div>
+
+<div style="margin-top:10px;">
+  <input placeholder="總金額">
+</div>
+
+</div>
+</div>
+
+<!-- 簽名 -->
+<div class="sigArea">
+  <div style="font-weight:700;margin-bottom:8px;">飼主簽名</div>
+  <canvas id="sig"></canvas>
+  <div class="small">請確認以上內容無誤後簽名送出</div>
+  <button onclick="submitForm()">送出確認</button>
+  <div class="status" id="status"></div>
+</div>
+
+</div>
+
+<script>
+const GAS_URL="https://你的GAS網址";
+
+const canvas=document.getElementById("sig");
+const ctx=canvas.getContext("2d");
+
+function resize(){
+ const ratio=window.devicePixelRatio||1;
+ canvas.width=canvas.offsetWidth*ratio;
+ canvas.height=canvas.offsetHeight*ratio;
+ ctx.scale(ratio,ratio);
+}
+resize();
+
+let drawing=false;
+
+canvas.addEventListener("mousedown",e=>{
+ drawing=true;
+ ctx.beginPath();
+ ctx.moveTo(e.offsetX,e.offsetY);
+});
+canvas.addEventListener("mousemove",e=>{
+ if(!drawing)return;
+ ctx.lineTo(e.offsetX,e.offsetY);
+ ctx.stroke();
+});
+canvas.addEventListener("mouseup",()=>drawing=false);
+
+async function submitForm(){
+ document.getElementById("status").innerText="送出中...";
+ const payload={
+   action:"submitHotelCheckout",
+   signature:canvas.toDataURL(),
+   created_at:new Date().toISOString()
+ };
+
+ const res=await fetch(GAS_URL,{
+   method:"POST",
+   headers:{"Content-Type":"text/plain"},
+   body:JSON.stringify(payload)
+ });
+
+ const json=await res.json();
+ if(json.ok){
+   document.getElementById("status").innerText="已寄送成功";
+ }else{
+   document.getElementById("status").innerText="送出失敗";
+ }
+}
+</script>
+
+</body>
+</html>
