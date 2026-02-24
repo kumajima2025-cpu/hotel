@@ -43,9 +43,9 @@
 </head>
 <body>
   <div class="wrap">
-    <h1>住宿前資料表（含簽名）</h1>
+    <h1>基本資料表</h1>
     <div class="hint">
-      請於住宿前填寫完成。送出後，系統會產生 PDF 並寄送到店家（可選擇同時寄一份到您的 Email）。
+      請於住宿前填寫完成。
     </div>
 
     <div class="card">
@@ -166,15 +166,19 @@
           <label>配合動物醫院 / 醫師（選填）</label>
           <input id="vet" placeholder="例：XXX動物醫院" />
         </div>
-        <div>
-          <label>緊急情況授權（必選）*</label>
-          <select id="emergency_consent" required>
-            <option value="">請選擇</option>
-            <option value="同意">同意店家緊急送醫並先行必要處置</option>
-            <option value="不同意">不同意（請於備註說明處理方式）</option>
-          </select>
-        </div>
-      </div>
+       <div>
+  <label>緊急情況授權（必選）*</label>
+
+  <select id="emergency_consent" required>
+    <option value="">請選擇</option>
+    <option value="同意">同意緊急送醫</option>
+    <option value="不同意">不同意（請於備註說明處理方式）</option>
+  </select>
+
+  <div class="small" style="margin-top:6px; line-height:1.5;">
+    住宿期間若寵物有就醫需求，本人同意由 CAMA CAMA 帶往惟心動物醫院就診。
+  </div>
+</div>
 
       <div style="height:10px"></div>
       <label>住宿備註（飲食、藥物、分離焦慮、注意事項等）</label>
