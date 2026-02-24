@@ -3,16 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>CAMA CAMA｜住宿回家確認</title>
+<title>CAMA CAMA｜住宿明細確認單</title>
 
 <style>
 :root{
-  --bg:#f6f6f6;
+  --bg:#F6F1E9;
   --card:#ffffff;
-  --line:#dcdcdc;
-  --header:#3a3a3a;
-  --text:#222;
-  --muted:#777;
+  --line:#E3D8C8;
+  --title:#EDE6DA;
+  --text:#3C3A36;
 }
 
 body{
@@ -23,130 +22,94 @@ body{
 }
 
 .wrap{
-  max-width:760px;
+  max-width:860px;
   margin:0 auto;
-  padding:20px;
+  padding:24px;
 }
 
-.logo{
+h1{
   text-align:center;
-  font-weight:700;
-  margin-bottom:10px;
+  margin-bottom:20px;
+  font-size:20px;
 }
 
-.mainTitle{
-  background:var(--header);
-  color:#fff;
-  text-align:center;
-  padding:12px;
-  font-size:18px;
-  letter-spacing:2px;
-}
-
-.block{
+.card{
   background:var(--card);
   border:1px solid var(--line);
-  margin-top:18px;
+  border-radius:18px;
+  margin-bottom:20px;
+  overflow:hidden;
 }
 
-.tableHead{
-  display:grid;
-  grid-template-columns:120px 1fr 120px;
-  background:#efefef;
+.cardTitle{
+  background:var(--title);
+  padding:12px 16px;
   font-weight:700;
-  border-bottom:1px solid var(--line);
 }
 
-.tableHead div{
-  padding:10px;
-  border-right:1px solid var(--line);
+.cardBody{
+  padding:16px;
 }
 
-.tableHead div:last-child{
-  border-right:none;
-}
-
-.dayRow{
+.grid{
   display:grid;
-  grid-template-columns:120px 1fr 120px;
-  border-bottom:1px solid var(--line);
-}
-
-.dayRow div{
-  padding:12px;
-  border-right:1px solid var(--line);
-}
-
-.dayRow div:last-child{
-  border-right:none;
-}
-
-.checkGroup{
-  display:flex;
-  flex-wrap:wrap;
+  grid-template-columns:1fr 1fr;
   gap:12px;
-  margin-bottom:6px;
-  font-size:14px;
 }
 
-.sectionTitle{
-  background:#efefef;
-  padding:10px;
-  font-weight:700;
-  border-bottom:1px solid var(--line);
+.grid3{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:12px;
 }
 
-.feeBox{
-  padding:14px;
+@media(max-width:720px){
+  .grid,.grid3{grid-template-columns:1fr;}
 }
 
-input{
-  border:1px solid var(--line);
-  padding:8px;
-  border-radius:6px;
+input,textarea{
   width:100%;
+  padding:10px;
+  border-radius:10px;
+  border:1px solid var(--line);
   box-sizing:border-box;
 }
 
 textarea{
-  width:100%;
   min-height:80px;
-  border:1px solid var(--line);
-  padding:8px;
-  border-radius:6px;
-  box-sizing:border-box;
+  resize:vertical;
 }
 
-.sigArea{
-  margin-top:20px;
-  border-top:1px solid var(--line);
-  padding-top:15px;
+.feeRow{
+  display:grid;
+  grid-template-columns:1fr 120px 120px 120px;
+  gap:10px;
+  margin-bottom:10px;
 }
 
-canvas{
-  width:100%;
-  height:180px;
-  border:1px solid var(--line);
-  border-radius:6px;
+.totalBox{
+  text-align:right;
+  font-weight:700;
+  font-size:18px;
+  margin-top:10px;
 }
 
 button{
-  margin-top:12px;
-  padding:10px 14px;
-  border:none;
-  background:#222;
+  background:#3C3A36;
   color:#fff;
-  border-radius:8px;
+  border:none;
+  padding:12px 16px;
+  border-radius:12px;
   cursor:pointer;
 }
 
-.small{
-  font-size:12px;
-  color:var(--muted);
-}
-
-.status{
-  margin-top:10px;
+.linkBox{
+  margin-top:15px;
+  padding:10px;
+  background:#fff;
+  border:1px dashed var(--line);
+  border-radius:10px;
+  word-break:break-all;
   font-size:14px;
 }
 </style>
@@ -155,120 +118,105 @@ button{
 <body>
 <div class="wrap">
 
-<div class="logo">CAMA CAMA</div>
+<h1>住宿明細確認單（店家填寫）</h1>
 
-<div class="mainTitle">— 活動紀錄 —</div>
-
-<div class="block">
-
-<div class="tableHead">
-  <div>日期</div>
-  <div>日常紀錄</div>
-  <div>提醒</div>
+<!-- 基本資訊 -->
+<div class="card">
+<div class="cardTitle">基本資訊</div>
+<div class="cardBody grid">
+  <input id="owner_name" placeholder="飼主姓名">
+  <input id="owner_email" placeholder="飼主 Email">
+  <input id="pet_name" placeholder="寵物名字">
+  <input id="stay_date" placeholder="住宿日期（例：3/18-3/20）">
+</div>
 </div>
 
-<!-- Day 1 -->
-<div class="dayRow">
-  <div><input placeholder="日期"></div>
-  <div>
-    <div class="checkGroup">
-      早：
-      <label><input type="radio" name="d1a">良好</label>
-      <label><input type="radio" name="d1a">普通</label>
-      <label><input type="radio" name="d1a">不吃</label>
-    </div>
-    <div class="checkGroup">
-      排尿：
-      <label><input type="radio" name="d1b">3次以上</label>
-      <label><input type="radio" name="d1b">1-3次</label>
-      <label><input type="radio" name="d1b">無</label>
-    </div>
-  </div>
-  <div><textarea placeholder="備註"></textarea></div>
+<div class="card">
+<div class="cardTitle">活動紀錄</div>
+<div class="cardBody">
+  <textarea id="activity_record" placeholder="例：
+第一天：食慾良好，精神穩定。
+第二天：排便正常，午睡較多。
+第三天：與其他狗狗互動良好。"></textarea>
+</div>
 </div>
 
-<!-- 可自行複製第二天第三天 -->
-
+<div class="card">
+<div class="cardTitle">照顧細節 / 溫馨提醒</div>
+<div class="cardBody">
+  <textarea id="care_note" placeholder="例：回家後建議清淡飲食一天，若有軟便請觀察。"></textarea>
+</div>
 </div>
 
-<!-- 費用明細 -->
-<div class="block">
-<div class="sectionTitle">費用明細</div>
+<div class="card">
+<div class="cardTitle">費用明細</div>
+<div class="cardBody">
 
-<div class="feeBox">
+<div id="feeContainer"></div>
 
-<div style="display:grid;grid-template-columns:1fr 120px 120px;gap:10px;">
-  <input placeholder="項目">
-  <input placeholder="單價">
-  <input placeholder="小計">
-</div>
+<button type="button" onclick="addFeeRow()">＋新增項目</button>
 
-<div style="margin-top:10px;">
-  <input placeholder="總金額">
+<div class="totalBox">
+總金額：$ <span id="total">0</span>
 </div>
 
 </div>
 </div>
 
-<!-- 簽名 -->
-<div class="sigArea">
-  <div style="font-weight:700;margin-bottom:8px;">飼主簽名</div>
-  <canvas id="sig"></canvas>
-  <div class="small">請確認以上內容無誤後簽名送出</div>
-  <button onclick="submitForm()">送出確認</button>
-  <div class="status" id="status"></div>
-</div>
+<button onclick="generateLink()">產生確認連結</button>
+
+<div id="resultLink" class="linkBox" style="display:none;"></div>
 
 </div>
 
 <script>
-const GAS_URL="https://你的GAS網址";
+let feeContainer=document.getElementById("feeContainer");
 
-const canvas=document.getElementById("sig");
-const ctx=canvas.getContext("2d");
-
-function resize(){
- const ratio=window.devicePixelRatio||1;
- canvas.width=canvas.offsetWidth*ratio;
- canvas.height=canvas.offsetHeight*ratio;
- ctx.scale(ratio,ratio);
+function addFeeRow(){
+  const row=document.createElement("div");
+  row.className="feeRow";
+  row.innerHTML=`
+    <input placeholder="項目">
+    <input placeholder="單價" type="number" oninput="calcTotal()">
+    <input placeholder="數量" type="number" value="1" oninput="calcTotal()">
+    <input placeholder="小計" readonly>
+  `;
+  feeContainer.appendChild(row);
 }
-resize();
 
-let drawing=false;
+function calcTotal(){
+  let rows=document.querySelectorAll(".feeRow");
+  let total=0;
+  rows.forEach(r=>{
+    let price=r.children[1].value;
+    let qty=r.children[2].value;
+    let subtotal=price*qty;
+    r.children[3].value=subtotal||0;
+    total+=subtotal||0;
+  });
+  document.getElementById("total").innerText=total;
+}
 
-canvas.addEventListener("mousedown",e=>{
- drawing=true;
- ctx.beginPath();
- ctx.moveTo(e.offsetX,e.offsetY);
-});
-canvas.addEventListener("mousemove",e=>{
- if(!drawing)return;
- ctx.lineTo(e.offsetX,e.offsetY);
- ctx.stroke();
-});
-canvas.addEventListener("mouseup",()=>drawing=false);
+addFeeRow();
 
-async function submitForm(){
- document.getElementById("status").innerText="送出中...";
- const payload={
-   action:"submitHotelCheckout",
-   signature:canvas.toDataURL(),
-   created_at:new Date().toISOString()
- };
+function generateLink(){
+  let data={
+    owner_name:owner_name.value,
+    owner_email:owner_email.value,
+    pet_name:pet_name.value,
+    stay_date:stay_date.value,
+    activity_record:activity_record.value,
+    care_note:care_note.value,
+    total:document.getElementById("total").innerText
+  };
 
- const res=await fetch(GAS_URL,{
-   method:"POST",
-   headers:{"Content-Type":"text/plain"},
-   body:JSON.stringify(payload)
- });
+  let encoded=btoa(unescape(encodeURIComponent(JSON.stringify(data))));
 
- const json=await res.json();
- if(json.ok){
-   document.getElementById("status").innerText="已寄送成功";
- }else{
-   document.getElementById("status").innerText="送出失敗";
- }
+  let url=`https://kumajima2025-cpu.github.io/hotel/hotel_confirm.html?data=${encoded}`;
+
+  let box=document.getElementById("resultLink");
+  box.style.display="block";
+  box.innerText=url;
 }
 </script>
 
