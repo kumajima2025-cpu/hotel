@@ -87,11 +87,11 @@
       <div class="secTitle">寵物資料</div>
       <div class="grid3">
         <div>
-          <label>名字 *</label>
+          <label>名字</label>
           <input id="pet_name" placeholder="例：豆豆" required />
         </div>
         <div>
-          <label>性別 *</label>
+          <label>性別</label>
           <select id="pet_sex" required>
             <option value="">請選擇</option>
             <option>公</option>
@@ -99,12 +99,12 @@
           </select>
         </div>
         <div>
-          <label>品種 *</label>
+          <label>品種</label>
           <input id="pet_breed" placeholder="例：比熊" required />
         </div>
         <div>
-          <label>出生年份（選填）</label>
-          <input id="pet_birth_year" inputmode="numeric" placeholder="例：2022" />
+          <label>出生年/月/日</label>
+          <input id="pet_birth_year" inputmode="numeric" placeholder="例：2021/02/14" />
         </div>
         <div>
           <label>是否已絕育</label>
@@ -115,7 +115,7 @@
           </select>
         </div>
         <div>
-          <label>體外驅蟲（選填）</label>
+          <label>體外驅蟲</label>
           <select id="pet_deworm">
             <option value="">請選擇</option>
             <option>滴劑</option>
@@ -128,11 +128,11 @@
       <div style="height:10px"></div>
       <div class="grid">
         <div>
-          <label>晶片號碼（選填）</label>
+          <label>晶片號碼</label>
           <input id="pet_chip" placeholder="例：900xxxxxxx（可留空）" />
         </div>
         <div>
-          <label>狂犬疫苗注射時間（選填）</label>
+          <label>狂犬疫苗注射時間</label>
           <input id="pet_rabies" placeholder="例：2023/06" />
         </div>
       </div>
@@ -182,9 +182,9 @@
     </div>
 
     <div class="card">
-      <div class="secTitle">飼主簽名 *</div>
+      <div class="secTitle">飼主簽名</div>
       <div class="sigBox">
-        <div class="small">請在下方簽名（手指或觸控筆皆可）。</div>
+        <div class="small">請在下方簽名</div>
         <canvas id="sig"></canvas>
         <div class="btns">
           <button class="ghost" id="clearBtn" type="button">清除簽名</button>
@@ -364,7 +364,7 @@
         setStatus("送出失敗：" + (json.error || "未知錯誤"));
         return;
       }
-      setStatus("✅ 已送出！PDF 將寄到店家（若有填 Email 也會寄一份給您）", true);
+      setStatus("✅ 已送出！將會寄送表單至您的Email", true);
 
       // 可選：送出後鎖按鈕
       document.getElementById('submitBtn').disabled = true;
