@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>熊嶼｜住宿前資料表（含簽名）</title>
+  <title>CAMACAMA｜基本資料表</title>
   <style>
     :root { --bg:#fff; --card:#faf7f2; --line:#e7dfd2; --text:#2b2b2b; --muted:#6b6b6b; }
     body{font-family: -apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
@@ -45,18 +45,18 @@
   <div class="wrap">
     <h1>基本資料表</h1>
     <div class="hint">
-      請於住宿前填寫完成。
+      *請於住宿前填寫完成本資料表!
     </div>
 
     <div class="card">
       <div class="secTitle">飼主資料</div>
       <div class="grid">
         <div>
-          <label>主要聯絡人姓名</label>
-          <input id="owner_name" placeholder="例：王小明" required />
+          <label>主要聯絡人</label>
+          <input id="owner_name" placeholder="例：陳小美" required />
         </div>
         <div>
-          <label>手機</label>
+          <label>手機號碼</label>
           <input id="owner_phone" inputmode="tel" placeholder="09xxxxxxxx" required />
         </div>
         <div>
@@ -70,14 +70,14 @@
       </div>
 
       <div style="height:10px"></div>
-      <div class="secTitle">備用聯絡人（緊急聯絡）</div>
+      <div class="secTitle">備用聯絡人</div>
       <div class="grid">
         <div>
-          <label>備用聯絡人姓名</label>
-          <input id="backup_name" placeholder="例：李小姐" />
+          <label>聯絡人姓名</label>
+          <input id="backup_name" placeholder="例：王小名" />
         </div>
         <div>
-          <label>備用聯絡人手機</label>
+          <label>聯絡人手機</label>
           <input id="backup_phone" inputmode="tel" placeholder="09xxxxxxxx" />
         </div>
       </div>
@@ -85,27 +85,38 @@
 
     <div class="card">
       <div class="secTitle">寵物資料</div>
+
       <div class="grid3">
         <div>
           <label>名字</label>
-          <input id="pet_name" placeholder="例：豆豆" required />
+          <input id="pet_name" placeholder="例：Lucky" required />
         </div>
+
         <div>
           <label>性別</label>
           <select id="pet_sex" required>
             <option value="">請選擇</option>
-            <option>公</option>
-            <option>母</option>
+            <option>男</option>
+            <option>女</option>
           </select>
         </div>
+
         <div>
           <label>品種</label>
-          <input id="pet_breed" placeholder="例：比熊" required />
+          <input id="pet_breed" placeholder="例：貴賓" required />
         </div>
+
         <div>
-          <label>出生日</label>
-          <input id="pet_rabies" placeholder="例：2021/02/14" />
+          <label>出生年份</label>
+          <input
+            id="pet_birth_year"
+            inputmode="numeric"
+            pattern="[0-9]*"
+            maxlength="4"
+            placeholder="例：2021"
+          />
         </div>
+
         <div>
           <label>是否已絕育</label>
           <select id="pet_neutered">
@@ -114,6 +125,7 @@
             <option>未絕育</option>
           </select>
         </div>
+
         <div>
           <label>體外驅蟲</label>
           <select id="pet_deworm">
@@ -122,6 +134,9 @@
             <option>口服</option>
             <option>無</option>
           </select>
+          <div class="small" style="margin-top:6px; line-height:1.4;">
+            *飼養寵物皆須施打晶片、絕育並按時施打狂犬病疫苗*
+          </div>
         </div>
       </div>
 
@@ -149,6 +164,7 @@
         <label class="chip"><input type="checkbox" value="關節問題">關節問題</label>
         <label class="chip"><input type="checkbox" value="糖尿病">糖尿病</label>
       </div>
+
       <div class="grid">
         <div>
           <label>手術外傷尚未癒合（選填）</label>
@@ -166,19 +182,19 @@
           <label>配合動物醫院 / 醫師（選填）</label>
           <input id="vet" placeholder="例：XXX動物醫院" />
         </div>
-       <div>
-  <label>緊急情況授權（必選）*</label>
 
-  <select id="emergency_consent" required>
-    <option value="">請選擇</option>
-    <option value="同意">同意緊急送醫</option>
-    <option value="不同意">不同意（請於備註說明處理方式）</option>
-  </select>
-
-  <div class="small" style="margin-top:6px; line-height:1.5;">
-    住宿期間若寵物有就醫需求，本人同意由 CAMA CAMA 帶往惟心動物醫院就診。
-  </div>
-</div>
+        <div>
+          <label>緊急情況授權（必填）*</label>
+          <select id="emergency_consent" required>
+            <option value="">請選擇</option>
+            <option value="同意">同意緊急送醫</option>
+            <option value="不同意">不同意（請於備註說明處理方式）</option>
+          </select>
+          <div class="small" style="margin-top:6px; line-height:1.5;">
+            住宿期間若寵物有就醫需求，本人同意由 CAMA CAMA 帶往惟心動物醫院就診。
+          </div>
+        </div>
+      </div>
 
       <div style="height:10px"></div>
       <label>住宿備註（飲食、藥物、分離焦慮、注意事項等）</label>
@@ -219,15 +235,11 @@
   </div>
 
 <script>
-  // ✅ 你的 GAS Web App URL（部署後貼在這裡）
   const GAS_URL = "https://script.google.com/macros/s/AKfycbw_tlByXzZy-V8Rx6Cf_a8B_0WyYA5V7tBrx5Z2UkDdZC4qxFxG2WT4_XCX_IgvahbN/exec";
-
-  // 讓日期預設今天
   const d = new Date();
   const pad = n => String(n).padStart(2,'0');
   document.getElementById("signed_date").value = `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
 
-  // --- 簽名板 ---
   const canvas = document.getElementById('sig');
   const ctx = canvas.getContext('2d');
   function resizeCanvas(){
@@ -308,7 +320,6 @@
 
   document.getElementById('submitBtn').addEventListener('click', async ()=>{
     try{
-      // 基本驗證
       const required = [
         ["owner_name","請填主要聯絡人姓名"],
         ["owner_phone","請填手機"],
@@ -370,7 +381,6 @@
       }
       setStatus("✅ 已送出！將會寄送表單至您的Email", true);
 
-      // 可選：送出後鎖按鈕
       document.getElementById('submitBtn').disabled = true;
 
     }catch(err){
