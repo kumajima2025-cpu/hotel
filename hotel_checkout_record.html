@@ -109,11 +109,6 @@
             <input id="pet_name" placeholder="例：Lucky">
           </div>
           <div>
-            <label>飼主 Email（客人收件）*</label>
-            <input id="owner_email" inputmode="email" placeholder="you@example.com">
-            <div class="small">客人確認後，PDF 會寄到此信箱與店家信箱。</div>
-          </div>
-          <div>
             <label>住宿日期</label>
             <input id="stay_date" placeholder="例：2026/03/18 - 2026/03/20">
           </div>
@@ -381,16 +376,26 @@
         </div>
         <div class="linkBox" id="linkBox" style="display:none;"></div>
       </div>
+<div class="card" id="cardConfirmActions" style="display:none;">
+  <div class="cardTitle">飼主確認與簽名</div>
+  <div class="cardBody">
+
+    <div style="margin-bottom:14px;">
+      <label>您的 Email（收取確認副本）*</label>
+      <input id="confirm_email" inputmode="email" placeholder="請輸入您的 Email">
     </div>
 
-    <!-- 客人模式：確認＋簽名送出 -->
-    <div class="card" id="cardConfirmActions" style="display:none;">
-      <div class="cardTitle">飼主確認與簽名</div>
-      <div class="cardBody">
-        <div class="opts" style="margin-bottom:10px;">
-          <label class="opt"><input id="confirm_record" type="checkbox">我已確認住宿期間紀錄內容無誤</label>
-          <label class="opt"><input id="confirm_fee" type="checkbox">我已確認費用明細與總金額無誤</label>
-        </div>
+    <div class="opts" style="margin-bottom:10px;">
+      <label class="opt">
+        <input id="confirm_record" type="checkbox">
+        我已確認住宿期間紀錄內容無誤
+      </label>
+
+      <label class="opt">
+        <input id="confirm_fee" type="checkbox">
+        我已確認費用明細與總金額無誤
+      </label>
+    </div>
 
         <div class="sigBox">
           <div class="small">請在下方簽名</div>
@@ -762,6 +767,10 @@
 
   // ========= confirm: submit =========
   const submitBtn = document.getElementById("submitBtn");
+  const confirmEmail = document.getElementById("confirm_email").value.trim();
+if(!confirmEmail){
+  setStatus("請填寫您的 Email"); return;
+}
   if(submitBtn){
     submitBtn.addEventListener("click", async ()=>{
       try{
@@ -778,18 +787,26 @@
         setStatus("送出中…請稍候");
 
         const data = collectAllData(); // readonly but still reads values
-        const payload = {
-          action: "submitHotelCheckoutConfirm",
-          data: {
-            ...data,
-            confirm_record: true,
-            confirm_fee: true,
-            signed_date: document.getElementById("signed_date").value.trim(),
-            signature_png: canvas.toDataURL("image/png"),
-            ua: navigator.userAgent,
-            confirmed_at: new Date().toISOString()
-          }
-        };
+       const confirmEmail = document.getElementById("confirm_email").value.trim();
+
+if(!confirmEmail){
+  setStatus("請填寫您的 Email"); 
+  return;
+}
+
+const payload = {
+  action: "submitHotelCheckoutConfirm",
+  data: {
+    ...data,
+    customer_email: confirmEmail,
+    confirm_record: true,
+    confirm_fee: true,
+    signed_date: document.getElementById("signed_date").value.trim(),
+    signature_png: canvas.toDataURL("image/png"),
+    ua: navigator.userAgent,
+    confirmed_at: new Date().toISOString()
+  }
+};
 
         const res = await fetch(GAS_URL, {
           method: "POST",
