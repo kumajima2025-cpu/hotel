@@ -1,224 +1,730 @@
 <!doctype html>
 <html lang="zh-Hant">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>CAMA CAMA｜住宿明細確認單</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CAMA CAMA｜住宿明細確認</title>
+  <style>
+    :root{
+      --bg:#F6F1E9;
+      --card:#ffffff;
+      --line:#E3D8C8;
+      --title:#EDE6DA;
+      --text:#3C3A36;
+      --muted:#7B746B;
+      --btn:#2f2d2a;
+    }
+    body{
+      margin:0; background:var(--bg); color:var(--text);
+      font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+    }
+    .wrap{max-width:900px; margin:0 auto; padding:18px;}
+    .brand{ text-align:center; font-weight:800; letter-spacing:1px; margin:6px 0 10px; }
+    .barTitle{
+      background:var(--btn); color:#fff; text-align:center;
+      padding:12px 14px; border-radius:14px; font-weight:800; letter-spacing:3px;
+    }
+    .hint{color:var(--muted); font-size:13px; line-height:1.5; margin:10px 0 14px;}
+    .card{
+      background:var(--card); border:1px solid var(--line); border-radius:18px;
+      overflow:hidden; margin:12px 0;
+    }
+    .cardTitle{background:var(--title); padding:12px 14px; font-weight:800;}
+    .cardBody{padding:14px;}
+    .grid{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+    .grid3{display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;}
+    @media (max-width:760px){ .grid,.grid3{grid-template-columns:1fr;} }
 
-<style>
-:root{
-  --bg:#F6F1E9;
-  --card:#ffffff;
-  --line:#E3D8C8;
-  --title:#EDE6DA;
-  --text:#3C3A36;
-}
+    label{display:block; font-size:13px; margin:2px 0 6px; color:var(--muted);}
+    input, textarea, select{
+      width:100%; box-sizing:border-box; padding:10px 10px; border-radius:12px;
+      border:1px solid var(--line); background:#fff; font-size:15px; color:var(--text);
+    }
+    textarea{min-height:86px; resize:vertical;}
 
-body{
-  margin:0;
-  background:var(--bg);
-  font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
-  color:var(--text);
-}
+    /* table like paper */
+    .tbl{width:100%; border-collapse:separate; border-spacing:0; border:1px solid var(--line); border-radius:14px; overflow:hidden; background:#fff;}
+    .tbl th,.tbl td{border-bottom:1px solid var(--line); border-right:1px solid var(--line); padding:10px; vertical-align:top; font-size:14px;}
+    .tbl th{background:#f4efe6; text-align:left; font-weight:800;}
+    .tbl tr:last-child td{border-bottom:0;}
+    .tbl td:last-child,.tbl th:last-child{border-right:0;}
+    .cellTitle{font-weight:800; margin-bottom:6px;}
+    .opts{display:flex; flex-wrap:wrap; gap:10px; align-items:center;}
+    .opt{display:flex; gap:6px; align-items:center; font-size:14px;}
+    .opt input{width:auto;}
 
-.wrap{
-  max-width:860px;
-  margin:0 auto;
-  padding:24px;
-}
+    /* fee */
+    .feeRow{display:grid; grid-template-columns:1fr 120px 120px 120px; gap:10px; margin-bottom:10px;}
+    @media (max-width:760px){ .feeRow{grid-template-columns:1fr 1fr; } }
+    .mono{font-variant-numeric: tabular-nums;}
+    .feeTotal{display:flex; justify-content:flex-end; gap:10px; align-items:center; margin-top:8px; font-weight:900;}
+    .feeTotal span{font-size:18px;}
 
-h1{
-  text-align:center;
-  margin-bottom:20px;
-  font-size:20px;
-}
+    /* buttons */
+    .btns{display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;}
+    button{
+      padding:11px 14px; border:0; border-radius:14px; cursor:pointer; font-size:15px;
+      background:var(--btn); color:#fff;
+    }
+    .ghost{background:#fff; border:1px solid var(--line); color:var(--text);}
+    .small{font-size:12px; color:var(--muted); line-height:1.5;}
+    .linkBox{
+      margin-top:10px; padding:10px; border:1px dashed #cdbfae; border-radius:12px;
+      background:#fff; word-break:break-all; font-size:13px;
+    }
 
-.card{
-  background:var(--card);
-  border:1px solid var(--line);
-  border-radius:18px;
-  margin-bottom:20px;
-  overflow:hidden;
-}
+    /* signature */
+    .sigBox{background:#fff; border:1px dashed #cdbfae; border-radius:12px; padding:10px;}
+    canvas{width:100%; height:180px; border:1px solid var(--line); border-radius:12px; touch-action:none;}
+    .status{margin-top:10px; font-size:14px;}
+    .ok{color:#1b7f3a;}
+    .bad{color:#b00020;}
 
-.cardTitle{
-  background:var(--title);
-  padding:12px 16px;
-  font-weight:700;
-}
+    /* mode label */
+    .modeTag{
+      display:inline-block; padding:6px 10px; border-radius:999px;
+      border:1px solid var(--line); background:#fff; font-size:12px; color:var(--muted);
+      margin:10px 0 0;
+    }
 
-.cardBody{
-  padding:16px;
-}
-
-.grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
-}
-
-.grid3{
-  display:grid;
-  grid-template-columns:1fr 1fr 1fr;
-  gap:12px;
-}
-
-@media(max-width:720px){
-  .grid,.grid3{grid-template-columns:1fr;}
-}
-
-input,textarea{
-  width:100%;
-  padding:10px;
-  border-radius:10px;
-  border:1px solid var(--line);
-  box-sizing:border-box;
-}
-
-textarea{
-  min-height:80px;
-  resize:vertical;
-}
-
-.feeRow{
-  display:grid;
-  grid-template-columns:1fr 120px 120px 120px;
-  gap:10px;
-  margin-bottom:10px;
-}
-
-.totalBox{
-  text-align:right;
-  font-weight:700;
-  font-size:18px;
-  margin-top:10px;
-}
-
-button{
-  background:#3C3A36;
-  color:#fff;
-  border:none;
-  padding:12px 16px;
-  border-radius:12px;
-  cursor:pointer;
-}
-
-.linkBox{
-  margin-top:15px;
-  padding:10px;
-  background:#fff;
-  border:1px dashed var(--line);
-  border-radius:10px;
-  word-break:break-all;
-  font-size:14px;
-}
-</style>
+    /* readonly look */
+    .ro input[readonly], .ro textarea[readonly], .ro select:disabled{
+      background:#fbfaf7;
+    }
+  </style>
 </head>
 
 <body>
-<div class="wrap">
+  <div class="wrap">
+    <div class="brand">CAMA CAMA</div>
+    <div class="barTitle">— 住宿明細確認 —</div>
+    <div class="hint" id="hint"></div>
+    <div class="modeTag" id="modeTag"></div>
 
-<h1>住宿明細確認單（店家填寫）</h1>
+    <!-- 基本資訊 -->
+    <div class="card" id="cardBase">
+      <div class="cardTitle">基本資訊</div>
+      <div class="cardBody">
+        <div class="grid">
+          <div>
+            <label>飼主姓名</label>
+            <input id="owner_name" placeholder="例：陳小美">
+          </div>
+          <div>
+            <label>寵物名字</label>
+            <input id="pet_name" placeholder="例：Lucky">
+          </div>
+          <div>
+            <label>飼主 Email（客人收件）*</label>
+            <input id="owner_email" inputmode="email" placeholder="you@example.com">
+            <div class="small">客人確認後，PDF 會寄到此信箱與店家信箱。</div>
+          </div>
+          <div>
+            <label>住宿日期</label>
+            <input id="stay_date" placeholder="例：2026/03/18 - 2026/03/20">
+          </div>
+        </div>
+      </div>
+    </div>
 
-<!-- 基本資訊 -->
-<div class="card">
-<div class="cardTitle">基本資訊</div>
-<div class="cardBody grid">
-  <input id="owner_name" placeholder="飼主姓名">
-  <input id="owner_email" placeholder="飼主 Email">
-  <input id="pet_name" placeholder="寵物名字">
-  <input id="stay_date" placeholder="住宿日期（例：3/18-3/20）">
-</div>
-</div>
+    <!-- 活動紀錄（照你紙本風格：日期 / 日常紀錄 / 提醒） -->
+    <div class="card" id="cardActivity">
+      <div class="cardTitle">活動紀錄</div>
+      <div class="cardBody">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th style="width:18%;">日期</th>
+              <th style="width:54%;">日常紀錄</th>
+              <th style="width:28%;">提醒</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- 3 天固定 -->
+            ${[1,2,3].map(i=>`
+            <tr>
+              <td><input id="d${i}_date" placeholder="日期"></td>
+              <td>
+                <div class="cellTitle">食慾</div>
+                <div class="opts">
+                  <span class="opt">早：
+                    <label class="opt"><input type="radio" name="d${i}_am" value="良好">良好</label>
+                    <label class="opt"><input type="radio" name="d${i}_am" value="普通">普通</label>
+                    <label class="opt"><input type="radio" name="d${i}_am" value="不吃">不吃</label>
+                  </span>
+                </div>
+                <div class="opts" style="margin-top:6px;">
+                  <span class="opt">中：
+                    <label class="opt"><input type="radio" name="d${i}_noon" value="良好">良好</label>
+                    <label class="opt"><input type="radio" name="d${i}_noon" value="普通">普通</label>
+                    <label class="opt"><input type="radio" name="d${i}_noon" value="不吃">不吃</label>
+                  </span>
+                </div>
+                <div class="opts" style="margin-top:6px;">
+                  <span class="opt">晚：
+                    <label class="opt"><input type="radio" name="d${i}_pm" value="良好">良好</label>
+                    <label class="opt"><input type="radio" name="d${i}_pm" value="普通">普通</label>
+                    <label class="opt"><input type="radio" name="d${i}_pm" value="不吃">不吃</label>
+                  </span>
+                </div>
 
-<div class="card">
-<div class="cardTitle">活動紀錄</div>
-<div class="cardBody">
-  <textarea id="activity_record" placeholder="例：
-第一天：食慾良好，精神穩定。
-第二天：排便正常，午睡較多。
-第三天：與其他狗狗互動良好。"></textarea>
-</div>
-</div>
+                <div style="height:10px"></div>
+                <div class="cellTitle">排尿</div>
+                <div class="opts">
+                  <label class="opt"><input type="radio" name="d${i}_pee" value="3次以上">3次以上</label>
+                  <label class="opt"><input type="radio" name="d${i}_pee" value="1-3次">1-3次</label>
+                  <label class="opt"><input type="radio" name="d${i}_pee" value="無">無</label>
+                </div>
 
-<div class="card">
-<div class="cardTitle">照顧細節 / 溫馨提醒</div>
-<div class="cardBody">
-  <textarea id="care_note" placeholder="例：回家後建議清淡飲食一天，若有軟便請觀察。"></textarea>
-</div>
-</div>
+                <div style="height:10px"></div>
+                <div class="cellTitle">排便</div>
+                <div class="opts">
+                  <label class="opt"><input type="radio" name="d${i}_poo" value="3次以上">3次以上</label>
+                  <label class="opt"><input type="radio" name="d${i}_poo" value="1-3次">1-3次</label>
+                  <label class="opt"><input type="radio" name="d${i}_poo" value="無">無</label>
+                </div>
+              </td>
+              <td><textarea id="d${i}_remind" placeholder="備註"></textarea></td>
+            </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
 
-<div class="card">
-<div class="cardTitle">費用明細</div>
-<div class="cardBody">
+    <!-- 照顧細節（像你圖二的內容） -->
+    <div class="card" id="cardCare">
+      <div class="cardTitle">照顧細節</div>
+      <div class="cardBody">
+        <div class="grid">
+          <div>
+            <label>生活習慣（勾選）</label>
+            <div class="opts">
+              <label class="opt"><input type="checkbox" id="habit_neutered">已絕育</label>
+              <label class="opt"><input type="checkbox" id="habit_diaper">需要包尿布</label>
+              <label class="opt"><input type="checkbox" id="habit_picky">護食</label>
+              <label class="opt"><input type="checkbox" id="habit_notfriendly">不親狗</label>
+            </div>
+          </div>
+          <div>
+            <label>已知食物過敏原（選填）</label>
+            <input id="allergy" placeholder="例：雞肉、牛肉、乳製品...">
+          </div>
+        </div>
 
-<div id="feeContainer"></div>
+        <div style="height:10px"></div>
 
-<button type="button" onclick="addFeeRow()">＋新增項目</button>
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th style="width:18%;">生活習慣</th>
+              <th style="width:42%;">餵食時間</th>
+              <th style="width:40%;">藥品 / 保健品</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div class="small">（可留空）</div>
+                <textarea id="lifestyle" placeholder="例：午睡多、怕吵、喜歡被摸頭..."></textarea>
+              </td>
+              <td>
+                <div class="cellTitle">早</div>
+                <input id="feed_morning" placeholder="飼料 / 罐頭 / 鮮食 / 凍乾（選填）">
+                <div style="height:10px"></div>
+                <div class="cellTitle">中</div>
+                <input id="feed_noon" placeholder="飼料 / 罐頭 / 鮮食 / 凍乾（選填）">
+                <div style="height:10px"></div>
+                <div class="cellTitle">晚</div>
+                <input id="feed_night" placeholder="飼料 / 罐頭 / 鮮食 / 凍乾（選填）">
+                <div style="height:10px"></div>
+                <div class="cellTitle">零食</div>
+                <input id="snack" placeholder="可 / 不可（選填）">
+              </td>
+              <td>
+                <div class="cellTitle">飯前 / 飯後</div>
+                <textarea id="meds_meal" placeholder="例：腸胃藥（飯後）早晚各1..."></textarea>
+                <div style="height:10px"></div>
+                <div class="cellTitle">隨餐</div>
+                <textarea id="meds_snack" placeholder="例：保健粉、益生菌..."></textarea>
+              </td>
+            </tr>
+          </tbody>
+        </table>
 
-<div class="totalBox">
-總金額：$ <span id="total">0</span>
-</div>
+        <div style="height:10px"></div>
 
-</div>
-</div>
+        <div class="grid">
+          <div>
+            <label>照顧須知（選填）</label>
+            <textarea id="care_rules" placeholder="例：需要慢慢親近／怕生／不喜歡突然抱起..."></textarea>
+          </div>
+          <div>
+            <label>溫馨提醒（選填）</label>
+            <textarea id="warm_remind" placeholder="例：回家後先清淡飲食一天，若有軟便請觀察..."></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
 
-<button onclick="generateLink()">產生確認連結</button>
+    <!-- 費用明細（自動加總） -->
+    <div class="card" id="cardFee">
+      <div class="cardTitle">費用明細</div>
+      <div class="cardBody">
+        <div id="feeRows"></div>
 
-<div id="resultLink" class="linkBox" style="display:none;"></div>
+        <div class="btns" id="feeBtns">
+          <button class="ghost" type="button" id="addFeeBtn">＋新增項目</button>
+          <button class="ghost" type="button" id="resetFeeBtn">重設常用項目</button>
+        </div>
 
-</div>
+        <div class="feeTotal">
+          <div>總金額：</div>
+          <div class="mono">$ <span id="feeTotal">0</span></div>
+        </div>
+        <div class="small">小計＝單價×數量；總金額自動加總。</div>
+      </div>
+    </div>
+
+    <!-- 店家模式：產生連結 -->
+    <div class="card" id="cardCreateActions">
+      <div class="cardTitle">產生客人確認連結</div>
+      <div class="cardBody">
+        <div class="small">店家填完後按下方按鈕，系統會產生「帶資料的專屬連結」，傳給客人即可。</div>
+        <div class="btns">
+          <button type="button" id="genLinkBtn">產生確認連結</button>
+          <button type="button" class="ghost" id="copyLinkBtn" style="display:none;">複製連結</button>
+        </div>
+        <div class="linkBox" id="linkBox" style="display:none;"></div>
+      </div>
+    </div>
+
+    <!-- 客人模式：確認＋簽名送出 -->
+    <div class="card" id="cardConfirmActions" style="display:none;">
+      <div class="cardTitle">飼主確認與簽名</div>
+      <div class="cardBody">
+        <div class="opts" style="margin-bottom:10px;">
+          <label class="opt"><input id="confirm_record" type="checkbox">我已確認住宿期間紀錄內容無誤</label>
+          <label class="opt"><input id="confirm_fee" type="checkbox">我已確認費用明細與總金額無誤</label>
+        </div>
+
+        <div class="sigBox">
+          <div class="small">請在下方簽名</div>
+          <canvas id="sig"></canvas>
+          <div class="btns">
+            <button class="ghost" id="clearBtn" type="button">清除簽名</button>
+          </div>
+        </div>
+
+        <div style="height:10px"></div>
+        <div class="grid">
+          <div>
+            <label>簽名日期 *</label>
+            <input id="signed_date" />
+          </div>
+          <div>
+            <label>送出後 PDF 寄送</label>
+            <div class="small">系統將寄送 PDF 至店家與飼主 Email 留存。</div>
+          </div>
+        </div>
+
+        <div class="btns">
+          <button id="submitBtn" type="button">送出並寄送 PDF</button>
+        </div>
+        <div class="status" id="status"></div>
+      </div>
+    </div>
+
+    <div class="hint" style="margin-top:12px;">
+      若開到舊版，請在網址最後加 <span class="mono">?v=1</span> 或 <span class="mono">&v=2</span> 重新整理。
+    </div>
+  </div>
 
 <script>
-let feeContainer=document.getElementById("feeContainer");
+  // ✅ 改成你的 GAS 網址（你之前就有）
+  const GAS_URL = "https://script.google.com/macros/s/AKfycbw_tlByXzZy-V8Rx6Cf_a8B_0WyYA5V7tBrx5Z2UkDdZC4qxFxG2WT4_XCX_IgvahbN/exec";
 
-function addFeeRow(){
-  const row=document.createElement("div");
-  row.className="feeRow";
-  row.innerHTML=`
-    <input placeholder="項目">
-    <input placeholder="單價" type="number" oninput="calcTotal()">
-    <input placeholder="數量" type="number" value="1" oninput="calcTotal()">
-    <input placeholder="小計" readonly>
-  `;
-  feeContainer.appendChild(row);
-}
+  // ========= helpers =========
+  const qs = new URLSearchParams(location.search);
+  const mode = qs.get("mode");       // create
+  const dataParam = qs.get("data");  // confirm
+  const isCreate = mode === "create" && !dataParam;
+  const isConfirm = !!dataParam;
 
-function calcTotal(){
-  let rows=document.querySelectorAll(".feeRow");
-  let total=0;
-  rows.forEach(r=>{
-    let price=r.children[1].value;
-    let qty=r.children[2].value;
-    let subtotal=price*qty;
-    r.children[3].value=subtotal||0;
-    total+=subtotal||0;
-  });
-  document.getElementById("total").innerText=total;
-}
+  const pad = n => String(n).padStart(2,'0');
+  function setStatus(msg, ok=false){
+    const el = document.getElementById('status');
+    el.textContent = msg;
+    el.className = "status " + (ok ? "ok":"bad");
+  }
+  function escapeB64Json(obj){
+    // 支援中文與特殊字元
+    return btoa(unescape(encodeURIComponent(JSON.stringify(obj))));
+  }
+  function unescapeB64Json(b64){
+    return JSON.parse(decodeURIComponent(escape(atob(b64))));
+  }
+  function readRadio(name){
+    const el = document.querySelector(`input[name="${name}"]:checked`);
+    return el ? el.value : "";
+  }
+  function setRadio(name, value){
+    if(!value) return;
+    const el = document.querySelector(`input[name="${name}"][value="${CSS.escape(value)}"]`);
+    if(el) el.checked = true;
+  }
+  function setReadonlyAll(){
+    // inputs & textarea
+    document.querySelectorAll('input, textarea').forEach(el=>{
+      if(el.id === "confirm_record" || el.id === "confirm_fee" || el.id === "signed_date") return;
+      el.setAttribute('readonly','readonly');
+    });
+    // radio/checkbox/select disable
+    document.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(el=>{
+      if(el.id === "confirm_record" || el.id === "confirm_fee") return;
+      el.disabled = true;
+    });
+    document.querySelectorAll('select').forEach(el=> el.disabled = true);
+    document.body.classList.add("ro");
+  }
 
-addFeeRow();
+  // ========= fee =========
+  const feeRowsEl = document.getElementById("feeRows");
+  function feeRowTpl(item="", price="", qty="1"){
+    const row = document.createElement("div");
+    row.className = "feeRow";
+    row.innerHTML = `
+      <input class="fee_item" placeholder="項目" value="${item.replace(/"/g,'&quot;')}">
+      <input class="fee_price mono" placeholder="單價" inputmode="numeric" value="${price}">
+      <input class="fee_qty mono" placeholder="數量" inputmode="numeric" value="${qty}">
+      <input class="fee_sub mono" placeholder="小計" value="0" readonly>
+    `;
+    // listeners
+    const priceEl = row.querySelector(".fee_price");
+    const qtyEl = row.querySelector(".fee_qty");
+    priceEl.addEventListener("input", calcFee);
+    qtyEl.addEventListener("input", calcFee);
+    return row;
+  }
 
-function generateLink(){
-  let data={
-    owner_name:owner_name.value,
-    owner_email:owner_email.value,
-    pet_name:pet_name.value,
-    stay_date:stay_date.value,
-    activity_record:activity_record.value,
-    care_note:care_note.value,
-    total:document.getElementById("total").innerText
-  };
+  function resetFeeCommon(){
+    feeRowsEl.innerHTML = "";
+    feeRowsEl.appendChild(feeRowTpl("住宿費", "", "1"));
+    feeRowsEl.appendChild(feeRowTpl("加購項目", "", "1"));
+    feeRowsEl.appendChild(feeRowTpl("洗澡/美容", "", "1"));
+    calcFee();
+  }
 
-  let encoded=btoa(unescape(encodeURIComponent(JSON.stringify(data))));
+  function addFeeRow(){
+    feeRowsEl.appendChild(feeRowTpl());
+    calcFee();
+  }
 
-  let url=`https://kumajima2025-cpu.github.io/hotel/hotel_confirm.html?data=${encoded}`;
+  function calcFee(){
+    let total = 0;
+    feeRowsEl.querySelectorAll(".feeRow").forEach(row=>{
+      const p = Number((row.querySelector(".fee_price").value || "").toString().replace(/,/g,'')) || 0;
+      const q = Number((row.querySelector(".fee_qty").value || "").toString().replace(/,/g,'')) || 0;
+      const sub = p * q;
+      row.querySelector(".fee_sub").value = String(sub);
+      total += sub;
+    });
+    document.getElementById("feeTotal").textContent = String(total);
+    return total;
+  }
 
-  let box=document.getElementById("resultLink");
-  box.style.display="block";
-  box.innerText=url;
-}
+  document.getElementById("addFeeBtn").addEventListener("click", addFeeRow);
+  document.getElementById("resetFeeBtn").addEventListener("click", resetFeeCommon);
+  resetFeeCommon();
+
+  // ========= signature =========
+  const canvas = document.getElementById('sig');
+  const ctx = canvas.getContext('2d');
+
+  function resizeCanvas(){
+    if(!canvas) return;
+    const rect = canvas.getBoundingClientRect();
+    const ratio = Math.max(window.devicePixelRatio || 1, 1);
+    canvas.width = Math.floor(rect.width * ratio);
+    canvas.height = Math.floor(rect.height * ratio);
+    ctx.setTransform(ratio,0,0,ratio,0,0);
+    ctx.lineWidth = 2;
+    ctx.lineCap = 'round';
+    ctx.strokeStyle = '#111';
+  }
+  window.addEventListener('resize', resizeCanvas);
+
+  let drawing = false;
+  let last = null;
+
+  function getPos(e){
+    const rect = canvas.getBoundingClientRect();
+    const touch = e.touches ? e.touches[0] : null;
+    const clientX = touch ? touch.clientX : e.clientX;
+    const clientY = touch ? touch.clientY : e.clientY;
+    return { x: clientX - rect.left, y: clientY - rect.top };
+  }
+
+  function start(e){
+    e.preventDefault();
+    drawing = true;
+    last = getPos(e);
+  }
+  function move(e){
+    if(!drawing) return;
+    e.preventDefault();
+    const p = getPos(e);
+    ctx.beginPath();
+    ctx.moveTo(last.x, last.y);
+    ctx.lineTo(p.x, p.y);
+    ctx.stroke();
+    last = p;
+  }
+  function end(e){
+    if(!drawing) return;
+    e.preventDefault();
+    drawing = false;
+    last = null;
+  }
+
+  function clearSig(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+  }
+
+  function canvasIsBlank(){
+    const blank = document.createElement('canvas');
+    blank.width = canvas.width; blank.height = canvas.height;
+    return canvas.toDataURL() === blank.toDataURL();
+  }
+
+  document.getElementById('clearBtn').addEventListener('click', clearSig);
+
+  canvas.addEventListener('mousedown', start);
+  canvas.addEventListener('mousemove', move);
+  window.addEventListener('mouseup', end);
+  canvas.addEventListener('touchstart', start, {passive:false});
+  canvas.addEventListener('touchmove', move, {passive:false});
+  canvas.addEventListener('touchend', end, {passive:false});
+
+  // ========= data collect / apply =========
+  function collectAllData(){
+    const feeItems = [];
+    feeRowsEl.querySelectorAll(".feeRow").forEach(row=>{
+      feeItems.push({
+        item: row.querySelector(".fee_item").value.trim(),
+        price: row.querySelector(".fee_price").value.trim(),
+        qty: row.querySelector(".fee_qty").value.trim(),
+        sub: row.querySelector(".fee_sub").value.trim()
+      });
+    });
+
+    const days = [1,2,3].map(i=>({
+      date: document.getElementById(`d${i}_date`).value.trim(),
+      appetite_am: readRadio(`d${i}_am`),
+      appetite_noon: readRadio(`d${i}_noon`),
+      appetite_pm: readRadio(`d${i}_pm`),
+      pee: readRadio(`d${i}_pee`),
+      poo: readRadio(`d${i}_poo`),
+      remind: document.getElementById(`d${i}_remind`).value.trim()
+    }));
+
+    return {
+      owner_name: document.getElementById("owner_name").value.trim(),
+      owner_email: document.getElementById("owner_email").value.trim(),
+      pet_name: document.getElementById("pet_name").value.trim(),
+      stay_date: document.getElementById("stay_date").value.trim(),
+
+      days,
+
+      habit_neutered: document.getElementById("habit_neutered").checked,
+      habit_diaper: document.getElementById("habit_diaper").checked,
+      habit_picky: document.getElementById("habit_picky").checked,
+      habit_notfriendly: document.getElementById("habit_notfriendly").checked,
+      allergy: document.getElementById("allergy").value.trim(),
+
+      lifestyle: document.getElementById("lifestyle").value.trim(),
+      feed_morning: document.getElementById("feed_morning").value.trim(),
+      feed_noon: document.getElementById("feed_noon").value.trim(),
+      feed_night: document.getElementById("feed_night").value.trim(),
+      snack: document.getElementById("snack").value.trim(),
+
+      meds_meal: document.getElementById("meds_meal").value.trim(),
+      meds_snack: document.getElementById("meds_snack").value.trim(),
+
+      care_rules: document.getElementById("care_rules").value.trim(),
+      warm_remind: document.getElementById("warm_remind").value.trim(),
+
+      fee_items: feeItems,
+      fee_total: String(calcFee()),
+
+      created_at: new Date().toISOString()
+    };
+  }
+
+  function applyAllData(data){
+    document.getElementById("owner_name").value = data.owner_name || "";
+    document.getElementById("owner_email").value = data.owner_email || "";
+    document.getElementById("pet_name").value = data.pet_name || "";
+    document.getElementById("stay_date").value = data.stay_date || "";
+
+    (data.days || []).slice(0,3).forEach((d,i)=>{
+      const idx = i+1;
+      document.getElementById(`d${idx}_date`).value = d.date || "";
+      setRadio(`d${idx}_am`, d.appetite_am || "");
+      setRadio(`d${idx}_noon`, d.appetite_noon || "");
+      setRadio(`d${idx}_pm`, d.appetite_pm || "");
+      setRadio(`d${idx}_pee`, d.pee || "");
+      setRadio(`d${idx}_poo`, d.poo || "");
+      document.getElementById(`d${idx}_remind`).value = d.remind || "";
+    });
+
+    document.getElementById("habit_neutered").checked = !!data.habit_neutered;
+    document.getElementById("habit_diaper").checked = !!data.habit_diaper;
+    document.getElementById("habit_picky").checked = !!data.habit_picky;
+    document.getElementById("habit_notfriendly").checked = !!data.habit_notfriendly;
+    document.getElementById("allergy").value = data.allergy || "";
+
+    document.getElementById("lifestyle").value = data.lifestyle || "";
+    document.getElementById("feed_morning").value = data.feed_morning || "";
+    document.getElementById("feed_noon").value = data.feed_noon || "";
+    document.getElementById("feed_night").value = data.feed_night || "";
+    document.getElementById("snack").value = data.snack || "";
+
+    document.getElementById("meds_meal").value = data.meds_meal || "";
+    document.getElementById("meds_snack").value = data.meds_snack || "";
+
+    document.getElementById("care_rules").value = data.care_rules || "";
+    document.getElementById("warm_remind").value = data.warm_remind || "";
+
+    // fee
+    feeRowsEl.innerHTML = "";
+    (data.fee_items || []).forEach(x=>{
+      feeRowsEl.appendChild(feeRowTpl(x.item || "", x.price || "", x.qty || "1"));
+    });
+    if((data.fee_items || []).length === 0) resetFeeCommon();
+    calcFee();
+  }
+
+  // ========= mode UI =========
+  const hintEl = document.getElementById("hint");
+  const modeTagEl = document.getElementById("modeTag");
+
+  if(isCreate){
+    hintEl.innerHTML = "【店家填寫模式】填完後按「產生確認連結」，把連結傳給客人簽名回傳。";
+    modeTagEl.textContent = "MODE: 店家填寫";
+    document.getElementById("cardConfirmActions").style.display = "none";
+    document.getElementById("cardCreateActions").style.display = "block";
+  } else if(isConfirm){
+    hintEl.innerHTML = "【客人確認模式】請確認內容無誤後勾選、簽名並送出。";
+    modeTagEl.textContent = "MODE: 客人確認";
+    document.getElementById("cardConfirmActions").style.display = "block";
+    document.getElementById("cardCreateActions").style.display = "none";
+
+    // set signed date default
+    const now = new Date();
+    document.getElementById("signed_date").value = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}`;
+
+    // decode & apply
+    try{
+      const decoded = unescapeB64Json(dataParam);
+      applyAllData(decoded);
+    }catch(e){
+      setStatus("連結資料解析失敗，請向店家重新取得連結。");
+    }
+
+    // lock content
+    setReadonlyAll();
+
+    // init canvas after visible
+    setTimeout(()=>{ resizeCanvas(); }, 30);
+  } else {
+    // default: if no params, guide
+    hintEl.innerHTML = "請用店家填寫模式開啟：在網址後加 <span class='mono'>?mode=create</span>。";
+    modeTagEl.textContent = "MODE: 未指定";
+    document.getElementById("cardConfirmActions").style.display = "none";
+    document.getElementById("cardCreateActions").style.display = "none";
+  }
+
+  // ========= create: generate link =========
+  const genBtn = document.getElementById("genLinkBtn");
+  const linkBox = document.getElementById("linkBox");
+  const copyBtn = document.getElementById("copyLinkBtn");
+
+  if(genBtn){
+    genBtn.addEventListener("click", ()=>{
+      const data = collectAllData();
+      if(!data.owner_email){
+        alert("請先填飼主 Email（客人收件）");
+        return;
+      }
+      const encoded = escapeB64Json(data);
+      const base = location.origin + location.pathname; // same file
+      const url = `${base}?data=${encodeURIComponent(encoded)}`;
+      linkBox.style.display = "block";
+      linkBox.textContent = url;
+      copyBtn.style.display = "inline-block";
+    });
+
+    copyBtn.addEventListener("click", async ()=>{
+      try{
+        await navigator.clipboard.writeText(linkBox.textContent);
+        copyBtn.textContent = "已複製 ✓";
+        setTimeout(()=> copyBtn.textContent = "複製連結", 1200);
+      }catch(e){
+        alert("複製失敗，請長按選取連結複製。");
+      }
+    });
+  }
+
+  // ========= confirm: submit =========
+  const submitBtn = document.getElementById("submitBtn");
+  if(submitBtn){
+    submitBtn.addEventListener("click", async ()=>{
+      try{
+        if(!document.getElementById("confirm_record").checked){
+          setStatus("請勾選：我已確認住宿期間紀錄內容無誤"); return;
+        }
+        if(!document.getElementById("confirm_fee").checked){
+          setStatus("請勾選：我已確認費用明細與總金額無誤"); return;
+        }
+        if(canvasIsBlank()){
+          setStatus("請先簽名"); return;
+        }
+
+        setStatus("送出中…請稍候");
+
+        const data = collectAllData(); // readonly but still reads values
+        const payload = {
+          action: "submitHotelCheckoutConfirm",
+          data: {
+            ...data,
+            confirm_record: true,
+            confirm_fee: true,
+            signed_date: document.getElementById("signed_date").value.trim(),
+            signature_png: canvas.toDataURL("image/png"),
+            ua: navigator.userAgent,
+            confirmed_at: new Date().toISOString()
+          }
+        };
+
+        const res = await fetch(GAS_URL, {
+          method: "POST",
+          headers: {"Content-Type":"text/plain;charset=utf-8"},
+          body: JSON.stringify(payload)
+        });
+
+        const json = await res.json();
+        if(!json.ok){
+          setStatus("送出失敗：" + (json.error || "未知錯誤"));
+          return;
+        }
+
+        setStatus("✅ 已送出！PDF 會寄送至店家與您的 Email", true);
+        submitBtn.disabled = true;
+      }catch(err){
+        setStatus("送出失敗：" + err.message);
+      }
+    });
+  }
 </script>
-
 </body>
 </html>
