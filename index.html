@@ -353,7 +353,10 @@
     return [...document.querySelectorAll('#disease_row input[type="checkbox"]:checked')].map(x=>x.value);
   }
 
-  function val(id){ return document.getElementById(id).value.trim(); }
+  function val(id){
+  const el = document.getElementById(id);
+  return (el && typeof el.value === "string") ? el.value.trim() : "";
+}
 
   function setStatus(msg, ok=false){
     const el = document.getElementById('status');
@@ -439,7 +442,7 @@ if (rabiesInput) {
   pet_wound: val("pet_wound"),
   pet_other_disease: val("pet_other_disease"),
 
-  vet: val("vet"),
+  vet: "惟心動物醫院｜桃園市桃園區大興路207號｜03-3259001",
   emergency_consent: val("emergency_consent"),
   note: val("note"),
 
