@@ -531,3 +531,203 @@ canvas{
       </table>
     </div>
   </div>
+  <!-- 照顧細節 -->
+  <div class="card" id="cardCare">
+    <div class="cardTitle">照顧細節</div>
+    <div class="cardBody">
+
+      <div class="grid">
+        <div>
+          <label>生活習慣（勾選）</label>
+          <div class="opts">
+            <label class="opt"><input type="checkbox" id="habit_neutered">已絕育</label>
+            <label class="opt"><input type="checkbox" id="habit_diaper">需要包尿布</label>
+            <label class="opt"><input type="checkbox" id="habit_picky">護食</label>
+            <label class="opt"><input type="checkbox" id="habit_notfriendly">不親狗</label>
+          </div>
+        </div>
+
+        <div>
+          <label>已知食物過敏原（選填）</label>
+          <input id="allergy" placeholder="例：雞肉、牛肉、乳製品...">
+        </div>
+      </div>
+
+      <div style="height:10px"></div>
+
+      <table class="tbl">
+        <thead>
+          <tr>
+            <th style="width:18%;">生活習慣</th>
+            <th style="width:42%;">餵食時間</th>
+            <th style="width:40%;">藥品 / 保健品</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+
+            <td>
+              <div class="small">（可留空）</div>
+              <textarea id="lifestyle" placeholder="例：午睡多、怕吵、喜歡被摸頭..."></textarea>
+            </td>
+
+            <td>
+              <div class="cellTitle">早</div>
+              <input id="feed_morning" placeholder="飼料 / 罐頭 / 鮮食 / 凍乾（選填）">
+
+              <div style="height:10px"></div>
+
+              <div class="cellTitle">中</div>
+              <input id="feed_noon" placeholder="飼料 / 罐頭 / 鮮食 / 凍乾（選填）">
+
+              <div style="height:10px"></div>
+
+              <div class="cellTitle">晚</div>
+              <input id="feed_night" placeholder="飼料 / 罐頭 / 鮮食 / 凍乾（選填）">
+
+              <div style="height:10px"></div>
+
+              <div class="cellTitle">零食</div>
+              <input id="snack" placeholder="可 / 不可（選填）">
+            </td>
+
+            <td>
+              <div class="cellTitle">飯前 / 飯後</div>
+              <textarea id="meds_meal" placeholder="例：腸胃藥（飯後）早晚各1..."></textarea>
+
+              <div style="height:10px"></div>
+
+              <div class="cellTitle">隨餐</div>
+              <textarea id="meds_snack" placeholder="例：保健粉、益生菌..."></textarea>
+            </td>
+
+          </tr>
+        </tbody>
+      </table>
+
+      <div style="height:10px"></div>
+
+      <div class="grid">
+        <div>
+          <label>照顧須知（選填）</label>
+          <textarea id="care_rules" placeholder="例：需要慢慢親近／怕生／不喜歡突然抱起..."></textarea>
+        </div>
+
+        <div>
+          <label>溫馨提醒（選填）</label>
+          <textarea id="warm_remind" placeholder="例：回家後先清淡飲食一天，若有軟便請觀察..."></textarea>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- 費用明細 -->
+  <div class="card" id="cardFee">
+    <div class="cardTitle">費用明細</div>
+    <div class="cardBody">
+
+      <div id="feeRows"></div>
+
+      <div class="btns" id="feeBtns">
+        <button class="ghost" type="button" id="addFeeBtn">＋新增項目</button>
+        <button class="ghost" type="button" id="resetFeeBtn">重設常用項目</button>
+      </div>
+
+      <div class="feeTotal">
+        <div>總金額：</div>
+        <div class="mono">$ <span id="feeTotal">0</span></div>
+      </div>
+
+      <div class="small">
+        小計＝單價×數量；總金額自動加總。
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- 店家模式 -->
+  <div class="card" id="cardCreateActions">
+    <div class="cardTitle">產生客人確認連結</div>
+    <div class="cardBody">
+
+      <div class="small">
+        店家填完後按下方按鈕，系統會產生「帶資料的專屬連結」，傳給客人即可。
+      </div>
+
+      <div class="btns">
+        <button type="button" id="genLinkBtn">產生確認連結</button>
+        <button type="button" class="ghost" id="copyLinkBtn" style="display:none;">複製連結</button>
+      </div>
+
+      <div class="linkBox" id="linkBox" style="display:none;"></div>
+
+    </div>
+  </div>
+
+
+  <!-- 客人確認 -->
+  <div class="card" id="cardConfirmActions" style="display:none;">
+    <div class="cardTitle">飼主確認與簽名</div>
+    <div class="cardBody">
+
+      <div style="margin-bottom:14px;">
+        <label>您的 Email（收取確認副本）*</label>
+        <input id="confirm_email" inputmode="email" placeholder="請輸入您的 Email">
+      </div>
+
+      <div class="opts" style="margin-bottom:10px;">
+        <label class="opt">
+          <input id="confirm_record" type="checkbox">
+          我已確認住宿期間紀錄內容無誤
+        </label>
+
+        <label class="opt">
+          <input id="confirm_fee" type="checkbox">
+          我已確認費用明細與總金額無誤
+        </label>
+      </div>
+
+      <div class="sigBox">
+        <div class="small">請在下方簽名</div>
+        <canvas id="sig"></canvas>
+
+        <div class="btns">
+          <button class="ghost" id="clearBtn" type="button">清除簽名</button>
+        </div>
+      </div>
+
+      <div style="height:10px"></div>
+
+      <div class="grid">
+        <div>
+          <label>簽名日期 *</label>
+          <input id="signed_date" />
+        </div>
+
+        <div>
+          <label>送出後 PDF 寄送</label>
+          <div class="small">
+            系統將寄送 PDF 至店家與飼主 Email 留存。
+          </div>
+        </div>
+      </div>
+
+      <div class="btns">
+        <button id="submitBtn" type="button">送出並寄送 PDF</button>
+      </div>
+
+      <div class="status" id="status"></div>
+
+    </div>
+  </div>
+
+  <div class="hint" style="margin-top:12px;">
+    若開到舊版，請在網址最後加
+    <span class="mono">?v=1</span> 或
+    <span class="mono">&v=2</span> 重新整理。
+  </div>
+
+</div>
