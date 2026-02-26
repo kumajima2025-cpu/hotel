@@ -35,6 +35,7 @@
     .grid3{display:grid; grid-template-columns:repeat(3, 1fr); gap:10px;}
 @media (max-width:920px){ .grid3{grid-template-columns:repeat(2, 1fr);} }
 @media (max-width:520px){ .grid3{grid-template-columns:1fr;} }
+    @media (max-width:760px){ .grid{grid-template-columns:1fr;} }
   
 
     label{display:block; font-size:13px; margin:2px 0 6px; color:var(--muted);}
@@ -709,32 +710,43 @@ function applyAllData(data){
   setVal("stay_date", data.stay_date);
 
   // days
-  function ensureDays(n){
-    const tbody = document.getElementById("activityBody");
-    const tpl = tbody.querySelector('tr[data-template="day"]');
-    if(!tpl) return;
+function ensureDays(n){
+  const tbody = document.getElementById("activityBody");
+  const tpl = tbody.querySelector('tr[data-template="day"]');
+  if(!tpl) return;
 
-    const existing = tbody.querySelectorAll('tr').length;
-    for(let day = existing + 1; day <= n; day++){
-      const tr = tpl.cloneNode(true);
-      tr.removeAttribute("data-template");
+  n = Math.max(1, n);
 
-      tr.querySelectorAll("[id]").forEach(el=>{
-        el.id = el.id.replace(/^d\d+_/, `d${day}_`);
-      });
-      tr.querySelectorAll('input[type="radio"][name]').forEach(r=>{
-        r.name = r.name.replace(/^d\d+_/, `d${day}_`);
-      });
-
-      tr.querySelectorAll("input").forEach(inp=>{
-        if(inp.type === "radio" || inp.type === "checkbox") inp.checked = false;
-        else inp.value = "";
-      });
-      tr.querySelectorAll("textarea").forEach(t=> t.value = "");
-
-      tbody.appendChild(tr);
-    }
+  // 先刪到剛好 n
+  let rows = Array.from(tbody.querySelectorAll("tr"));
+  while(rows.length > n){
+    tbody.removeChild(rows[rows.length - 1]);
+    rows = Array.from(tbody.querySelectorAll("tr"));
   }
+
+  // 再補到剛好 n
+  while(rows.length < n){
+    const day = rows.length + 1;
+    const tr = tpl.cloneNode(true);
+    tr.removeAttribute("data-template");
+
+    tr.querySelectorAll("[id]").forEach(el=>{
+      el.id = el.id.replace(/^d\d+_/, `d${day}_`);
+    });
+    tr.querySelectorAll('input[type="radio"][name]').forEach(r=>{
+      r.name = r.name.replace(/^d\d+_/, `d${day}_`);
+    });
+
+    tr.querySelectorAll("input").forEach(inp=>{
+      if(inp.type === "radio" || inp.type === "checkbox") inp.checked = false;
+      else inp.value = "";
+    });
+    tr.querySelectorAll("textarea").forEach(t=> t.value = "");
+
+    tbody.appendChild(tr);
+    rows = Array.from(tbody.querySelectorAll("tr"));
+  }
+}
 
   const list = data.days || [];
   ensureDays(list.length || 1);
@@ -940,9 +952,12 @@ if(submitBtn){
   submitBtn.addEventListener("click", async ()=>{
     try{
       const confirmEmail = document.getElementById("confirm_email").value.trim();
-      if(!confirmEmail){
-        setStatus("請填寫您的 Email"); return;
-      }
+if(!confirmEmail){
+  setStatus("請填寫您的 Email"); return;
+}
+if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(confirmEmail)){
+  setStatus("Email 格式不正確，請重新確認"); return;
+}
       if(!document.getElementById("confirm_record").checked){
         setStatus("請勾選：我已確認住宿期間紀錄內容無誤"); return;
       }
