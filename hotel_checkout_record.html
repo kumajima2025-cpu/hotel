@@ -105,17 +105,18 @@
             <input id="owner_name" placeholder="例：陳小美">
           </div>
           <div>
-            <label>飼主 Email（店家填，用來寄送確認連結）</label>
-            <input id="owner_email" inputmode="email" placeholder="例：abc@gmail.com">
-          </div>
-          <div>
             <label>寵物名字</label>
             <input id="pet_name" placeholder="例：Lucky">
           </div>
-          <div>
-            <label>住宿日期</label>
-            <input id="stay_date" placeholder="例：2026/03/18 - 2026/03/20">
-          </div>
+<div>
+  <label>住宿日期</label>
+  <input
+    id="stay_date"
+    inputmode="numeric"
+    autocomplete="off"
+    placeholder="例：2026/03/18 - 2026/03/20"
+  >
+</div>
         </div>
       </div>
     </div>
@@ -868,6 +869,43 @@
         setStatus("送出失敗：" + (err && err.message ? err.message : String(err)));
       }
     });
+     const stay = document.getElementById("stay_date");
+
+  // 將純數字轉成 YYYY/MM/DD（最多 8 碼）
+  function toYMD(digits) {
+    const s = (digits || "").replace(/\D/g, "").slice(0, 8);
+    const y = s.slice(0, 4);
+    const m = s.slice(4, 6);
+    const d = s.slice(6, 8);
+
+    let out = y;
+    if (m) out += "/" + m;
+    if (d) out += "/" + d;
+    return out;
+  }
+
+  // 取出左右兩段的純數字（開始/結束）
+  function splitDigits(v) {
+    const parts = (v || "").split("-").map(p => p.trim());
+    const left = (parts[0] || "").replace(/\D/g, "");
+    const right = (parts[1] || "").replace(/\D/g, "");
+    return { left, right, hasDash: (v || "").includes("-") };
+  }
+
+  stay.addEventListener("input", () => {
+    const raw = stay.value || "";
+    const { left, right, hasDash } = splitDigits(raw);
+
+    const leftFmt = toYMD(left);
+    const rightFmt = toYMD(right);
+
+    // 有輸入到「-」或右邊開始有數字，就顯示區間格式
+    if (hasDash || right.length > 0) {
+      stay.value = `${leftFmt} - ${rightFmt}`.trim();
+    } else {
+      stay.value = leftFmt;
+    }
+  });
   }
 </script>
 </body>
