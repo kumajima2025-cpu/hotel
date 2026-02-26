@@ -1,11 +1,13 @@
 <!doctype html>
 <html lang="zh-Hant">
 <head>
+
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>CAMA CAMA｜住宿明細確認</title>
 
 <style>
+
 :root{
   --bg:#F6F1E9;
   --card:#ffffff;
@@ -15,271 +17,517 @@
   --muted:#7B746B;
   --btn:#2f2d2a;
 }
+
 body{
-  margin:0;background:var(--bg);color:var(--text);
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
   font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
 }
-.wrap{max-width:900px;margin:0 auto;padding:18px;}
-.brand{text-align:center;font-weight:800;margin:6px 0 10px;}
+
+.wrap{
+  max-width:900px;
+  margin:0 auto;
+  padding:18px;
+}
+
+.brand{
+  text-align:center;
+  font-weight:800;
+  letter-spacing:1px;
+  margin:6px 0 10px;
+}
+
 .barTitle{
-  background:var(--btn);color:#fff;text-align:center;
-  padding:12px;border-radius:14px;font-weight:800;
+  background:var(--btn);
+  color:#fff;
+  text-align:center;
+  padding:12px 14px;
+  border-radius:14px;
+  font-weight:800;
+  letter-spacing:3px;
 }
+
+.hint{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.5;
+  margin:10px 0 14px;
+}
+
 .card{
-  background:#fff;border:1px solid var(--line);
-  border-radius:18px;margin:12px 0;overflow:hidden;
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:18px;
+  overflow:hidden;
+  margin:12px 0;
 }
-.cardTitle{background:var(--title);padding:12px;font-weight:800;}
-.cardBody{padding:14px;}
-input,textarea,select{
-  width:100%;padding:10px;border-radius:12px;
-  border:1px solid var(--line);box-sizing:border-box;
+
+.cardTitle{
+  background:var(--title);
+  padding:12px 14px;
+  font-weight:800;
 }
-textarea{min-height:70px;}
-.tbl{width:100%;border-collapse:collapse;}
-.tbl th,.tbl td{border:1px solid var(--line);padding:8px;}
+
+.cardBody{
+  padding:14px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.grid3{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:10px;
+}
+
+@media (max-width:760px){
+  .grid,
+  .grid3{
+    grid-template-columns:1fr;
+  }
+}
+
+label{
+  display:block;
+  font-size:13px;
+  margin:2px 0 6px;
+  color:var(--muted);
+}
+
+input, textarea, select{
+  width:100%;
+  box-sizing:border-box;
+  padding:10px 10px;
+  border-radius:12px;
+  border:1px solid var(--line);
+  background:#fff;
+  font-size:15px;
+  color:var(--text);
+}
+
+textarea{
+  min-height:86px;
+  resize:vertical;
+}
+
+.tbl{
+  width:100%;
+  border-collapse:separate;
+  border-spacing:0;
+  border:1px solid var(--line);
+  border-radius:14px;
+  overflow:hidden;
+  background:#fff;
+}
+
+.tbl th,
+.tbl td{
+  border-bottom:1px solid var(--line);
+  border-right:1px solid var(--line);
+  padding:10px;
+  vertical-align:top;
+  font-size:14px;
+}
+
+.tbl th{
+  background:#f4efe6;
+  text-align:left;
+  font-weight:800;
+}
+
+.tbl tr:last-child td{
+  border-bottom:0;
+}
+
+.tbl td:last-child,
+.tbl th:last-child{
+  border-right:0;
+}
+
+.cellTitle{
+  font-weight:800;
+  margin-bottom:6px;
+}
+
+.opts{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  align-items:center;
+}
+
+.opt{
+  display:flex;
+  gap:6px;
+  align-items:center;
+  font-size:14px;
+}
+
+.opt input{
+  width:auto;
+}
+
+.feeRow{
+  display:grid;
+  grid-template-columns:1fr 120px 120px 120px;
+  gap:10px;
+  margin-bottom:10px;
+}
+
+@media (max-width:760px){
+  .feeRow{
+    grid-template-columns:1fr 1fr;
+  }
+}
+
+.mono{
+  font-variant-numeric: tabular-nums;
+}
+
+.feeTotal{
+  display:flex;
+  justify-content:flex-end;
+  gap:10px;
+  align-items:center;
+  margin-top:8px;
+  font-weight:900;
+}
+
+.feeTotal span{
+  font-size:18px;
+}
+
+.btns{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:10px;
+}
+
 button{
-  padding:10px 14px;border-radius:14px;
-  border:0;background:var(--btn);color:#fff;
+  padding:11px 14px;
+  border:0;
+  border-radius:14px;
   cursor:pointer;
+  font-size:15px;
+  background:var(--btn);
+  color:#fff;
 }
-.ghost{background:#fff;border:1px solid var(--line);color:var(--text);}
-.btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;}
-.small{font-size:12px;color:var(--muted);}
-.status{margin-top:10px;font-size:14px;}
-.ok{color:#1b7f3a;}
-.bad{color:#b00020;}
-canvas{width:100%;height:180px;border:1px solid var(--line);border-radius:12px;}
+
+.ghost{
+  background:#fff;
+  border:1px solid var(--line);
+  color:var(--text);
+}
+
+.small{
+  font-size:12px;
+  color:var(--muted);
+  line-height:1.5;
+}
+
+.linkBox{
+  margin-top:10px;
+  padding:10px;
+  border:1px dashed #cdbfae;
+  border-radius:12px;
+  background:#fff;
+  word-break:break-all;
+  font-size:13px;
+}
+
+.sigBox{
+  background:#fff;
+  border:1px dashed #cdbfae;
+  border-radius:12px;
+  padding:10px;
+}
+
+canvas{
+  width:100%;
+  height:180px;
+  border:1px solid var(--line);
+  border-radius:12px;
+  touch-action:none;
+}
+
+.status{
+  margin-top:10px;
+  font-size:14px;
+}
+
+.ok{ color:#1b7f3a; }
+.bad{ color:#b00020; }
+
+.modeTag{
+  display:inline-block;
+  padding:6px 10px;
+  border-radius:999px;
+  border:1px solid var(--line);
+  background:#fff;
+  font-size:12px;
+  color:var(--muted);
+  margin:10px 0 0;
+}
+
+.ro input[readonly],
+.ro textarea[readonly],
+.ro select:disabled{
+  background:#fbfaf7;
+}
+
 </style>
 </head>
-
 <body>
-<div class="wrap">
+  <div class="wrap">
 
-<div class="brand">CAMA CAMA</div>
-<div class="barTitle">住宿明細確認</div>
+  <div class="brand">CAMA CAMA</div>
+  <div class="barTitle">— 住宿明細確認 —</div>
 
-<!-- 日常紀錄 -->
-<div class="card">
-<div class="cardTitle">日常紀錄</div>
-<div class="cardBody">
+  <div class="hint" id="hint"></div>
+  <div class="modeTag" id="modeTag"></div>
 
-<div class="small">可依住宿天數新增（客人端預設只顯示前3天）</div>
+  <!-- 基本資訊 -->
+  <div class="card" id="cardBase">
+    <div class="cardTitle">基本資訊</div>
+    <div class="cardBody">
+      <div class="grid">
 
-<table class="tbl">
-<thead>
-<tr>
-<th style="width:15%">日期</th>
-<th style="width:30%">食慾</th>
-<th style="width:20%">排便 / 排尿</th>
-<th>備註</th>
-</tr>
-</thead>
-<tbody id="daysTbody"></tbody>
-</table>
+        <div>
+          <label>飼主姓名</label>
+          <input id="owner_name" placeholder="例：陳小美">
+        </div>
 
-<div class="btns">
-<button type="button" class="ghost" id="addDayBtn">＋新增一天</button>
-<button type="button" class="ghost" id="toggleDaysBtn" style="display:none;">
-展開全部
-</button>
-</div>
+        <div>
+          <label>飼主 Email（店家填，用來寄送確認連結）</label>
+          <input id="owner_email" inputmode="email" placeholder="例：abc@gmail.com">
+        </div>
 
-</div>
-</div>
+        <div>
+          <label>寵物名字</label>
+          <input id="pet_name" placeholder="例：Lucky">
+        </div>
 
-<!-- 費用 -->
-<div class="card">
-<div class="cardTitle">費用明細</div>
-<div class="cardBody">
+        <div>
+          <label>住宿日期</label>
+          <input id="stay_date" placeholder="例：2026/03/18 - 2026/03/20">
+        </div>
 
-<div id="feeRows"></div>
+      </div>
+    </div>
+  </div>
 
-<div class="btns">
-<button type="button" class="ghost" id="addFeeBtn">＋新增項目</button>
-</div>
+  <!-- 活動紀錄 -->
+  <div class="card" id="cardActivity">
+    <div class="cardTitle">活動紀錄</div>
+    <div class="cardBody">
+      <table class="tbl">
+        <thead>
+          <tr>
+            <th style="width:18%;">日期</th>
+            <th style="width:54%;">日常紀錄</th>
+            <th style="width:28%;">提醒</th>
+          </tr>
+        </thead>
+        <tbody>
 
-<div style="margin-top:10px;font-weight:800;">
-總金額：$ <span id="feeTotal">0</span>
-</div>
+          <!-- Day 1 -->
+          <tr>
+            <td>
+              <input id="d1_date" placeholder="日期">
+            </td>
 
-</div>
-</div>
+            <td>
 
-<!-- 客人確認 -->
-<div class="card" id="confirmCard">
-<div class="cardTitle">飼主確認與簽名</div>
-<div class="cardBody">
+              <div class="cellTitle">食慾</div>
 
-<label>Email *</label>
-<input id="confirm_email">
+              <div class="opts">
+                <span class="opt">
+                  早：
+                  <label class="opt"><input type="radio" name="d1_am" value="良好">良好</label>
+                  <label class="opt"><input type="radio" name="d1_am" value="普通">普通</label>
+                  <label class="opt"><input type="radio" name="d1_am" value="不吃">不吃</label>
+                </span>
+              </div>
 
-<label style="margin-top:10px;">
-<input type="checkbox" id="confirm_record">
-我已確認內容無誤
-</label>
+              <div class="opts" style="margin-top:6px;">
+                <span class="opt">
+                  中：
+                  <label class="opt"><input type="radio" name="d1_noon" value="良好">良好</label>
+                  <label class="opt"><input type="radio" name="d1_noon" value="普通">普通</label>
+                  <label class="opt"><input type="radio" name="d1_noon" value="不吃">不吃</label>
+                </span>
+              </div>
 
-<div style="margin-top:10px;">
-<canvas id="sig"></canvas>
-<div class="btns">
-<button type="button" class="ghost" id="clearBtn">清除簽名</button>
-</div>
-</div>
+              <div class="opts" style="margin-top:6px;">
+                <span class="opt">
+                  晚：
+                  <label class="opt"><input type="radio" name="d1_pm" value="良好">良好</label>
+                  <label class="opt"><input type="radio" name="d1_pm" value="普通">普通</label>
+                  <label class="opt"><input type="radio" name="d1_pm" value="不吃">不吃</label>
+                </span>
+              </div>
 
-<label style="margin-top:10px;">簽名日期</label>
-<input id="signed_date">
+              <div style="height:10px"></div>
 
-<div class="btns">
-<button type="button" id="submitBtn">送出</button>
-</div>
+              <div class="cellTitle">排尿</div>
+              <div class="opts">
+                <label class="opt"><input type="radio" name="d1_pee" value="3次以上">3次以上</label>
+                <label class="opt"><input type="radio" name="d1_pee" value="1-3次">1-3次</label>
+                <label class="opt"><input type="radio" name="d1_pee" value="無">無</label>
+              </div>
 
-<div class="status" id="status"></div>
+              <div style="height:10px"></div>
 
-</div>
-</div>
+              <div class="cellTitle">排便</div>
+              <div class="opts">
+                <label class="opt"><input type="radio" name="d1_poo" value="3次以上">3次以上</label>
+                <label class="opt"><input type="radio" name="d1_poo" value="1-3次">1-3次</label>
+                <label class="opt"><input type="radio" name="d1_poo" value="無">無</label>
+              </div>
 
-</div>
+            </td>
 
-<script>
-const GAS_URL="https://script.google.com/macros/s/AKfycbxcFQkQwLByRgvdw0cytzP3n8lU1hWCTmUz9L6AMvWGlnbk6i2xqcDLxcMLdCjisPsKzg/exec";
+            <td>
+              <textarea id="d1_remind" placeholder="備註"></textarea>
+            </td>
+          </tr>
 
-/* ---------- 日常紀錄 ---------- */
-const daysTbody=document.getElementById("daysTbody");
-let daysCollapsed=true;
+        </tbody>
+      </table>
+    </div>
+  </div>
+            <!-- Day 2 -->
+          <tr>
+            <td>
+              <input id="d2_date" placeholder="日期">
+            </td>
 
-function dayRowTpl(i){
-const tr=document.createElement("tr");
-tr.className="dayRow";
-tr.dataset.idx=i;
-tr.innerHTML=`
-<td><input type="date" id="d${i}_date"></td>
-<td>
-早<select id="d${i}_am">
-<option value="">-</option>
-<option>良好</option><option>普通</option><option>不吃</option>
-</select><br>
-中<select id="d${i}_noon">
-<option value="">-</option>
-<option>良好</option><option>普通</option><option>不吃</option>
-</select><br>
-晚<select id="d${i}_pm">
-<option value="">-</option>
-<option>良好</option><option>普通</option><option>不吃</option>
-</select>
-</td>
-<td>
-<select id="d${i}_pee"><option value="">排尿</option><option>正常</option><option>異常</option></select><br>
-<select id="d${i}_poo"><option value="">排便</option><option>正常</option><option>異常</option></select>
-</td>
-<td><textarea id="d${i}_remind"></textarea></td>
-`;
-return tr;
-}
+            <td>
 
-function addDay(){
-const count=daysTbody.querySelectorAll(".dayRow").length;
-daysTbody.appendChild(dayRowTpl(count+1));
-updateCollapse();
-}
+              <div class="cellTitle">食慾</div>
 
-function updateCollapse(){
-const rows=[...daysTbody.querySelectorAll(".dayRow")];
-const btn=document.getElementById("toggleDaysBtn");
+              <div class="opts">
+                <span class="opt">
+                  早：
+                  <label class="opt"><input type="radio" name="d2_am" value="良好">良好</label>
+                  <label class="opt"><input type="radio" name="d2_am" value="普通">普通</label>
+                  <label class="opt"><input type="radio" name="d2_am" value="不吃">不吃</label>
+                </span>
+              </div>
 
-if(rows.length>3){
-btn.style.display="inline-block";
-rows.forEach((r,i)=>r.style.display=(daysCollapsed&&i>=3)?"none":"");
-}else{
-btn.style.display="none";
-}
-}
+              <div class="opts" style="margin-top:6px;">
+                <span class="opt">
+                  中：
+                  <label class="opt"><input type="radio" name="d2_noon" value="良好">良好</label>
+                  <label class="opt"><input type="radio" name="d2_noon" value="普通">普通</label>
+                  <label class="opt"><input type="radio" name="d2_noon" value="不吃">不吃</label>
+                </span>
+              </div>
 
-document.getElementById("addDayBtn").onclick=addDay;
-document.getElementById("toggleDaysBtn").onclick=()=>{
-daysCollapsed=!daysCollapsed;
-updateCollapse();
-};
+              <div class="opts" style="margin-top:6px;">
+                <span class="opt">
+                  晚：
+                  <label class="opt"><input type="radio" name="d2_pm" value="良好">良好</label>
+                  <label class="opt"><input type="radio" name="d2_pm" value="普通">普通</label>
+                  <label class="opt"><input type="radio" name="d2_pm" value="不吃">不吃</label>
+                </span>
+              </div>
 
-for(let i=1;i<=3;i++){addDay();}
+              <div style="height:10px"></div>
 
-/* ---------- 費用 ---------- */
-const feeRows=document.getElementById("feeRows");
+              <div class="cellTitle">排尿</div>
+              <div class="opts">
+                <label class="opt"><input type="radio" name="d2_pee" value="3次以上">3次以上</label>
+                <label class="opt"><input type="radio" name="d2_pee" value="1-3次">1-3次</label>
+                <label class="opt"><input type="radio" name="d2_pee" value="無">無</label>
+              </div>
 
-function feeRow(){
-const row=document.createElement("div");
-row.style.display="grid";
-row.style.gridTemplateColumns="1fr 100px 100px 100px";
-row.style.gap="10px";
-row.innerHTML=`
-<input class="item" placeholder="項目">
-<input class="price" placeholder="單價">
-<input class="qty" placeholder="數量" value="1">
-<input class="sub" readonly>
-`;
-row.querySelectorAll(".price,.qty").forEach(el=>el.oninput=calcFee);
-return row;
-}
+              <div style="height:10px"></div>
 
-function calcFee(){
-let total=0;
-feeRows.querySelectorAll("div").forEach(r=>{
-const p=Number(r.querySelector(".price").value)||0;
-const q=Number(r.querySelector(".qty").value)||0;
-const sub=p*q;
-r.querySelector(".sub").value=sub;
-total+=sub;
-});
-document.getElementById("feeTotal").textContent=total;
-}
+              <div class="cellTitle">排便</div>
+              <div class="opts">
+                <label class="opt"><input type="radio" name="d2_poo" value="3次以上">3次以上</label>
+                <label class="opt"><input type="radio" name="d2_poo" value="1-3次">1-3次</label>
+                <label class="opt"><input type="radio" name="d2_poo" value="無">無</label>
+              </div>
 
-document.getElementById("addFeeBtn").onclick=()=>feeRows.appendChild(feeRow());
-feeRows.appendChild(feeRow());
+            </td>
 
-/* ---------- 簽名 ---------- */
-const canvas=document.getElementById("sig");
-const ctx=canvas.getContext("2d");
-let drawing=false;
+            <td>
+              <textarea id="d2_remind" placeholder="備註"></textarea>
+            </td>
+          </tr>
 
-canvas.onmousedown=e=>{drawing=true;ctx.moveTo(e.offsetX,e.offsetY);};
-canvas.onmousemove=e=>{if(drawing){ctx.lineTo(e.offsetX,e.offsetY);ctx.stroke();}};
-window.onmouseup=()=>drawing=false;
 
-document.getElementById("clearBtn").onclick=()=>ctx.clearRect(0,0,canvas.width,canvas.height);
+          <!-- Day 3 -->
+          <tr>
+            <td>
+              <input id="d3_date" placeholder="日期">
+            </td>
 
-function canvasBlank(){
-return canvas.toDataURL().length<2000;
-}
+            <td>
 
-/* ---------- 送出 ---------- */
-document.getElementById("submitBtn").onclick=async()=>{
-if(!document.getElementById("confirm_email").value){
-alert("請填Email");return;
-}
-if(canvasBlank()){
-alert("請簽名");return;
-}
+              <div class="cellTitle">食慾</div>
 
-const payload={
-action:"submitHotelCheckoutConfirm",
-data:{
-customer_email:document.getElementById("confirm_email").value,
-signature_png:canvas.toDataURL(),
-signed_date:document.getElementById("signed_date").value,
-days:[],
-fee_total:document.getElementById("feeTotal").textContent
-}
-};
+              <div class="opts">
+                <span class="opt">
+                  早：
+                  <label class="opt"><input type="radio" name="d3_am" value="良好">良好</label>
+                  <label class="opt"><input type="radio" name="d3_am" value="普通">普通</label>
+                  <label class="opt"><input type="radio" name="d3_am" value="不吃">不吃</label>
+                </span>
+              </div>
 
-await fetch(GAS_URL,{
-method:"POST",
-headers:{"Content-Type":"text/plain;charset=utf-8"},
-body:JSON.stringify(payload)
-});
+              <div class="opts" style="margin-top:6px;">
+                <span class="opt">
+                  中：
+                  <label class="opt"><input type="radio" name="d3_noon" value="良好">良好</label>
+                  <label class="opt"><input type="radio" name="d3_noon" value="普通">普通</label>
+                  <label class="opt"><input type="radio" name="d3_noon" value="不吃">不吃</label>
+                </span>
+              </div>
 
-document.getElementById("status").textContent="已送出 ✓";
-document.getElementById("status").className="status ok";
-};
-</script>
+              <div class="opts" style="margin-top:6px;">
+                <span class="opt">
+                  晚：
+                  <label class="opt"><input type="radio" name="d3_pm" value="良好">良好</label>
+                  <label class="opt"><input type="radio" name="d3_pm" value="普通">普通</label>
+                  <label class="opt"><input type="radio" name="d3_pm" value="不吃">不吃</label>
+                </span>
+              </div>
 
-</body>
-</html>
+              <div style="height:10px"></div>
+
+              <div class="cellTitle">排尿</div>
+              <div class="opts">
+                <label class="opt"><input type="radio" name="d3_pee" value="3次以上">3次以上</label>
+                <label class="opt"><input type="radio" name="d3_pee" value="1-3次">1-3次</label>
+                <label class="opt"><input type="radio" name="d3_pee" value="無">無</label>
+              </div>
+
+              <div style="height:10px"></div>
+
+              <div class="cellTitle">排便</div>
+              <div class="opts">
+                <label class="opt"><input type="radio" name="d3_poo" value="3次以上">3次以上</label>
+                <label class="opt"><input type="radio" name="d3_poo" value="1-3次">1-3次</label>
+                <label class="opt"><input type="radio" name="d3_poo" value="無">無</label>
+              </div>
+
+            </td>
+
+            <td>
+              <textarea id="d3_remind" placeholder="備註"></textarea>
+            </td>
+          </tr>
+
+        </tbody>
+      </table>
+    </div>
+  </div>
