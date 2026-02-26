@@ -431,20 +431,28 @@
       </div>
     </div>
 
-    <div class="hint" style="margin-top:12px;">
-      若開到舊版，請在網址最後加 <span class="mono">?v=1</span> 或 <span class="mono">&v=2</span> 重新整理。
-    </div>
   </div>
 
 <script>
   const GAS_URL = "https://script.google.com/macros/s/AKfycbwQEZqaO0atYVzlUS8nKFYCZ3WzS4_7Rpx5hs_9O-7KtcguSqMTAfW4Yt0-LRModVh-Tw/exec";
-
-  // ========= helpers =========
   const qs = new URLSearchParams(location.search);
-  const mode = qs.get("mode");       // create
-  const dataParam = qs.get("data");  // confirm
-  const isCreate = mode === "create" && !dataParam;
-  const isConfirm = !!dataParam;
+
+  let mode = qs.get("mode");
+  let dataParam = qs.get("data");
+  let idParam = qs.get("id");
+
+  const liffState = qs.get("liff.state");
+  if ((!mode && !dataParam && !idParam) && liffState) {
+    const decoded = decodeURIComponent(liffState);
+    const inner = decoded.startsWith("?") ? decoded.slice(1) : decoded;
+    const innerQs = new URLSearchParams(inner);
+    mode = innerQs.get("mode") || mode;
+    dataParam = innerQs.get("data") || dataParam;
+    idParam = innerQs.get("id") || idParam;
+  }
+
+  const isCreate = mode === "create" && !dataParam && !idParam;
+  const isConfirm = !!dataParam || !!idParam;
 
   const pad = n => String(n).padStart(2,'0');
   function setStatus(msg, ok=false){
@@ -691,6 +699,7 @@
     document.getElementById("care_rules").value = data.care_rules || "";
     document.getElementById("warm_remind").value = data.warm_remind || "";
 
+    // fee
     feeRowsEl.innerHTML = "";
     (data.fee_items || []).forEach(x=>{
       feeRowsEl.appendChild(feeRowTpl(x.item || "", x.price || "", x.qty || "1"));
@@ -703,35 +712,54 @@
   const hintEl = document.getElementById("hint");
   const modeTagEl = document.getElementById("modeTag");
 
-  if(isCreate){
-    hintEl.innerHTML = "【店家填寫模式】填完後按「產生確認連結」，把連結傳給客人簽名回傳。";
-    modeTagEl.textContent = "MODE: 店家填寫";
-    document.getElementById("cardConfirmActions").style.display = "none";
-    document.getElementById("cardCreateActions").style.display = "block";
-  } else if(isConfirm){
-    hintEl.innerHTML = "【客人確認模式】請確認內容無誤後勾選、簽名並送出。";
-    modeTagEl.textContent = "MODE: 客人確認";
-    document.getElementById("cardConfirmActions").style.display = "block";
-    document.getElementById("cardCreateActions").style.display = "none";
-
-    const now = new Date();
-    document.getElementById("signed_date").value = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}`;
-
-    try{
-      const decoded = unescapeB64Json(dataParam);
-      applyAllData(decoded);
-    }catch(e){
-      setStatus("連結資料解析失敗，請向店家重新取得連結。");
+  (async function init(){
+    if(isCreate){
+      hintEl.innerHTML = "【店家填寫模式】填完後按「產生確認連結」，把連結傳給客人簽名回傳。";
+      modeTagEl.textContent = "MODE: 店家填寫";
+      document.getElementById("cardConfirmActions").style.display = "none";
+      document.getElementById("cardCreateActions").style.display = "block";
+      return;
     }
 
-    setReadonlyAll();
-    setTimeout(()=>{ resizeCanvas(); }, 30);
-  } else {
+    if(isConfirm){
+      hintEl.innerHTML = "【客人確認模式】請確認內容無誤後勾選、簽名並送出。";
+      modeTagEl.textContent = "MODE: 客人確認";
+      document.getElementById("cardConfirmActions").style.display = "block";
+      document.getElementById("cardCreateActions").style.display = "none";
+
+      const now = new Date();
+      document.getElementById("signed_date").value = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}`;
+
+      try{
+        if (idParam) {
+          const r = await fetch(GAS_URL, {
+            method: "POST",
+            headers: {"Content-Type":"text/plain;charset=utf-8"},
+            body: JSON.stringify({ action: "getCheckoutRecord", id: idParam })
+          });
+          const j = await r.json();
+          if (!j.ok) throw new Error(j.error || "getCheckoutRecord failed");
+          applyAllData(j.data || {});
+        } else {
+          // 舊版 data 仍保留
+          const decoded = unescapeB64Json(dataParam);
+          applyAllData(decoded);
+        }
+      }catch(e){
+        setStatus("連結資料解析失敗，請向店家重新取得連結。");
+        return;
+      }
+
+      setReadonlyAll();
+      setTimeout(()=>{ resizeCanvas(); }, 30);
+      return;
+    }
+
     hintEl.innerHTML = "請用店家填寫模式開啟：在網址後加 <span class='mono'>?mode=create</span>。";
     modeTagEl.textContent = "MODE: 未指定";
     document.getElementById("cardConfirmActions").style.display = "none";
     document.getElementById("cardCreateActions").style.display = "none";
-  }
+  })();
 
   // ========= create: generate link =========
   const genBtn = document.getElementById("genLinkBtn");
@@ -739,15 +767,26 @@
   const copyBtn = document.getElementById("copyLinkBtn");
 
   if(genBtn){
-    genBtn.addEventListener("click", ()=>{
+    genBtn.addEventListener("click", async ()=>{
       const data = collectAllData();
       if(!data.owner_email){
         alert("請先填飼主 Email（店家用來寄送/留存）");
         return;
       }
-      const encoded = escapeB64Json(data);
+
+      const r = await fetch(GAS_URL, {
+        method: "POST",
+        headers: {"Content-Type":"text/plain;charset=utf-8"},
+        body: JSON.stringify({ action: "createCheckoutRecord", data })
+      });
+      const j = await r.json();
+      if(!j.ok){
+        alert("產生連結失敗：" + (j.error || "未知錯誤"));
+        return;
+      }
+
       const base = location.origin + location.pathname;
-      const url = `${base}?data=${encodeURIComponent(encoded)}`;
+      const url = `${base}?id=${encodeURIComponent(j.id)}&v=1`; // 加 v 避免快取
       linkBox.style.display = "block";
       linkBox.textContent = url;
       copyBtn.style.display = "inline-block";
@@ -791,6 +830,7 @@
           action: "submitHotelCheckoutConfirm",
           data: {
             ...data,
+            record_id: idParam || "", 
             customer_email: confirmEmail,
             confirm_record: true,
             confirm_fee: true,
