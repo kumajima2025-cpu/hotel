@@ -32,8 +32,10 @@
     .cardTitle{background:var(--title); padding:12px 14px; font-weight:800;}
     .cardBody{padding:14px;}
     .grid{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
-    .grid3{display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;}
-    @media (max-width:760px){ .grid,.grid3{grid-template-columns:1fr;} }
+    .grid3{display:grid; grid-template-columns:repeat(3, 1fr); gap:10px;}
+@media (max-width:920px){ .grid3{grid-template-columns:repeat(2, 1fr);} }
+@media (max-width:520px){ .grid3{grid-template-columns:1fr;} }
+  
 
     label{display:block; font-size:13px; margin:2px 0 6px; color:var(--muted);}
     input, textarea, select{
@@ -156,129 +158,168 @@
         <tbody id="activityBody">
   <!-- Day 1 (template) -->
   <tr data-template="day">
-    <td><input id="d1_date" placeholder="日期"></td>
-    <td>
-      <div class="cellTitle">食慾</div>
-      <div class="opts">
-        <span class="opt">早：
-          <label class="opt"><input type="radio" name="d1_am" value="良好">良好</label>
-          <label class="opt"><input type="radio" name="d1_am" value="普通">普通</label>
-          <label class="opt"><input type="radio" name="d1_am" value="不吃">不吃</label>
-        </span>
-      </div>
-      <div class="opts" style="margin-top:6px;">
-        <span class="opt">中：
-          <label class="opt"><input type="radio" name="d1_noon" value="良好">良好</label>
-          <label class="opt"><input type="radio" name="d1_noon" value="普通">普通</label>
-          <label class="opt"><input type="radio" name="d1_noon" value="不吃">不吃</label>
-        </span>
-      </div>
-      <div class="opts" style="margin-top:6px;">
-        <span class="opt">晚：
-          <label class="opt"><input type="radio" name="d1_pm" value="良好">良好</label>
-          <label class="opt"><input type="radio" name="d1_pm" value="普通">普通</label>
-          <label class="opt"><input type="radio" name="d1_pm" value="不吃">不吃</label>
-        </span>
-      </div>
+  <td><input id="d1_date" placeholder="日期"></td>
 
-      <div style="height:10px"></div>
-      <div class="cellTitle">排尿</div>
-      <div class="opts">
-        <label class="opt"><input type="radio" name="d1_pee" value="3次以上">3次以上</label>
-        <label class="opt"><input type="radio" name="d1_pee" value="1-3次">1-3次</label>
-        <label class="opt"><input type="radio" name="d1_pee" value="無">無</label>
-      </div>
+  <td>
+    <div class="cellTitle">食慾</div>
+    <div class="opts">
+      <span class="opt">早：
+        <label class="opt"><input type="radio" name="d1_am" value="良好">良好</label>
+        <label class="opt"><input type="radio" name="d1_am" value="普通">普通</label>
+        <label class="opt"><input type="radio" name="d1_am" value="不吃">不吃</label>
+      </span>
+    </div>
+    <div class="opts" style="margin-top:6px;">
+      <span class="opt">中：
+        <label class="opt"><input type="radio" name="d1_noon" value="良好">良好</label>
+        <label class="opt"><input type="radio" name="d1_noon" value="普通">普通</label>
+        <label class="opt"><input type="radio" name="d1_noon" value="不吃">不吃</label>
+      </span>
+    </div>
+    <div class="opts" style="margin-top:6px;">
+      <span class="opt">晚：
+        <label class="opt"><input type="radio" name="d1_pm" value="良好">良好</label>
+        <label class="opt"><input type="radio" name="d1_pm" value="普通">普通</label>
+        <label class="opt"><input type="radio" name="d1_pm" value="不吃">不吃</label>
+      </span>
+    </div>
 
-      <div style="height:10px"></div>
-      <div class="cellTitle">排便</div>
-      <div class="opts">
-        <label class="opt"><input type="radio" name="d1_poo" value="3次以上">3次以上</label>
-        <label class="opt"><input type="radio" name="d1_poo" value="1-3次">1-3次</label>
-        <label class="opt"><input type="radio" name="d1_poo" value="無">無</label>
-      </div>
-    </td>
-    <td><textarea id="d1_remind" placeholder="備註"></textarea></td>
-  </tr>
+    <div style="height:10px"></div>
+    <div class="cellTitle">排便 / 排尿次數</div>
+    <div class="opts">
+      <label class="opt"><input type="radio" name="d1_toilet" value="正常">正常</label>
+      <label class="opt"><input type="radio" name="d1_toilet" value="異常">異常</label>
+    </div>
+    <textarea id="d1_toilet_note" placeholder="異常狀況說明"></textarea>
+  </td>
+
+  <td><textarea id="d1_remind" placeholder="備註"></textarea></td>
+</tr>
 </tbody>
         </table>
       </div>
     </div>
 
     <!-- 照顧細節 -->
-    <div class="card" id="cardCare">
-      <div class="cardTitle">照顧細節</div>
-      <div class="cardBody">
-        <div class="grid">
-          <div>
-            <label>生活習慣（勾選）</label>
-            <div class="opts">
-              <label class="opt"><input type="checkbox" id="habit_neutered">已絕育</label>
-              <label class="opt"><input type="checkbox" id="habit_diaper">需要包尿布</label>
-              <label class="opt"><input type="checkbox" id="habit_picky">護食</label>
-              <label class="opt"><input type="checkbox" id="habit_notfriendly">不親狗</label>
-            </div>
-          </div>
-          <div>
-            <label>已知食物過敏原（選填）</label>
-            <input id="allergy" placeholder="例：雞肉、牛肉、乳製品...">
-          </div>
-        </div>
+<div class="card" id="cardCare">
+  <div class="cardTitle">照顧細節</div>
+  <div class="cardBody">
 
-        <div style="height:10px"></div>
+    <label>生活習慣：</label>
+    <textarea id="lifestyle" placeholder="例：怕吵、喜歡被摸頭、午睡多..."></textarea>
 
-        <table class="tbl">
-          <thead>
-            <tr>
-              <th style="width:18%;">生活習慣</th>
-              <th style="width:42%;">餵食時間</th>
-              <th style="width:40%;">藥品 / 保健品</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                <div class="small">（可留空）</div>
-                <textarea id="lifestyle" placeholder="例：午睡多、怕吵、喜歡被摸頭..."></textarea>
-              </td>
-              <td>
-                <div class="cellTitle">早</div>
-                <input id="feed_morning" placeholder="飼料 / 罐頭 / 鮮食 / 凍乾（選填）">
-                <div style="height:10px"></div>
-                <div class="cellTitle">中</div>
-                <input id="feed_noon" placeholder="飼料 / 罐頭 / 鮮食 / 凍乾（選填）">
-                <div style="height:10px"></div>
-                <div class="cellTitle">晚</div>
-                <input id="feed_night" placeholder="飼料 / 罐頭 / 鮮食 / 凍乾（選填）">
-                <div style="height:10px"></div>
-                <div class="cellTitle">零食</div>
-                <input id="snack" placeholder="可 / 不可（選填）">
-              </td>
-              <td>
-                <div class="cellTitle">飯前 / 飯後</div>
-                <textarea id="meds_meal" placeholder="例：腸胃藥（飯後）早晚各1..."></textarea>
-                <div style="height:10px"></div>
-                <div class="cellTitle">隨餐</div>
-                <textarea id="meds_snack" placeholder="例：保健粉、益生菌..."></textarea>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+    <div style="height:16px"></div>
 
-        <div style="height:10px"></div>
+    <label>餵食習慣（可多選）</label>
 
-        <div class="grid">
-          <div>
-            <label>照顧須知（選填）</label>
-            <textarea id="care_rules" placeholder="例：需要慢慢親近／怕生／不喜歡突然抱起..."></textarea>
-          </div>
-          <div>
-            <label>溫馨提醒（選填）</label>
-            <textarea id="warm_remind" placeholder="例：回家後先清淡飲食一天，若有軟便請觀察..."></textarea>
-          </div>
-        </div>
-      </div>
+    <div class="cellTitle">早</div>
+    <div class="opts">
+      <label class="opt"><input type="checkbox" id="feed_am_kibble">飼料</label>
+      <label class="opt"><input type="checkbox" id="feed_am_can">罐頭</label>
+      <label class="opt"><input type="checkbox" id="feed_am_fresh">鮮食</label>
+      <label class="opt"><input type="checkbox" id="feed_am_freeze">凍乾</label>
     </div>
 
+    <div class="cellTitle">中</div>
+    <div class="opts">
+      <label class="opt"><input type="checkbox" id="feed_noon_kibble">飼料</label>
+      <label class="opt"><input type="checkbox" id="feed_noon_can">罐頭</label>
+      <label class="opt"><input type="checkbox" id="feed_noon_fresh">鮮食</label>
+      <label class="opt"><input type="checkbox" id="feed_noon_freeze">凍乾</label>
+    </div>
+
+    <div class="cellTitle">晚</div>
+    <div class="opts">
+      <label class="opt"><input type="checkbox" id="feed_pm_kibble">飼料</label>
+      <label class="opt"><input type="checkbox" id="feed_pm_can">罐頭</label>
+      <label class="opt"><input type="checkbox" id="feed_pm_fresh">鮮食</label>
+      <label class="opt"><input type="checkbox" id="feed_pm_freeze">凍乾</label>
+    </div>
+
+    <div style="height:20px"></div>
+
+    <label>藥品 / 保健品</label>
+
+    <div class="cellTitle">早</div>
+    <div class="opts">
+      <label class="opt"><input type="checkbox" id="med_am_before">飯前</label>
+      <label class="opt"><input type="checkbox" id="med_am_after">飯後</label>
+      <label class="opt"><input type="checkbox" id="med_am_with">隨餐</label>
+    </div>
+    <textarea id="med_am_note" placeholder="備註"></textarea>
+
+    <div class="cellTitle">中</div>
+    <div class="opts">
+      <label class="opt"><input type="checkbox" id="med_noon_before">飯前</label>
+      <label class="opt"><input type="checkbox" id="med_noon_after">飯後</label>
+      <label class="opt"><input type="checkbox" id="med_noon_with">隨餐</label>
+    </div>
+    <textarea id="med_noon_note" placeholder="備註"></textarea>
+
+    <div class="cellTitle">晚</div>
+    <div class="opts">
+      <label class="opt"><input type="checkbox" id="med_pm_before">飯前</label>
+      <label class="opt"><input type="checkbox" id="med_pm_after">飯後</label>
+      <label class="opt"><input type="checkbox" id="med_pm_with">隨餐</label>
+    </div>
+    <textarea id="med_pm_note" placeholder="備註"></textarea>
+
+    <div style="height:16px"></div>
+
+    <label>照顧須知（選填）</label>
+    <textarea id="care_rules" placeholder="例：需要慢慢親近／怕生／不喜歡突然抱起..."></textarea>
+
+    <label>溫馨提醒（選填）</label>
+    <textarea id="warm_remind" placeholder="例：回家後先清淡飲食一天，若有軟便請觀察..."></textarea>
+
+  </div>
+</div>
+<div class="card">
+  <div class="cardTitle">住宿時期個性觀察（可多選）</div>
+  <div class="cardBody">
+    <div class="opts">
+      <label class="opt"><input type="checkbox" id="p_friendly_human">親人</label>
+      <label class="opt"><input type="checkbox" id="p_slow">需慢慢靠近</label>
+      <label class="opt"><input type="checkbox" id="p_not_human">不親人</label>
+    </div>
+
+    <div class="opts">
+      <label class="opt"><input type="checkbox" id="p_friendly_dog">親狗</label>
+      <label class="opt"><input type="checkbox" id="p_annoyed">不喜狗過度打擾</label>
+      <label class="opt"><input type="checkbox" id="p_not_dog">不親狗</label>
+    </div>
+
+    <div class="opts">
+      <label class="opt"><input type="checkbox" id="p_stable">互動良好自在，性格穩定</label>
+      <label class="opt"><input type="checkbox" id="p_shy">害羞</label>
+      <label class="opt"><input type="checkbox" id="p_nervous">緊張</label>
+      <label class="opt"><input type="checkbox" id="p_timidy">膽小</label>
+      <label class="opt"><input type="checkbox" id="p_anxious">焦慮</label>
+      <label class="opt"><input type="checkbox" id="p_hyper">極度熱情活潑</label>
+      <label class="opt"><input type="checkbox" id="p_play_high">玩樂需求高</label>
+      <label class="opt"><input type="checkbox" id="p_rest_high">休息需求高</label>
+    </div>
+  </div>
+</div>
+  <div class="card">
+  <div class="cardTitle">額外附加</div>
+  <div class="cardBody">
+    <div class="grid3">
+      <div><label>刷牙</label><input id="extra_brush_teeth" inputmode="numeric"></div>
+      <div><label>餵藥/保養品</label><input id="extra_meds" inputmode="numeric"></div>
+      <div><label>點眼藥水</label><input id="extra_eye" inputmode="numeric"></div>
+      <div><label>散步</label><input id="extra_walk" inputmode="numeric"></div>
+      <div><label>梳毛</label><input id="extra_brush" inputmode="numeric"></div>
+      <div><label>特殊照顧</label><input id="extra_special" inputmode="numeric"></div>
+      <div><label>陪診服務</label><input id="extra_hospital" inputmode="numeric"></div>
+      <div><label>傷口擦藥</label><input id="extra_wound_med" inputmode="numeric"></div>
+      <div><label>傷口換藥</label><input id="extra_wound_change" inputmode="numeric"></div>
+      <div><label>針管餵水</label><input id="extra_syringe" inputmode="numeric"></div>
+      <div><label>手餵飯</label><input id="extra_handfeed" inputmode="numeric"></div>
+    </div>
+  </div>
+</div>
+  
     <!-- 費用明細 -->
     <div class="card" id="cardFee">
       <div class="cardTitle">費用明細</div>
@@ -415,7 +456,7 @@
   function setReadonlyAll(){
      // inputs & textarea: 除了客人要填的 confirm_email / signed_date / owner_name
   document.querySelectorAll('input, textarea').forEach(el=>{
-    const allow = ["confirm_email","signed_date","owner_name"]; // ✅ 加 owner_name
+    const allow = ["confirm_email","signed_date"];
     if(allow.includes(el.id)) return;
     el.setAttribute('readonly','readonly');
   });
@@ -541,10 +582,12 @@ function clearSig(){
 
 function canvasIsBlank(){
   if(!canvas || !ctx) return true;
-  const blank = document.createElement('canvas');
-  blank.width = canvas.width;
-  blank.height = canvas.height;
-  return canvas.toDataURL() === blank.toDataURL();
+  const w = canvas.width, h = canvas.height;
+  const img = ctx.getImageData(0, 0, w, h).data;
+  for(let i = 3; i < img.length; i += 4){
+    if(img[i] !== 0) return false; // alpha 有值代表有畫到
+  }
+  return true;
 }
 
 const clearBtn = document.getElementById('clearBtn');
@@ -559,6 +602,9 @@ if(canvas){
   canvas.addEventListener('touchend', end, {passive:false});
 }
   // ========= data collect / apply =========
+function cb(id){ return !!document.getElementById(id)?.checked; }
+function val(id){ return document.getElementById(id)?.value?.trim?.() || ""; }
+
 function collectAllData(){
   const feeItems = [];
   feeRowsEl.querySelectorAll(".feeRow").forEach(row=>{
@@ -581,125 +627,213 @@ function collectAllData(){
 
   const dayIdx = getDayIndices();
   const days = dayIdx.map(i => ({
-    date: document.getElementById(`d${i}_date`)?.value.trim() || "",
+    date: val(`d${i}_date`),
     appetite_am: readRadio(`d${i}_am`),
     appetite_noon: readRadio(`d${i}_noon`),
     appetite_pm: readRadio(`d${i}_pm`),
-    pee: readRadio(`d${i}_pee`),
-    poo: readRadio(`d${i}_poo`),
-    remind: document.getElementById(`d${i}_remind`)?.value.trim() || ""
+    toilet: readRadio(`d${i}_toilet`),
+    toilet_note: val(`d${i}_toilet_note`),
+    remind: val(`d${i}_remind`)
   }));
 
   return {
-    owner_name: document.getElementById("owner_name").value.trim(),
-    pet_name: document.getElementById("pet_name").value.trim(),
-    stay_date: document.getElementById("stay_date").value.trim(),
+    owner_name: val("owner_name"),
+    pet_name: val("pet_name"),
+    stay_date: val("stay_date"),
+
+    lifestyle: val("lifestyle"),
+
+    // 餵食習慣
+    feed_am: { kibble: cb("feed_am_kibble"), can: cb("feed_am_can"), fresh: cb("feed_am_fresh"), freeze: cb("feed_am_freeze") },
+    feed_noon:{ kibble: cb("feed_noon_kibble"), can: cb("feed_noon_can"), fresh: cb("feed_noon_fresh"), freeze: cb("feed_noon_freeze") },
+    feed_pm: { kibble: cb("feed_pm_kibble"), can: cb("feed_pm_can"), fresh: cb("feed_pm_fresh"), freeze: cb("feed_pm_freeze") },
+
+    // 藥品/保健品
+    med_am: { before: cb("med_am_before"), after: cb("med_am_after"), with: cb("med_am_with"), note: val("med_am_note") },
+    med_noon:{ before: cb("med_noon_before"), after: cb("med_noon_after"), with: cb("med_noon_with"), note: val("med_noon_note") },
+    med_pm: { before: cb("med_pm_before"), after: cb("med_pm_after"), with: cb("med_pm_with"), note: val("med_pm_note") },
+
+    // 個性觀察
+    personality: {
+      friendly_human: cb("p_friendly_human"),
+      slow: cb("p_slow"),
+      not_human: cb("p_not_human"),
+      friendly_dog: cb("p_friendly_dog"),
+      annoyed: cb("p_annoyed"),
+      not_dog: cb("p_not_dog"),
+      stable: cb("p_stable"),
+      shy: cb("p_shy"),
+      nervous: cb("p_nervous"),
+      timidy: cb("p_timidy"),
+      anxious: cb("p_anxious"),
+      hyper: cb("p_hyper"),
+      play_high: cb("p_play_high"),
+      rest_high: cb("p_rest_high"),
+    },
+
+    // 額外附加
+    extra: {
+      brush_teeth: val("extra_brush_teeth"),
+      meds: val("extra_meds"),
+      eye: val("extra_eye"),
+      walk: val("extra_walk"),
+      brush: val("extra_brush"),
+      special: val("extra_special"),
+      hospital: val("extra_hospital"),
+      wound_med: val("extra_wound_med"),
+      wound_change: val("extra_wound_change"),
+      syringe: val("extra_syringe"),
+      handfeed: val("extra_handfeed"),
+    },
 
     days,
 
-    habit_neutered: document.getElementById("habit_neutered").checked,
-    habit_diaper: document.getElementById("habit_diaper").checked,
-    habit_picky: document.getElementById("habit_picky").checked,
-    habit_notfriendly: document.getElementById("habit_notfriendly").checked,
-    allergy: document.getElementById("allergy").value.trim(),
-
-    lifestyle: document.getElementById("lifestyle").value.trim(),
-    feed_morning: document.getElementById("feed_morning").value.trim(),
-    feed_noon: document.getElementById("feed_noon").value.trim(),
-    feed_night: document.getElementById("feed_night").value.trim(),
-    snack: document.getElementById("snack").value.trim(),
-
-    meds_meal: document.getElementById("meds_meal").value.trim(),
-    meds_snack: document.getElementById("meds_snack").value.trim(),
-
-    care_rules: document.getElementById("care_rules").value.trim(),
-    warm_remind: document.getElementById("warm_remind").value.trim(),
-
     fee_items: feeItems,
     fee_total: String(calcFee()),
-
     created_at: new Date().toISOString()
   };
 }
 
-  function applyAllData(data){
-    document.getElementById("owner_name").value = data.owner_name || "";
-    document.getElementById("pet_name").value = data.pet_name || "";
-    document.getElementById("stay_date").value = data.stay_date || "";
-
-    function ensureDays(n){
-  const tbody = document.getElementById("activityBody");
-  const tpl = tbody.querySelector('tr[data-template="day"]');
-  if(!tpl) return;
-
-  // 目前有幾天
-  const existing = tbody.querySelectorAll('tr').length;
-
-  for(let day = existing + 1; day <= n; day++){
-    const tr = tpl.cloneNode(true);
-    tr.removeAttribute("data-template");
-
-    // rename d1_ -> d{day}_
-    tr.querySelectorAll("[id]").forEach(el=>{
-      el.id = el.id.replace(/^d\d+_/, `d${day}_`);
-    });
-    tr.querySelectorAll('input[type="radio"][name]').forEach(r=>{
-      r.name = r.name.replace(/^d\d+_/, `d${day}_`);
-    });
-
-    // clear
-    tr.querySelectorAll("input").forEach(inp=>{
-      if(inp.type === "radio" || inp.type === "checkbox") inp.checked = false;
-      else inp.value = "";
-    });
-    tr.querySelectorAll("textarea").forEach(t=> t.value = "");
-
-    tbody.appendChild(tr);
-  }
+  function setCb(id, v){
+  const el = document.getElementById(id);
+  if(el) el.checked = !!v;
+}
+function setVal(id, v){
+  const el = document.getElementById(id);
+  if(el) el.value = v || "";
 }
 
-const list = data.days || [];
-ensureDays(list.length || 1);
+function applyAllData(data){
+  setVal("owner_name", data.owner_name);
+  setVal("pet_name", data.pet_name);
+  setVal("stay_date", data.stay_date);
 
-list.forEach((d, i)=>{
-  const idx = i + 1;
-  const dateEl = document.getElementById(`d${idx}_date`);
-  if(dateEl) dateEl.value = d.date || "";
-  setRadio(`d${idx}_am`, d.appetite_am || "");
-  setRadio(`d${idx}_noon`, d.appetite_noon || "");
-  setRadio(`d${idx}_pm`, d.appetite_pm || "");
-  setRadio(`d${idx}_pee`, d.pee || "");
-  setRadio(`d${idx}_poo`, d.poo || "");
-  const rEl = document.getElementById(`d${idx}_remind`);
-  if(rEl) rEl.value = d.remind || "";
-});
+  // days
+  function ensureDays(n){
+    const tbody = document.getElementById("activityBody");
+    const tpl = tbody.querySelector('tr[data-template="day"]');
+    if(!tpl) return;
 
-    document.getElementById("habit_neutered").checked = !!data.habit_neutered;
-    document.getElementById("habit_diaper").checked = !!data.habit_diaper;
-    document.getElementById("habit_picky").checked = !!data.habit_picky;
-    document.getElementById("habit_notfriendly").checked = !!data.habit_notfriendly;
-    document.getElementById("allergy").value = data.allergy || "";
+    const existing = tbody.querySelectorAll('tr').length;
+    for(let day = existing + 1; day <= n; day++){
+      const tr = tpl.cloneNode(true);
+      tr.removeAttribute("data-template");
 
-    document.getElementById("lifestyle").value = data.lifestyle || "";
-    document.getElementById("feed_morning").value = data.feed_morning || "";
-    document.getElementById("feed_noon").value = data.feed_noon || "";
-    document.getElementById("feed_night").value = data.feed_night || "";
-    document.getElementById("snack").value = data.snack || "";
+      tr.querySelectorAll("[id]").forEach(el=>{
+        el.id = el.id.replace(/^d\d+_/, `d${day}_`);
+      });
+      tr.querySelectorAll('input[type="radio"][name]').forEach(r=>{
+        r.name = r.name.replace(/^d\d+_/, `d${day}_`);
+      });
 
-    document.getElementById("meds_meal").value = data.meds_meal || "";
-    document.getElementById("meds_snack").value = data.meds_snack || "";
+      tr.querySelectorAll("input").forEach(inp=>{
+        if(inp.type === "radio" || inp.type === "checkbox") inp.checked = false;
+        else inp.value = "";
+      });
+      tr.querySelectorAll("textarea").forEach(t=> t.value = "");
 
-    document.getElementById("care_rules").value = data.care_rules || "";
-    document.getElementById("warm_remind").value = data.warm_remind || "";
-
-    // fee
-    feeRowsEl.innerHTML = "";
-    (data.fee_items || []).forEach(x=>{
-      feeRowsEl.appendChild(feeRowTpl(x.item || "", x.price || "", x.qty || "1"));
-    });
-    if((data.fee_items || []).length === 0) resetFeeCommon();
-    calcFee();
+      tbody.appendChild(tr);
+    }
   }
+
+  const list = data.days || [];
+  ensureDays(list.length || 1);
+
+  list.forEach((d, i)=>{
+    const idx = i + 1;
+    setVal(`d${idx}_date`, d.date);
+    setRadio(`d${idx}_am`, d.appetite_am || "");
+    setRadio(`d${idx}_noon`, d.appetite_noon || "");
+    setRadio(`d${idx}_pm`, d.appetite_pm || "");
+    setRadio(`d${idx}_toilet`, d.toilet || "");
+    setVal(`d${idx}_toilet_note`, d.toilet_note);
+    setVal(`d${idx}_remind`, d.remind);
+  });
+
+  // 照顧細節
+  setVal("lifestyle", data.lifestyle);
+
+  // 餵食
+  const fam = data.feed_am || {};
+  setCb("feed_am_kibble", fam.kibble);
+  setCb("feed_am_can", fam.can);
+  setCb("feed_am_fresh", fam.fresh);
+  setCb("feed_am_freeze", fam.freeze);
+
+  const fnoon = data.feed_noon || {};
+  setCb("feed_noon_kibble", fnoon.kibble);
+  setCb("feed_noon_can", fnoon.can);
+  setCb("feed_noon_fresh", fnoon.fresh);
+  setCb("feed_noon_freeze", fnoon.freeze);
+
+  const fpm = data.feed_pm || {};
+  setCb("feed_pm_kibble", fpm.kibble);
+  setCb("feed_pm_can", fpm.can);
+  setCb("feed_pm_fresh", fpm.fresh);
+  setCb("feed_pm_freeze", fpm.freeze);
+
+  // 藥品/保健品
+  const mam = data.med_am || {};
+  setCb("med_am_before", mam.before);
+  setCb("med_am_after", mam.after);
+  setCb("med_am_with", mam.with);
+  setVal("med_am_note", mam.note);
+
+  const mnoon = data.med_noon || {};
+  setCb("med_noon_before", mnoon.before);
+  setCb("med_noon_after", mnoon.after);
+  setCb("med_noon_with", mnoon.with);
+  setVal("med_noon_note", mnoon.note);
+
+  const mpm = data.med_pm || {};
+  setCb("med_pm_before", mpm.before);
+  setCb("med_pm_after", mpm.after);
+  setCb("med_pm_with", mpm.with);
+  setVal("med_pm_note", mpm.note);
+
+  // 照顧須知/溫馨提醒
+  setVal("care_rules", data.care_rules);
+  setVal("warm_remind", data.warm_remind);
+
+  // 個性觀察
+  const p = data.personality || {};
+  setCb("p_friendly_human", p.friendly_human);
+  setCb("p_slow", p.slow);
+  setCb("p_not_human", p.not_human);
+  setCb("p_friendly_dog", p.friendly_dog);
+  setCb("p_annoyed", p.annoyed);
+  setCb("p_not_dog", p.not_dog);
+  setCb("p_stable", p.stable);
+  setCb("p_shy", p.shy);
+  setCb("p_nervous", p.nervous);
+  setCb("p_timidy", p.timidy);
+  setCb("p_anxious", p.anxious);
+  setCb("p_hyper", p.hyper);
+  setCb("p_play_high", p.play_high);
+  setCb("p_rest_high", p.rest_high);
+
+  // 額外附加
+  const ex = data.extra || {};
+  setVal("extra_brush_teeth", ex.brush_teeth);
+  setVal("extra_meds", ex.meds);
+  setVal("extra_eye", ex.eye);
+  setVal("extra_walk", ex.walk);
+  setVal("extra_brush", ex.brush);
+  setVal("extra_special", ex.special);
+  setVal("extra_hospital", ex.hospital);
+  setVal("extra_wound_med", ex.wound_med);
+  setVal("extra_wound_change", ex.wound_change);
+  setVal("extra_syringe", ex.syringe);
+  setVal("extra_handfeed", ex.handfeed);
+
+  // fee
+  feeRowsEl.innerHTML = "";
+  (data.fee_items || []).forEach(x=>{
+    feeRowsEl.appendChild(feeRowTpl(x.item || "", x.price || "", x.qty || "1"));
+  });
+  if((data.fee_items || []).length === 0) resetFeeCommon();
+  calcFee();
+}
 
   // ========= mode UI =========
   const hintEl = document.getElementById("hint");
