@@ -85,6 +85,22 @@
     .ro input[readonly], .ro textarea[readonly], .ro select:disabled{
       background:#fbfaf7;
     }
+#cardActivity .tbl{ table-layout: fixed; width:100%; }
+#cardActivity .tbl th:first-child,
+#cardActivity .tbl td:first-child{
+  width: 26% !important;
+  min-width: 110px; 
+  padding-left: 12px;
+  padding-right: 12px;
+  box-sizing: border-box;
+}
+#cardActivity .tbl th:first-child{
+  white-space: nowrap;
+}
+#cardActivity .tbl td:first-child input{
+  width:100%;
+  box-sizing:border-box;
+}
   </style>
 </head>
 
@@ -125,6 +141,10 @@
     <div class="card" id="cardActivity">
       <div class="cardTitle">活動紀錄</div>
       <div class="cardBody">
+        <div class="btns" style="justify-content:flex-end; margin:0 0 10px;">
+  <button type="button" class="ghost" id="actAddDay">＋新增一天</button>
+  <button type="button" class="ghost" id="actShowAll">顯示全部</button>
+</div>
         <table class="tbl">
           <thead>
             <tr>
@@ -133,145 +153,53 @@
               <th style="width:28%;">提醒</th>
             </tr>
           </thead>
-          <tbody>
-            <!-- Day 1 -->
-            <tr>
-              <td><input id="d1_date" placeholder="日期"></td>
-              <td>
-                <div class="cellTitle">食慾</div>
-                <div class="opts">
-                  <span class="opt">早：
-                    <label class="opt"><input type="radio" name="d1_am" value="良好">良好</label>
-                    <label class="opt"><input type="radio" name="d1_am" value="普通">普通</label>
-                    <label class="opt"><input type="radio" name="d1_am" value="不吃">不吃</label>
-                  </span>
-                </div>
-                <div class="opts" style="margin-top:6px;">
-                  <span class="opt">中：
-                    <label class="opt"><input type="radio" name="d1_noon" value="良好">良好</label>
-                    <label class="opt"><input type="radio" name="d1_noon" value="普通">普通</label>
-                    <label class="opt"><input type="radio" name="d1_noon" value="不吃">不吃</label>
-                  </span>
-                </div>
-                <div class="opts" style="margin-top:6px;">
-                  <span class="opt">晚：
-                    <label class="opt"><input type="radio" name="d1_pm" value="良好">良好</label>
-                    <label class="opt"><input type="radio" name="d1_pm" value="普通">普通</label>
-                    <label class="opt"><input type="radio" name="d1_pm" value="不吃">不吃</label>
-                  </span>
-                </div>
+        <tbody id="activityBody">
+  <!-- Day 1 (template) -->
+  <tr data-template="day">
+    <td><input id="d1_date" placeholder="日期"></td>
+    <td>
+      <div class="cellTitle">食慾</div>
+      <div class="opts">
+        <span class="opt">早：
+          <label class="opt"><input type="radio" name="d1_am" value="良好">良好</label>
+          <label class="opt"><input type="radio" name="d1_am" value="普通">普通</label>
+          <label class="opt"><input type="radio" name="d1_am" value="不吃">不吃</label>
+        </span>
+      </div>
+      <div class="opts" style="margin-top:6px;">
+        <span class="opt">中：
+          <label class="opt"><input type="radio" name="d1_noon" value="良好">良好</label>
+          <label class="opt"><input type="radio" name="d1_noon" value="普通">普通</label>
+          <label class="opt"><input type="radio" name="d1_noon" value="不吃">不吃</label>
+        </span>
+      </div>
+      <div class="opts" style="margin-top:6px;">
+        <span class="opt">晚：
+          <label class="opt"><input type="radio" name="d1_pm" value="良好">良好</label>
+          <label class="opt"><input type="radio" name="d1_pm" value="普通">普通</label>
+          <label class="opt"><input type="radio" name="d1_pm" value="不吃">不吃</label>
+        </span>
+      </div>
 
-                <div style="height:10px"></div>
-                <div class="cellTitle">排尿</div>
-                <div class="opts">
-                  <label class="opt"><input type="radio" name="d1_pee" value="3次以上">3次以上</label>
-                  <label class="opt"><input type="radio" name="d1_pee" value="1-3次">1-3次</label>
-                  <label class="opt"><input type="radio" name="d1_pee" value="無">無</label>
-                </div>
+      <div style="height:10px"></div>
+      <div class="cellTitle">排尿</div>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="d1_pee" value="3次以上">3次以上</label>
+        <label class="opt"><input type="radio" name="d1_pee" value="1-3次">1-3次</label>
+        <label class="opt"><input type="radio" name="d1_pee" value="無">無</label>
+      </div>
 
-                <div style="height:10px"></div>
-                <div class="cellTitle">排便</div>
-                <div class="opts">
-                  <label class="opt"><input type="radio" name="d1_poo" value="3次以上">3次以上</label>
-                  <label class="opt"><input type="radio" name="d1_poo" value="1-3次">1-3次</label>
-                  <label class="opt"><input type="radio" name="d1_poo" value="無">無</label>
-                </div>
-              </td>
-              <td><textarea id="d1_remind" placeholder="備註"></textarea></td>
-            </tr>
-
-            <!-- Day 2 -->
-            <tr>
-              <td><input id="d2_date" placeholder="日期"></td>
-              <td>
-                <div class="cellTitle">食慾</div>
-                <div class="opts">
-                  <span class="opt">早：
-                    <label class="opt"><input type="radio" name="d2_am" value="良好">良好</label>
-                    <label class="opt"><input type="radio" name="d2_am" value="普通">普通</label>
-                    <label class="opt"><input type="radio" name="d2_am" value="不吃">不吃</label>
-                  </span>
-                </div>
-                <div class="opts" style="margin-top:6px;">
-                  <span class="opt">中：
-                    <label class="opt"><input type="radio" name="d2_noon" value="良好">良好</label>
-                    <label class="opt"><input type="radio" name="d2_noon" value="普通">普通</label>
-                    <label class="opt"><input type="radio" name="d2_noon" value="不吃">不吃</label>
-                  </span>
-                </div>
-                <div class="opts" style="margin-top:6px;">
-                  <span class="opt">晚：
-                    <label class="opt"><input type="radio" name="d2_pm" value="良好">良好</label>
-                    <label class="opt"><input type="radio" name="d2_pm" value="普通">普通</label>
-                    <label class="opt"><input type="radio" name="d2_pm" value="不吃">不吃</label>
-                  </span>
-                </div>
-
-                <div style="height:10px"></div>
-                <div class="cellTitle">排尿</div>
-                <div class="opts">
-                  <label class="opt"><input type="radio" name="d2_pee" value="3次以上">3次以上</label>
-                  <label class="opt"><input type="radio" name="d2_pee" value="1-3次">1-3次</label>
-                  <label class="opt"><input type="radio" name="d2_pee" value="無">無</label>
-                </div>
-
-                <div style="height:10px"></div>
-                <div class="cellTitle">排便</div>
-                <div class="opts">
-                  <label class="opt"><input type="radio" name="d2_poo" value="3次以上">3次以上</label>
-                  <label class="opt"><input type="radio" name="d2_poo" value="1-3次">1-3次</label>
-                  <label class="opt"><input type="radio" name="d2_poo" value="無">無</label>
-                </div>
-              </td>
-              <td><textarea id="d2_remind" placeholder="備註"></textarea></td>
-            </tr>
-
-            <!-- Day 3 -->
-            <tr>
-              <td><input id="d3_date" placeholder="日期"></td>
-              <td>
-                <div class="cellTitle">食慾</div>
-                <div class="opts">
-                  <span class="opt">早：
-                    <label class="opt"><input type="radio" name="d3_am" value="良好">良好</label>
-                    <label class="opt"><input type="radio" name="d3_am" value="普通">普通</label>
-                    <label class="opt"><input type="radio" name="d3_am" value="不吃">不吃</label>
-                  </span>
-                </div>
-                <div class="opts" style="margin-top:6px;">
-                  <span class="opt">中：
-                    <label class="opt"><input type="radio" name="d3_noon" value="良好">良好</label>
-                    <label class="opt"><input type="radio" name="d3_noon" value="普通">普通</label>
-                    <label class="opt"><input type="radio" name="d3_noon" value="不吃">不吃</label>
-                  </span>
-                </div>
-                <div class="opts" style="margin-top:6px;">
-                  <span class="opt">晚：
-                    <label class="opt"><input type="radio" name="d3_pm" value="良好">良好</label>
-                    <label class="opt"><input type="radio" name="d3_pm" value="普通">普通</label>
-                    <label class="opt"><input type="radio" name="d3_pm" value="不吃">不吃</label>
-                  </span>
-                </div>
-
-                <div style="height:10px"></div>
-                <div class="cellTitle">排尿</div>
-                <div class="opts">
-                  <label class="opt"><input type="radio" name="d3_pee" value="3次以上">3次以上</label>
-                  <label class="opt"><input type="radio" name="d3_pee" value="1-3次">1-3次</label>
-                  <label class="opt"><input type="radio" name="d3_pee" value="無">無</label>
-                </div>
-
-                <div style="height:10px"></div>
-                <div class="cellTitle">排便</div>
-                <div class="opts">
-                  <label class="opt"><input type="radio" name="d3_poo" value="3次以上">3次以上</label>
-                  <label class="opt"><input type="radio" name="d3_poo" value="1-3次">1-3次</label>
-                  <label class="opt"><input type="radio" name="d3_poo" value="無">無</label>
-                </div>
-              </td>
-              <td><textarea id="d3_remind" placeholder="備註"></textarea></td>
-            </tr>
-          </tbody>
+      <div style="height:10px"></div>
+      <div class="cellTitle">排便</div>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="d1_poo" value="3次以上">3次以上</label>
+        <label class="opt"><input type="radio" name="d1_poo" value="1-3次">1-3次</label>
+        <label class="opt"><input type="radio" name="d1_poo" value="無">無</label>
+      </div>
+    </td>
+    <td><textarea id="d1_remind" placeholder="備註"></textarea></td>
+  </tr>
+</tbody>
         </table>
       </div>
     </div>
@@ -464,10 +392,11 @@
 
   const pad = n => String(n).padStart(2,'0');
   function setStatus(msg, ok=false){
-    const el = document.getElementById('status');
-    el.textContent = msg;
-    el.className = "status " + (ok ? "ok":"bad");
-  }
+  const el = document.getElementById('status');
+  if(!el) return; // ✅ 沒有 status 區塊就直接結束，避免報錯
+  el.textContent = msg;
+  el.className = "status " + (ok ? "ok":"bad");
+}
   function escapeB64Json(obj){
     return btoa(unescape(encodeURIComponent(JSON.stringify(obj))));
   }
@@ -484,21 +413,22 @@
     if(el) el.checked = true;
   }
   function setReadonlyAll(){
-    // inputs & textarea: 除了客人要填的 confirm_email / signed_date
-    document.querySelectorAll('input, textarea').forEach(el=>{
-      const allow = ["confirm_email","signed_date"];
-      if(allow.includes(el.id)) return;
-      el.setAttribute('readonly','readonly');
-    });
-    // radio/checkbox/select: 除了 confirm_record / confirm_fee
-    document.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(el=>{
-      const allow = ["confirm_record","confirm_fee"];
-      if(allow.includes(el.id)) return;
-      el.disabled = true;
-    });
-    document.querySelectorAll('select').forEach(el=> el.disabled = true);
-    document.body.classList.add("ro");
-  }
+     // inputs & textarea: 除了客人要填的 confirm_email / signed_date / owner_name
+  document.querySelectorAll('input, textarea').forEach(el=>{
+    const allow = ["confirm_email","signed_date","owner_name"]; // ✅ 加 owner_name
+    if(allow.includes(el.id)) return;
+    el.setAttribute('readonly','readonly');
+  });
+
+  // radio/checkbox/select: 除了 confirm_record / confirm_fee
+  document.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(el=>{
+    const allow = ["confirm_record","confirm_fee"];
+    if(allow.includes(el.id)) return;
+    el.disabled = true;
+  });
+  document.querySelectorAll('select').forEach(el=> el.disabled = true);
+  document.body.classList.add("ro");
+}
 
   // ========= fee =========
   const feeRowsEl = document.getElementById("feeRows");
@@ -549,145 +479,200 @@
   resetFeeCommon();
 
   // ========= signature =========
-  const canvas = document.getElementById('sig');
-  const ctx = canvas.getContext('2d');
+const canvas = document.getElementById('sig');
+const ctx = canvas ? canvas.getContext('2d') : null;
 
-  function resizeCanvas(){
-    if(!canvas) return;
-    const rect = canvas.getBoundingClientRect();
-    const ratio = Math.max(window.devicePixelRatio || 1, 1);
-    canvas.width = Math.floor(rect.width * ratio);
-    canvas.height = Math.floor(rect.height * ratio);
-    ctx.setTransform(ratio,0,0,ratio,0,0);
-    ctx.lineWidth = 2;
-    ctx.lineCap = 'round';
-    ctx.strokeStyle = '#111';
-  }
-  window.addEventListener('resize', resizeCanvas);
+function resizeCanvas(){
+  if(!canvas || !ctx) return;
+  const rect = canvas.getBoundingClientRect();
+  const ratio = Math.max(window.devicePixelRatio || 1, 1);
 
-  let drawing = false;
-  let last = null;
+  canvas.width = Math.floor(rect.width * ratio);
+  canvas.height = Math.floor(rect.height * ratio);
+  ctx.setTransform(1,0,0,1,0,0);
+  ctx.scale(ratio, ratio);
+  ctx.lineWidth = 2;
+  ctx.lineCap = 'round';
+  ctx.strokeStyle = '#111';
+}
+window.addEventListener('resize', resizeCanvas);
 
-  function getPos(e){
-    const rect = canvas.getBoundingClientRect();
-    const touch = e.touches ? e.touches[0] : null;
-    const clientX = touch ? touch.clientX : e.clientX;
-    const clientY = touch ? touch.clientY : e.clientY;
-    return { x: clientX - rect.left, y: clientY - rect.top };
-  }
+let drawing = false;
+let last = null;
 
-  function start(e){
-    e.preventDefault();
-    drawing = true;
-    last = getPos(e);
-  }
-  function move(e){
-    if(!drawing) return;
-    e.preventDefault();
-    const p = getPos(e);
-    ctx.beginPath();
-    ctx.moveTo(last.x, last.y);
-    ctx.lineTo(p.x, p.y);
-    ctx.stroke();
-    last = p;
-  }
-  function end(e){
-    if(!drawing) return;
-    e.preventDefault();
-    drawing = false;
-    last = null;
-  }
+function getPos(e){
+  if(!canvas) return { x:0, y:0 };
+  const rect = canvas.getBoundingClientRect();
+  const touch = e.touches ? e.touches[0] : null;
+  const clientX = touch ? touch.clientX : e.clientX;
+  const clientY = touch ? touch.clientY : e.clientY;
+  return { x: clientX - rect.left, y: clientY - rect.top };
+}
 
-  function clearSig(){
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-  }
+function start(e){
+  if(!canvas || !ctx) return;
+  e.preventDefault();
+  drawing = true;
+  last = getPos(e);
+}
+function move(e){
+  if(!canvas || !ctx) return;
+  if(!drawing) return;
+  e.preventDefault();
+  const p = getPos(e);
+  ctx.beginPath();
+  ctx.moveTo(last.x, last.y);
+  ctx.lineTo(p.x, p.y);
+  ctx.stroke();
+  last = p;
+}
+function end(e){
+  if(!canvas || !ctx) return;
+  if(!drawing) return;
+  e.preventDefault();
+  drawing = false;
+  last = null;
+}
 
-  function canvasIsBlank(){
-    const blank = document.createElement('canvas');
-    blank.width = canvas.width; blank.height = canvas.height;
-    return canvas.toDataURL() === blank.toDataURL();
-  }
+function clearSig(){
+  if(!canvas || !ctx) return;
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+}
 
-  document.getElementById('clearBtn').addEventListener('click', clearSig);
+function canvasIsBlank(){
+  if(!canvas || !ctx) return true;
+  const blank = document.createElement('canvas');
+  blank.width = canvas.width;
+  blank.height = canvas.height;
+  return canvas.toDataURL() === blank.toDataURL();
+}
 
+const clearBtn = document.getElementById('clearBtn');
+if(clearBtn) clearBtn.addEventListener('click', clearSig);
+
+if(canvas){
   canvas.addEventListener('mousedown', start);
   canvas.addEventListener('mousemove', move);
   window.addEventListener('mouseup', end);
   canvas.addEventListener('touchstart', start, {passive:false});
   canvas.addEventListener('touchmove', move, {passive:false});
   canvas.addEventListener('touchend', end, {passive:false});
-
+}
   // ========= data collect / apply =========
-  function collectAllData(){
-    const feeItems = [];
-    feeRowsEl.querySelectorAll(".feeRow").forEach(row=>{
-      feeItems.push({
-        item: row.querySelector(".fee_item").value.trim(),
-        price: row.querySelector(".fee_price").value.trim(),
-        qty: row.querySelector(".fee_qty").value.trim(),
-        sub: row.querySelector(".fee_sub").value.trim()
-      });
+function collectAllData(){
+  const feeItems = [];
+  feeRowsEl.querySelectorAll(".feeRow").forEach(row=>{
+    feeItems.push({
+      item: row.querySelector(".fee_item").value.trim(),
+      price: row.querySelector(".fee_price").value.trim(),
+      qty: row.querySelector(".fee_qty").value.trim(),
+      sub: row.querySelector(".fee_sub").value.trim()
     });
+  });
 
-    const days = [1,2,3].map(i=>({
-      date: document.getElementById(`d${i}_date`).value.trim(),
-      appetite_am: readRadio(`d${i}_am`),
-      appetite_noon: readRadio(`d${i}_noon`),
-      appetite_pm: readRadio(`d${i}_pm`),
-      pee: readRadio(`d${i}_pee`),
-      poo: readRadio(`d${i}_poo`),
-      remind: document.getElementById(`d${i}_remind`).value.trim()
-    }));
-
-    return {
-      owner_name: document.getElementById("owner_name").value.trim(),
-      owner_email: document.getElementById("owner_email").value.trim(),
-      pet_name: document.getElementById("pet_name").value.trim(),
-      stay_date: document.getElementById("stay_date").value.trim(),
-
-      days,
-
-      habit_neutered: document.getElementById("habit_neutered").checked,
-      habit_diaper: document.getElementById("habit_diaper").checked,
-      habit_picky: document.getElementById("habit_picky").checked,
-      habit_notfriendly: document.getElementById("habit_notfriendly").checked,
-      allergy: document.getElementById("allergy").value.trim(),
-
-      lifestyle: document.getElementById("lifestyle").value.trim(),
-      feed_morning: document.getElementById("feed_morning").value.trim(),
-      feed_noon: document.getElementById("feed_noon").value.trim(),
-      feed_night: document.getElementById("feed_night").value.trim(),
-      snack: document.getElementById("snack").value.trim(),
-
-      meds_meal: document.getElementById("meds_meal").value.trim(),
-      meds_snack: document.getElementById("meds_snack").value.trim(),
-
-      care_rules: document.getElementById("care_rules").value.trim(),
-      warm_remind: document.getElementById("warm_remind").value.trim(),
-
-      fee_items: feeItems,
-      fee_total: String(calcFee()),
-
-      created_at: new Date().toISOString()
-    };
+  function getDayIndices(){
+    const set = new Set();
+    document.querySelectorAll('input[id^="d"][id$="_date"]').forEach(el=>{
+      const m = el.id.match(/^d(\d+)_date$/);
+      if(m) set.add(parseInt(m[1],10));
+    });
+    return Array.from(set).sort((a,b)=>a-b);
   }
+
+  const dayIdx = getDayIndices();
+  const days = dayIdx.map(i => ({
+    date: document.getElementById(`d${i}_date`)?.value.trim() || "",
+    appetite_am: readRadio(`d${i}_am`),
+    appetite_noon: readRadio(`d${i}_noon`),
+    appetite_pm: readRadio(`d${i}_pm`),
+    pee: readRadio(`d${i}_pee`),
+    poo: readRadio(`d${i}_poo`),
+    remind: document.getElementById(`d${i}_remind`)?.value.trim() || ""
+  }));
+
+  return {
+    owner_name: document.getElementById("owner_name").value.trim(),
+    pet_name: document.getElementById("pet_name").value.trim(),
+    stay_date: document.getElementById("stay_date").value.trim(),
+
+    days,
+
+    habit_neutered: document.getElementById("habit_neutered").checked,
+    habit_diaper: document.getElementById("habit_diaper").checked,
+    habit_picky: document.getElementById("habit_picky").checked,
+    habit_notfriendly: document.getElementById("habit_notfriendly").checked,
+    allergy: document.getElementById("allergy").value.trim(),
+
+    lifestyle: document.getElementById("lifestyle").value.trim(),
+    feed_morning: document.getElementById("feed_morning").value.trim(),
+    feed_noon: document.getElementById("feed_noon").value.trim(),
+    feed_night: document.getElementById("feed_night").value.trim(),
+    snack: document.getElementById("snack").value.trim(),
+
+    meds_meal: document.getElementById("meds_meal").value.trim(),
+    meds_snack: document.getElementById("meds_snack").value.trim(),
+
+    care_rules: document.getElementById("care_rules").value.trim(),
+    warm_remind: document.getElementById("warm_remind").value.trim(),
+
+    fee_items: feeItems,
+    fee_total: String(calcFee()),
+
+    created_at: new Date().toISOString()
+  };
+}
 
   function applyAllData(data){
     document.getElementById("owner_name").value = data.owner_name || "";
-    document.getElementById("owner_email").value = data.owner_email || "";
     document.getElementById("pet_name").value = data.pet_name || "";
     document.getElementById("stay_date").value = data.stay_date || "";
 
-    (data.days || []).slice(0,3).forEach((d,i)=>{
-      const idx = i+1;
-      document.getElementById(`d${idx}_date`).value = d.date || "";
-      setRadio(`d${idx}_am`, d.appetite_am || "");
-      setRadio(`d${idx}_noon`, d.appetite_noon || "");
-      setRadio(`d${idx}_pm`, d.appetite_pm || "");
-      setRadio(`d${idx}_pee`, d.pee || "");
-      setRadio(`d${idx}_poo`, d.poo || "");
-      document.getElementById(`d${idx}_remind`).value = d.remind || "";
+    function ensureDays(n){
+  const tbody = document.getElementById("activityBody");
+  const tpl = tbody.querySelector('tr[data-template="day"]');
+  if(!tpl) return;
+
+  // 目前有幾天
+  const existing = tbody.querySelectorAll('tr').length;
+
+  for(let day = existing + 1; day <= n; day++){
+    const tr = tpl.cloneNode(true);
+    tr.removeAttribute("data-template");
+
+    // rename d1_ -> d{day}_
+    tr.querySelectorAll("[id]").forEach(el=>{
+      el.id = el.id.replace(/^d\d+_/, `d${day}_`);
     });
+    tr.querySelectorAll('input[type="radio"][name]').forEach(r=>{
+      r.name = r.name.replace(/^d\d+_/, `d${day}_`);
+    });
+
+    // clear
+    tr.querySelectorAll("input").forEach(inp=>{
+      if(inp.type === "radio" || inp.type === "checkbox") inp.checked = false;
+      else inp.value = "";
+    });
+    tr.querySelectorAll("textarea").forEach(t=> t.value = "");
+
+    tbody.appendChild(tr);
+  }
+}
+
+const list = data.days || [];
+ensureDays(list.length || 1);
+
+list.forEach((d, i)=>{
+  const idx = i + 1;
+  const dateEl = document.getElementById(`d${idx}_date`);
+  if(dateEl) dateEl.value = d.date || "";
+  setRadio(`d${idx}_am`, d.appetite_am || "");
+  setRadio(`d${idx}_noon`, d.appetite_noon || "");
+  setRadio(`d${idx}_pm`, d.appetite_pm || "");
+  setRadio(`d${idx}_pee`, d.pee || "");
+  setRadio(`d${idx}_poo`, d.poo || "");
+  const rEl = document.getElementById(`d${idx}_remind`);
+  if(rEl) rEl.value = d.remind || "";
+});
 
     document.getElementById("habit_neutered").checked = !!data.habit_neutered;
     document.getElementById("habit_diaper").checked = !!data.habit_diaper;
@@ -720,86 +705,88 @@
   const hintEl = document.getElementById("hint");
   const modeTagEl = document.getElementById("modeTag");
 
-  (async function init(){
-    if(isCreate){
-      hintEl.innerHTML = "【店家填寫模式】填完後按「產生確認連結」，把連結傳給客人簽名回傳。";
-      modeTagEl.textContent = "MODE: 店家填寫";
-      document.getElementById("cardConfirmActions").style.display = "none";
-      document.getElementById("cardCreateActions").style.display = "block";
-      return;
-    }
-
-    if(isConfirm){
-      hintEl.innerHTML = "【客人確認模式】請確認內容無誤後勾選、簽名並送出。";
-      modeTagEl.textContent = "MODE: 客人確認";
-      document.getElementById("cardConfirmActions").style.display = "block";
-      document.getElementById("cardCreateActions").style.display = "none";
-
-      const now = new Date();
-      document.getElementById("signed_date").value = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}`;
-
-      try{
-        if (idParam) {
-          // ✅ 新版：用 id 跟 GAS 抓資料
-          const r = await fetch(GAS_URL, {
-            method: "POST",
-            headers: {"Content-Type":"text/plain;charset=utf-8"},
-            body: JSON.stringify({ action: "getCheckoutRecord", id: idParam })
-          });
-          const j = await r.json();
-          if (!j.ok) throw new Error(j.error || "getCheckoutRecord failed");
-          applyAllData(j.data || {});
-        } else {
-          // 舊版 data 仍保留
-          const decoded = unescapeB64Json(dataParam);
-          applyAllData(decoded);
-        }
-      }catch(e){
-        setStatus("連結資料解析失敗，請向店家重新取得連結。");
-        return;
-      }
-
-      setReadonlyAll();
-      setTimeout(()=>{ resizeCanvas(); }, 30);
-      return;
-    }
-
-    hintEl.innerHTML = "請用店家填寫模式開啟：在網址後加 <span class='mono'>?mode=create</span>。";
-    modeTagEl.textContent = "MODE: 未指定";
+(async function init(){
+  if (isCreate) {
+    hintEl.innerHTML = "【店家填寫模式】填完後按「產生確認連結」，把連結傳給客人簽名回傳。";
+    modeTagEl.textContent = "MODE: 店家填寫";
     document.getElementById("cardConfirmActions").style.display = "none";
-    document.getElementById("cardCreateActions").style.display = "none";
-  })();
+    document.getElementById("cardCreateActions").style.display = "block";
+    return;
+  }
 
-  // ========= create: generate link =========
+  if (isConfirm) {
+    hintEl.innerHTML = "【客人確認模式】請確認內容無誤後勾選、簽名並送出。";
+    modeTagEl.textContent = "MODE: 客人確認";
+    document.getElementById("cardConfirmActions").style.display = "block";
+    document.getElementById("cardCreateActions").style.display = "none";
+
+    const now = new Date();
+    document.getElementById("signed_date").value =
+      `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+
+    try {
+      if (idParam) {
+        const r = await fetch(GAS_URL, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify({ action: "getCheckoutRecord", id: idParam })
+        });
+
+        const j = await r.json();
+        if (!j.ok) throw new Error(j.error || "getCheckoutRecord failed");
+        applyAllData(j.data || {});
+      } else {
+        const decoded = unescapeB64Json(dataParam);
+        applyAllData(decoded);
+      }
+    } catch (e) {
+      setStatus("連結資料解析失敗，請向店家重新取得連結。");
+      return;
+    }
+
+    if (window.__setShowAllDays) window.__setShowAllDays(true);
+    setReadonlyAll();
+resizeCanvas(); 
+requestAnimationFrame(resizeCanvas);
+return;
+  }
+
+  hintEl.innerHTML = "請用店家填寫模式開啟：在網址後加 <span class='mono'>?mode=create</span>。";
+  modeTagEl.textContent = "MODE: 未指定";
+  document.getElementById("cardConfirmActions").style.display = "none";
+  document.getElementById("cardCreateActions").style.display = "none";
+})();
+    // ========= create: generate link =========
   const genBtn = document.getElementById("genLinkBtn");
   const linkBox = document.getElementById("linkBox");
   const copyBtn = document.getElementById("copyLinkBtn");
 
-  if(genBtn){
+ if (isCreate && genBtn){
     genBtn.addEventListener("click", async ()=>{
-      const data = collectAllData();
-      if(!data.owner_email){
-        alert("請先填飼主 Email（店家用來寄送/留存）");
-        return;
-      }
+      try{
+        const data = collectAllData();
 
-      // ✅ 改成存到 GAS 拿短 id
-      const r = await fetch(GAS_URL, {
-        method: "POST",
-        headers: {"Content-Type":"text/plain;charset=utf-8"},
-        body: JSON.stringify({ action: "createCheckoutRecord", data })
-      });
-      const j = await r.json();
-      if(!j.ok){
-        alert("產生連結失敗：" + (j.error || "未知錯誤"));
-        return;
-      }
+        const r = await fetch(GAS_URL, {
+          method: "POST",
+          headers: {"Content-Type":"text/plain;charset=utf-8"},
+          body: JSON.stringify({ action: "createCheckoutRecord", data })
+        });
 
-      const base = location.origin + location.pathname;
-      const url = `${base}?id=${encodeURIComponent(j.id)}&v=1`; // 加 v 避免快取
-      linkBox.style.display = "block";
-      linkBox.textContent = url;
-      copyBtn.style.display = "inline-block";
+        const j = await r.json();
+        if(!j.ok){
+          alert("產生連結失敗：" + (j.error || "未知錯誤"));
+          return;
+        }
+
+        const base = location.origin + location.pathname;
+        const url = `${base}?id=${encodeURIComponent(j.id)}&v=1`;
+
+        linkBox.style.display = "block";
+        linkBox.textContent = url;
+        copyBtn.style.display = "inline-block";
+      }catch(e){
+        alert("產生連結失敗：" + (e && e.message ? e.message : String(e)));
+      }
     });
 
     copyBtn.addEventListener("click", async ()=>{
@@ -813,104 +800,221 @@
     });
   }
 
-  // ========= confirm: submit =========
-  const submitBtn = document.getElementById("submitBtn");
-  if(submitBtn){
-    submitBtn.addEventListener("click", async ()=>{
-      try{
-        const confirmEmail = document.getElementById("confirm_email").value.trim();
-        if(!confirmEmail){
-          setStatus("請填寫您的 Email"); return;
-        }
-        if(!document.getElementById("confirm_record").checked){
-          setStatus("請勾選：我已確認住宿期間紀錄內容無誤"); return;
-        }
-        if(!document.getElementById("confirm_fee").checked){
-          setStatus("請勾選：我已確認費用明細與總金額無誤"); return;
-        }
-        if(canvasIsBlank()){
-          setStatus("請先簽名"); return;
-        }
-
-        setStatus("送出中…請稍候");
-
-        const data = collectAllData();
-
-        const payload = {
-          action: "submitHotelCheckoutConfirm",
-          data: {
-            ...data,
-            record_id: idParam || "",                 // ✅ 新增：讓 GAS 可刪暫存
-            customer_email: confirmEmail,
-            confirm_record: true,
-            confirm_fee: true,
-            signed_date: document.getElementById("signed_date").value.trim(),
-            signature_png: canvas.toDataURL("image/png"),
-            ua: navigator.userAgent,
-            confirmed_at: new Date().toISOString()
-          }
-        };
-
-        const res = await fetch(GAS_URL, {
-          method: "POST",
-          headers: {"Content-Type":"text/plain;charset=utf-8"},
-          body: JSON.stringify(payload)
-        });
-
-        const json = await res.json();
-        if(!json.ok){
-          setStatus("送出失敗：" + (json.error || "未知錯誤"));
-          return;
-        }
-
-        setStatus("✅ 已送出！PDF 會寄送至店家與您的 Email", true);
-        submitBtn.disabled = true;
-      }catch(err){
-        setStatus("送出失敗：" + (err && err.message ? err.message : String(err)));
+ // ========= confirm: submit =========
+const submitBtn = document.getElementById("submitBtn");
+if(submitBtn){
+  submitBtn.addEventListener("click", async ()=>{
+    try{
+      const confirmEmail = document.getElementById("confirm_email").value.trim();
+      if(!confirmEmail){
+        setStatus("請填寫您的 Email"); return;
       }
-    });
-const stay = document.getElementById("stay_date");
+      if(!document.getElementById("confirm_record").checked){
+        setStatus("請勾選：我已確認住宿期間紀錄內容無誤"); return;
+      }
+      if(!document.getElementById("confirm_fee").checked){
+        setStatus("請勾選：我已確認費用明細與總金額無誤"); return;
+      }
+      if(canvasIsBlank()){
+        setStatus("請先簽名"); return;
+      }
 
-  function formatYMD(digits) {
+      setStatus("送出中…請稍候");
+
+      const data = collectAllData();
+
+      const payload = {
+        action: "submitHotelCheckoutConfirm",
+        data: {
+          ...data,
+          record_id: idParam || "",
+          customer_email: confirmEmail,              // ✅ 只靠客人填的 email
+          confirm_record: true,
+          confirm_fee: true,
+          signed_date: document.getElementById("signed_date").value.trim(),
+          signature_png: canvas.toDataURL("image/png"),
+          ua: navigator.userAgent,
+          confirmed_at: new Date().toISOString()
+        }
+      };
+
+      const res = await fetch(GAS_URL, {
+        method: "POST",
+        headers: {"Content-Type":"text/plain;charset=utf-8"},
+        body: JSON.stringify(payload)
+      });
+
+      const json = await res.json();
+      if(!json.ok){
+        setStatus("送出失敗：" + (json.error || "未知錯誤"));
+        return;
+      }
+
+      setStatus("✅ 已送出！PDF 會寄送至店家與您的 Email", true);
+      submitBtn.disabled = true;
+    }catch(err){
+      setStatus("送出失敗：" + (err && err.message ? err.message : String(err)));
+    }
+  });
+}
+
+
+// ========= stay_date format + auto-generate days =========
+(function(){
+  const stay = document.getElementById("stay_date");
+  const tbody = document.getElementById("activityBody");
+  const btnAdd = document.getElementById("actAddDay");
+  const btnShowAll = document.getElementById("actShowAll");
+  if(!stay || !tbody) return;
+
+  function formatYMD(digits){
     const s = digits.replace(/\D/g, "").slice(0, 8);
     const y = s.slice(0, 4);
     const m = s.slice(4, 6);
     const d = s.slice(6, 8);
-
     let out = y;
-    if (m) out += "/" + m;
-    if (d) out += "/" + d;
+    if(m) out += "/" + m;
+    if(d) out += "/" + d;
     return out;
   }
+  function parseYMD(str){
+    const digits = (str || "").replace(/\D/g,"").slice(0,8);
+    if(digits.length !== 8) return null;
+    const y = parseInt(digits.slice(0,4),10);
+    const m = parseInt(digits.slice(4,6),10);
+    const d = parseInt(digits.slice(6,8),10);
+    const dt = new Date(y, m-1, d);
+    if(dt.getFullYear()!==y || dt.getMonth()!==m-1 || dt.getDate()!==d) return null;
+    return dt;
+  }
+  function fmtDate(dt){
+    const y = dt.getFullYear();
+    const m = String(dt.getMonth()+1).padStart(2,"0");
+    const d = String(dt.getDate()).padStart(2,"0");
+    return `${y}/${m}/${d}`;
+  }
+  function daysBetweenInclusive(a,b){
+    const ms = 24*60*60*1000;
+    const aa = new Date(a.getFullYear(), a.getMonth(), a.getDate()).getTime();
+    const bb = new Date(b.getFullYear(), b.getMonth(), b.getDate()).getTime();
+    if(bb < aa) return 0;
+    return Math.floor((bb-aa)/ms) + 1;
+  }
 
-  stay.addEventListener("input", () => {
+  function getRows(){ return Array.from(tbody.querySelectorAll("tr")); }
+
+  function renameRow(tr, day){
+    tr.querySelectorAll("[id]").forEach(el=>{
+      el.id = el.id.replace(/^d\d+_/, `d${day}_`);
+    });
+    tr.querySelectorAll('input[type="radio"][name]').forEach(r=>{
+      r.name = r.name.replace(/^d\d+_/, `d${day}_`);
+    });
+  }
+  function clearRow(tr){
+    tr.querySelectorAll("input").forEach(inp=>{
+      if(inp.type === "radio" || inp.type === "checkbox") inp.checked = false;
+      else inp.value = "";
+    });
+    tr.querySelectorAll("textarea").forEach(t=> t.value = "");
+  }
+let showAll = false;
+
+function applyVisibility(){
+  const rows = getRows();
+  rows.forEach((tr, idx)=>{
+    tr.style.display = (showAll || idx===0) ? "" : "none";
+  });
+  if(btnShowAll){
+    btnShowAll.textContent = showAll ? "只顯示一天" : "顯示全部";
+  }
+}
+
+window.__setShowAllDays = function(on){
+  showAll = !!on;
+  applyVisibility();
+};
+
+  function ensureDayCount(n){
+    n = Math.max(1, n);
+    const tpl = tbody.querySelector('tr[data-template="day"]') || tbody.querySelector("tr");
+    if(!tpl) return;
+
+    let rows = getRows();
+    while(rows.length > n){
+      tbody.removeChild(rows[rows.length-1]);
+      rows = getRows();
+    }
+    while(rows.length < n){
+      const tr = tpl.cloneNode(true);
+      tr.removeAttribute("data-template");
+      const day = rows.length + 1;
+      renameRow(tr, day);
+      clearRow(tr);
+      tbody.appendChild(tr);
+      rows = getRows();
+    }
+  }
+
+  function fillDatesFromRange(startDt, endDt){
+    const n = daysBetweenInclusive(startDt, endDt);
+    ensureDayCount(n);
+    for(let i=0;i<n;i++){
+      const dt = new Date(startDt);
+      dt.setDate(startDt.getDate() + i);
+      const el = document.getElementById(`d${i+1}_date`);
+      if(el) el.value = fmtDate(dt);
+    }
+  }
+
+  function addDayManual(){
+    const rows = getRows();
+    ensureDayCount(rows.length + 1);
+    showAll = true;
+    applyVisibility();
+    const last = getRows()[getRows().length-1];
+    last && last.scrollIntoView({behavior:"smooth", block:"start"});
+  }
+
+  if(btnAdd) btnAdd.addEventListener("click", addDayManual);
+  if(btnShowAll) btnShowAll.addEventListener("click", ()=>{
+    showAll = !showAll;
+    applyVisibility();
+  });
+
+  // 初始化：只顯示一天
+  showAll = false;
+  applyVisibility();
+
+  // stay_date 輸入：格式化 + 兩邊滿8碼就自動生成天數
+  stay.addEventListener("input", ()=>{
     let value = stay.value;
-
-    // 統一分隔符
     value = value.replace(/[～\-]/g, "~").replace(/\s+/g, "");
-
     const parts = value.split("~");
-
     const leftDigits = (parts[0] || "").replace(/\D/g, "");
     const rightDigits = (parts[1] || "").replace(/\D/g, "");
 
     const leftFormatted = formatYMD(leftDigits);
     const rightFormatted = formatYMD(rightDigits);
 
-    // ⭐ 左邊滿8碼，自動補 ~
-    if (leftDigits.length === 8 && parts.length === 1) {
+    if(leftDigits.length === 8 && parts.length === 1){
       stay.value = leftFormatted + "~";
-      return;
-    }
-
-    // 有右邊就顯示區間
-    if (parts.length > 1) {
+    } else if(parts.length > 1){
       stay.value = leftFormatted + "~" + rightFormatted;
     } else {
       stay.value = leftFormatted;
     }
+
+    const s = parseYMD(leftFormatted);
+    const e = parseYMD(rightFormatted);
+    if(s && e){
+      fillDatesFromRange(s, e);
+      showAll = false;
+      applyVisibility();
+    }
   });
-  }
+
+})();
 </script>
 </body>
 </html>
