@@ -114,7 +114,7 @@
     id="stay_date"
     inputmode="numeric"
     autocomplete="off"
-    placeholder="例：2026/03/18 - 2026/03/20"
+    placeholder="例：2026/03/18~2026/03/20"
   >
 </div>
         </div>
@@ -869,11 +869,10 @@
         setStatus("送出失敗：" + (err && err.message ? err.message : String(err)));
       }
     });
-     const stay = document.getElementById("stay_date");
+const stay = document.getElementById("stay_date");
 
-  // 將純數字轉成 YYYY/MM/DD（最多 8 碼）
-  function toYMD(digits) {
-    const s = (digits || "").replace(/\D/g, "").slice(0, 8);
+  function formatYMD(digits) {
+    const s = digits.replace(/\D/g, "").slice(0, 8);
     const y = s.slice(0, 4);
     const m = s.slice(4, 6);
     const d = s.slice(6, 8);
@@ -884,26 +883,31 @@
     return out;
   }
 
-  // 取出左右兩段的純數字（開始/結束）
-  function splitDigits(v) {
-    const parts = (v || "").split("-").map(p => p.trim());
-    const left = (parts[0] || "").replace(/\D/g, "");
-    const right = (parts[1] || "").replace(/\D/g, "");
-    return { left, right, hasDash: (v || "").includes("-") };
-  }
-
   stay.addEventListener("input", () => {
-    const raw = stay.value || "";
-    const { left, right, hasDash } = splitDigits(raw);
+    let value = stay.value;
 
-    const leftFmt = toYMD(left);
-    const rightFmt = toYMD(right);
+    // 統一分隔符
+    value = value.replace(/[～\-]/g, "~").replace(/\s+/g, "");
 
-    // 有輸入到「-」或右邊開始有數字，就顯示區間格式
-    if (hasDash || right.length > 0) {
-      stay.value = `${leftFmt} - ${rightFmt}`.trim();
+    const parts = value.split("~");
+
+    const leftDigits = (parts[0] || "").replace(/\D/g, "");
+    const rightDigits = (parts[1] || "").replace(/\D/g, "");
+
+    const leftFormatted = formatYMD(leftDigits);
+    const rightFormatted = formatYMD(rightDigits);
+
+    // ⭐ 左邊滿8碼，自動補 ~
+    if (leftDigits.length === 8 && parts.length === 1) {
+      stay.value = leftFormatted + "~";
+      return;
+    }
+
+    // 有右邊就顯示區間
+    if (parts.length > 1) {
+      stay.value = leftFormatted + "~" + rightFormatted;
     } else {
-      stay.value = leftFmt;
+      stay.value = leftFormatted;
     }
   });
   }
