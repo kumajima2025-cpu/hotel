@@ -60,7 +60,7 @@
       <input id="owner_phone" inputmode="tel" placeholder="09xxxxxxxx" required />
     </div>
     <div>
-      <label>Email</label>
+      <label>Email（寄送副本用）</label>
       <input id="owner_email" inputmode="email" placeholder="you@example.com" />
     </div>
     <div>
@@ -397,63 +397,96 @@ if (rabiesInput) {
   });
 }
   
-  document.getElementById('submitBtn').addEventListener('click', async ()=>{
+document.getElementById('submitBtn').addEventListener('click', async ()=>{
     try{
       const required = [
         ["owner_name","請填主要聯絡人姓名"],
         ["owner_phone","請填手機"],
+        ["owner_email","請填 Email"],
+        ["owner_address","請填現居地址"],
+        ["backup_name","請填備用聯絡人"],
+        ["backup_phone","請填備用聯絡人手機"],
+
         ["pet_name","請填寵物名字"],
         ["pet_sex","請選擇性別"],
         ["pet_breed","請填品種"],
+        ["pet_color","請填毛色"],
+        ["pet_birth_date","請填出生日期"],
+        ["pet_neutered","請選擇是否已絕育"],
+
+        ["pet_deworm_date","請填體外驅蟲時間"],
+        ["pet_deworm_way","請選擇體外驅蟲方式"],
+
+        ["pet_chip","請填晶片號碼"],
+        ["pet_rabies","請填狂犬疫苗注射時間"],
+
         ["emergency_consent","請選擇緊急情況授權"],
         ["signed_date","請填簽名日期"],
       ];
+
       for(const [id,msg] of required){
         if(!val(id)){ setStatus(msg); return; }
       }
       if(canvasIsBlank()){ setStatus("請先簽名"); return; }
+
+      const email = val("owner_email");
+      if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+        setStatus("Email 格式不正確"); return;
+      }
+
+      const dateIds = [
+        ["pet_birth_date","出生日期"],
+        ["pet_deworm_date","體外驅蟲時間"],
+        ["pet_rabies","狂犬疫苗注射時間"],
+      ];
+      for (const [id,label] of dateIds){
+        const v = val(id);
+        if(!/^\d{4}\/\d{2}\/\d{2}$/.test(v)){
+          setStatus(`${label} 格式需為 YYYY/MM/DD`); return;
+        }
+      }
 
       setStatus("送出中…請稍候");
 
       const payload = {
         action: "submitHotelIntake",
         data: {
-  owner_name: val("owner_name"),
-  owner_phone: val("owner_phone"),
-  owner_email: val("owner_email"),
-  owner_address: val("owner_address"),
-  backup_name: val("backup_name"),
-  backup_phone: val("backup_phone"),
+          owner_name: val("owner_name"),
+          owner_phone: val("owner_phone"),
+          owner_email: val("owner_email"),
+          owner_address: val("owner_address"),
+          backup_name: val("backup_name"),
+          backup_phone: val("backup_phone"),
 
-  pet_name: val("pet_name"),
-  pet_sex: val("pet_sex"),
-  pet_breed: val("pet_breed"),
-  pet_color: val("pet_color"),
-  pet_birth_date: val("pet_birth_date"),
-  pet_neutered: val("pet_neutered"),
+          pet_name: val("pet_name"),
+          pet_sex: val("pet_sex"),
+          pet_breed: val("pet_breed"),
+          pet_color: val("pet_color"),
+          pet_birth_date: val("pet_birth_date"),
+          pet_neutered: val("pet_neutered"),
 
-  pet_deworm_date: val("pet_deworm_date"),
-  pet_deworm_way: val("pet_deworm_way"),
+          pet_deworm_date: val("pet_deworm_date"),
+          pet_deworm_way: val("pet_deworm_way"),
 
-  pet_chip: val("pet_chip"),
-  pet_rabies: val("pet_rabies"),
+          pet_chip: val("pet_chip"),
+          pet_rabies: val("pet_rabies"),
 
-  phys_status: (document.querySelector('input[name="phys_status"]:checked')?.value || ""),
-  phys_abnormal_note: val("phys_abnormal_note"),
+          phys_status: (document.querySelector('input[name="phys_status"]:checked')?.value || ""),
+          phys_abnormal_note: val("phys_abnormal_note"),
 
-  pet_diseases: checkedDiseases(),
-  pet_wound: val("pet_wound"),
-  pet_other_disease: val("pet_other_disease"),
+          pet_diseases: checkedDiseases(),
+          pet_wound: val("pet_wound"),
+          pet_other_disease: val("pet_other_disease"),
 
-  vet: "惟心動物醫院｜桃園市桃園區大興路207號｜03-3259001",
-  emergency_consent: val("emergency_consent"),
-  note: val("note"),
+          vet: "惟心動物醫院｜桃園市桃園區大興路207號｜03-3259001",
+          emergency_consent: val("emergency_consent"),
+          note: val("note"),
 
-  signed_date: val("signed_date"),
-  signature_png: canvas.toDataURL("image/png"),
-  ua: navigator.userAgent,
-  created_at: new Date().toISOString()
-}
+          signed_date: val("signed_date"),
+          signature_png: canvas.toDataURL("image/png"),
+          ua: navigator.userAgent,
+          created_at: new Date().toISOString()
+        }
       };
 
       const res = await fetch(GAS_URL, {
@@ -468,7 +501,6 @@ if (rabiesInput) {
         return;
       }
       setStatus("✅ 已送出！將會寄送表單至您的Email", true);
-
       document.getElementById('submitBtn').disabled = true;
 
     }catch(err){
