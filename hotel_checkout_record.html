@@ -272,26 +272,10 @@
     #cardActivity .recordTable th:nth-child(2),
     #cardActivity .recordTable td:nth-child(2){ width:56%; }
   }
-    /* ===== 只修：住宿時期個性觀察（行距一致）===== */
-#cardPersonality .opts{
-  display:grid !important;
-  grid-template-columns:repeat(3, minmax(0, 1fr)) !important;
-  column-gap:18px !important;
-  row-gap:10px !important;   /* ⭐ 五行距離一致靠這個 */
-  align-items:center !important;
-}
+    /* ===== 只修：住宿時期個性觀察（可多選）行距一致 ===== */
 
-/* 每個選項（綠框那個） */
-#cardPersonality .opt,
-#cardPersonality label{
-  margin:0 !important;
-  display:flex !important;
-  align-items:center !important;
-  gap:10px !important;
-  line-height:1.35 !important;
-}
-
-/* checkbox 大小回正常 */
+/* 1) 找到「那一坨 checkbox」：通常會是 .opts 或任一個 div 容器
+   這裡用較保險的寫法：把 card 裡「第一個含 checkbox 的容器」變成 grid */
 #cardPersonality input[type="checkbox"]{
   width:20px !important;
   height:20px !important;
@@ -299,16 +283,52 @@
   flex:0 0 auto !important;
 }
 
-/* RWD */
-@media (max-width:920px){
-  #cardPersonality .opts{ grid-template-columns:repeat(2, minmax(0, 1fr)) !important; }
-}
-@media (max-width:520px){
-  #cardPersonality .opts{ grid-template-columns:1fr !important; }
+/* 2) 讓每個 checkbox + 文字成為一個固定格式的項目 */
+#cardPersonality input[type="checkbox"]{
+  /* 保持上面尺寸設定 */
 }
 
-    #cardPersonality{ outline:6px solid magenta !important; }
-#cardPersonality *{ outline:2px dashed rgba(255,0,255,.25) !important; }
+/* ✅ 關鍵：把 checkbox 的父層（label/opt/任何包住它的元素）變成一致的 flex item */
+#cardPersonality input[type="checkbox"]{
+  /* no-op */
+}
+#cardPersonality input[type="checkbox"]{
+  /* no-op */
+}
+
+/* 3) 直接抓「包含 checkbox 的那個群組容器」：用 :has()（iOS/Chrome 現在都支援）
+   如果你的環境不支援 :has()，我下面有備用方案 */
+#cardPersonality :is(div, section, fieldset):has(> * input[type="checkbox"]){
+  display:grid !important;
+  grid-template-columns:repeat(3, minmax(0, 1fr)) !important;
+  column-gap:18px !important;
+  row-gap:10px !important;   /* ⭐ 行距一致 */
+  align-items:center !important;
+}
+
+/* 4) 每個選項本體：抓「直接包含 checkbox 的元素」 */
+#cardPersonality :is(label, .opt, div):has(> input[type="checkbox"]){
+  display:flex !important;
+  align-items:center !important;
+  gap:10px !important;
+  margin:0 !important;
+  line-height:1.35 !important;
+  font-size:14px !important;
+  color:var(--text) !important;
+  min-width:0 !important;
+}
+
+/* RWD */
+@media (max-width:920px){
+  #cardPersonality :is(div, section, fieldset):has(> * input[type="checkbox"]){
+    grid-template-columns:repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+@media (max-width:520px){
+  #cardPersonality :is(div, section, fieldset):has(> * input[type="checkbox"]){
+    grid-template-columns:1fr !important;
+  }
+}
   </style>
 </head>
 
@@ -503,7 +523,7 @@
       </div>
     </div>
 
-    <div class="card" id="cardPersonality">
+    <div class="card">
       <div class="cardTitle">住宿時期個性觀察（可多選）</div>
       <div class="cardBody">
         <div class="opts">
