@@ -39,13 +39,23 @@
     *{ box-sizing:border-box; }
     img, canvas{ max-width:100%; display:block; }
 
-    .wrap{
+.wrap{
   width:100%;
-  max-width:820px;
+  max-width:900px;
   margin:24px auto;
-  padding:20px 18px;
+  padding-top:18px;
+  padding-bottom:18px;
+  padding-left:max(26px, env(safe-area-inset-left));
+  padding-right:max(26px, env(safe-area-inset-right));
+  overflow-x:hidden;
 }
-
+@media (max-width:520px){
+  .wrap{
+    padding-left:max(22px, env(safe-area-inset-left));
+    padding-right:max(22px, env(safe-area-inset-right));
+    margin:18px auto;
+  }
+}
     /* ===== Header（跟住宿明細確認一致）===== */
     .brand{ text-align:center; font-weight:800; letter-spacing:1px; margin:6px 0 10px; }
     .barTitle{
