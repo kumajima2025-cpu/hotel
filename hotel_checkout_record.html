@@ -65,53 +65,24 @@
   .cardTitle{background:var(--title); padding:12px 14px; font-weight:800;}
   .cardBody{padding:14px; min-width:0;}
 
-  .grid3{
-  display:grid;
-  grid-template-columns:repeat(3, 1fr);
-  column-gap:18px;
-  row-gap:12px;   /* 控制每一排距離 */
-  min-width:0;
-}
+  .grid{display:grid; grid-template-columns:1fr 1fr; gap:10px; min-width:0;}
+  .grid3{display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; min-width:0;}
+  @media (max-width:920px){ .grid3{grid-template-columns:repeat(2, 1fr);} }
+  @media (max-width:520px){ .grid3{grid-template-columns:1fr;} }
+  @media (max-width:760px){ .grid{grid-template-columns:1fr;} }
 
-/* checkbox 行 — 回到自然高度 */
-.grid3 label{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  margin:0;
-  line-height:1.4;
-  font-size:14px;
-  color:var(--text);
-}
+  label{display:block; font-size:13px; margin:2px 0 6px; color:var(--muted);}
 
-/* ✅ 讓 checkbox 回原本大小 */
-.grid3 input[type="checkbox"]{
-  width:20px;
-  height:20px;
-  margin:0;
-  flex-shrink:0;
-}
-
-/* ✅ 長文字允許換行 */
-.grid3 label span{
-  word-break:break-word;
-}
-
-/* ⭐ 讓「互動良好自在，性格穩定」獨佔一整排 */
-.grid3 label:nth-child(7){
-  grid-column:1 / -1;
-}
-
-/* RWD */
-@media (max-width:920px){
-  .grid3{grid-template-columns:repeat(2,1fr);}
-  .grid3 label:nth-child(7){grid-column:1/-1;}
-}
-
-@media (max-width:520px){
-  .grid3{grid-template-columns:1fr;}
-}
-}
+  input, textarea, select{
+    width:100%;
+    min-width:0;
+    padding:10px 10px;
+    border-radius:12px;
+    border:1px solid var(--line);
+    background:#fff;
+    font-size:16px;
+    color:var(--text);
+  }
   textarea{min-height:86px; resize:vertical;}
 
   .cellTitle{font-weight:800; margin-bottom:6px;}
