@@ -504,17 +504,18 @@
       <div class="cardTitle">額外附加</div>
       <div class="cardBody">
         <div class="grid3">
-          <div><label>刷牙</label><input id="extra_brush_teeth" inputmode="numeric" pattern="\d*"></div>
-          <div><label>餵藥/保養品</label><input id="extra_meds" inputmode="numeric" pattern="\d*"></div>
-          <div><label>點眼藥水</label><input id="extra_eye" inputmode="numeric" pattern="\d*"></div>
-          <div><label>散步</label><input id="extra_walk" inputmode="numeric" pattern="\d*"></div>
-          <div><label>梳毛</label><input id="extra_brush" inputmode="numeric" pattern="\d*"></div>
-          <div><label>特殊照顧</label><input id="extra_special" inputmode="numeric" pattern="\d*"></div>
-          <div><label>陪診服務</label><input id="extra_hospital" inputmode="numeric" pattern="\d*"></div>
-          <div><label>傷口擦藥</label><input id="extra_wound_med" inputmode="numeric" pattern="\d*"></div>
-          <div><label>傷口換藥</label><input id="extra_wound_change" inputmode="numeric" pattern="\d*"></div>
-          <div><label>針管餵水</label><input id="extra_syringe" inputmode="numeric" pattern="\d*"></div>
-          <div><label>手餵飯</label><input id="extra_handfeed" inputmode="numeric" pattern="\d*"></div>
+          <div><label>刷牙</label><input id="extra_brush_teeth" autocomplete="off"></div>
+          <div><label>餵藥/保養品</label><input id="extra_brush_teeth" autocomplete="off"></div>
+          <div><label>點眼藥水</label><input id="extra_brush_teeth" autocomplete="off"></div>
+          <div><label>散步</label><input id="extra_brush_teeth" autocomplete="off"></div>
+          <div><label>梳毛</label><input id="extra_brush_teeth" autocomplete="off"></div>
+          <div><label>特殊照顧</label><input id="extra_brush_teeth" autocomplete="off"></div>
+          <div><label>陪診服務</label><input id="extra_brush_teeth" autocomplete="off"></div>
+          <div><label>傷口擦藥</label><input id="extra_brush_teeth" autocomplete="off"></div>
+          <div><label>傷口換藥</label><input id="extra_brush_teeth" autocomplete="off"></div>
+          <div><label>針管餵水</label><input id="extra_brush_teeth" autocomplete="off"></div>
+          <div><label>手餵飯</label><input id="extra_brush_teeth" autocomplete="off"></div>
+          <div><label>退房後有無其它注意事項</label><input id="extra_brush_teeth" autocomplete="off"></div>
         </div>
       </div>
     </div>
@@ -904,6 +905,13 @@
   const btnDel = document.getElementById("actDelDay");
   const btnShowAll = document.getElementById("actShowAll");
 
+  if (isConfirm) {
+  [btnAdd, btnDel, btnShowAll].forEach(b => {
+    if (!b) return;
+    b.disabled = true;
+    b.style.display = "none"; // 直接不顯示，最不會被誤按
+  });
+}
   let showAll = false;
 
   function getRows(){ return Array.from(tbody.querySelectorAll("tr")); }
