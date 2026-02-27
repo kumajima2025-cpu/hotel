@@ -362,6 +362,29 @@
     height:20px !important;
     margin:0 !important;
   }
+  /* 活動紀錄：每一天的左右欄兩欄排版 */
+#cardActivity .activityGrid{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:10px;
+  align-items:stretch;
+  min-width:0;
+}
+
+/* 左欄：日期+備註 */
+#cardActivity .leftCol{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  min-width:0;
+}
+
+/* 手機變單欄 */
+@media (max-width:760px){
+  #cardActivity .activityGrid{
+    grid-template-columns: 1fr;
+  }
+}
 </style>
 </head>
 
