@@ -15,20 +15,18 @@
     --btn:#2f2d2a;
   }
 
-  /* ✅ 防止整頁水平溢出（左右滑動） */
  html, body{
   width:100%;
-  overflow-x:hidden;
-  overscroll-behavior-x: none;
+  max-width:100%;
+  overflow-x:hidden;          /* ✅ 基本鎖 */
 }
-  body{
-    margin:0;
-    width:100%;
-    overflow-x:clip; /* 新瀏覽器更乾淨 */
-    background:var(--bg);
-    color:var(--text);
-    font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
-  }
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+}
   @supports not (overflow: clip){
     body{ overflow-x:hidden; }
   }
