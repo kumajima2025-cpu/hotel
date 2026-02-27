@@ -114,92 +114,92 @@
   .ro input[readonly], .ro textarea[readonly], .ro select:disabled{
     background:#fbfaf7;
   }
-
- /* =========================================================
-   活動紀錄（穩定 + 不黏 + 備註拉到底）
+/* =========================================================
+   活動紀錄：兩行對齊版（日期↔食慾、備註↔排便）
+   目的：不黏、有間距、備註只跟排便對齊（不吃到食慾高度）
    ========================================================= */
 #cardActivity .recordTable{
   width:100%;
   border-collapse:separate;
   border-spacing:0;
+  table-layout:fixed;
 }
 
-/* 表頭 */
-#cardActivity .recordTable thead tr{
-  display:grid;
-  grid-template-columns: 34% 66%;
-  gap:12px;
-  align-items:center;
-}
-#cardActivity .recordTable thead th{
-  text-align:left;
-  padding:8px 0 10px;
-  font-weight:900;
+#cardActivity .recordTable th,
+#cardActivity .recordTable td{
+  vertical-align:top;
+  word-break:break-word;
 }
 
-/* Day row：左右同高 */
-#cardActivity #activityBody tr{
+/* 表頭兩欄 */
+#cardActivity .recordTable th:nth-child(1){ width:34%; }
+#cardActivity .recordTable th:nth-child(2){ width:66%; }
+
+@media (max-width:520px){
+  #cardActivity .recordTable th:nth-child(1){ width:44%; }
+  #cardActivity .recordTable th:nth-child(2){ width:56%; }
+}
+
+/* ✅ 讓每一列變成「2欄2列」的 grid */
+#cardActivity .recordTable tbody tr{
   display:grid;
   grid-template-columns: 34% 66%;
-  gap:12px;
-  align-items:stretch;
+  grid-template-rows: auto auto;
+  column-gap:12px;     /* 左右間距 */
+  row-gap:12px;        /* 上下間距：日期↔備註、食慾↔排便 不黏 */
   padding:12px 0;
   border-top:1px solid var(--line);
+  align-items:start;
 }
 
-/* td 變 block */
-#cardActivity #activityBody td{
-  display:block;
-  padding:0;
-  border:0;
-  min-width:0;
-}
-
-/* 小螢幕欄寬 */
 @media (max-width:520px){
-  #cardActivity .recordTable thead tr,
-  #cardActivity #activityBody tr{
+  #cardActivity .recordTable tbody tr{
     grid-template-columns: 44% 56%;
-    gap:10px;
+    column-gap:10px;
+    row-gap:10px;
   }
-  #cardActivity .recordTable thead th{ font-size:13px; }
 }
 
-/* ---------- 左欄：日期 + 備註（不要黏，備註拉到底） ---------- */
-#cardActivity td.dateCol{
-  display:flex;
-  flex-direction:column;
-  gap:12px;         /* ✅ 日期/備註分開一點 */
-  height:100%;
-  min-height:0;
+/* ✅ 關鍵：td 本身不要佔 grid 格子，讓裡面元素直接進 grid */
+#cardActivity td.dateCol,
+#cardActivity td.dailyCol{
+  display:contents;
 }
 
-/* 日期框 */
+/* ---------- 放置到 2x2 的正確位置 ---------- */
+/* 左上：日期 */
 #cardActivity td.dateCol input[id$="_date"]{
+  grid-column:1;
+  grid-row:1;
+
   font-variant-numeric: tabular-nums;
   font-size:14px;
   padding:10px 8px;
   text-align:center;
 }
 
-/* 備註框：不要變小，真的吃到底 */
+/* 左下：備註（只會對齊到右下「排便」高度，不會吃到食慾） */
 #cardActivity td.dateCol .remindFill{
-  flex:1;
-  min-height:0;     /* ✅ flex 內可伸縮 */
-  height:100%;
-  resize:none;
+  grid-column:1;
+  grid-row:2;
+
+  min-height:170px;   /* 你想更高/更矮就改這個 */
+  resize:vertical;
 }
 
-/* ---------- 右欄：日常紀錄（食慾/排便不要黏） ---------- */
-#cardActivity td.dailyCol{
-  display:flex;
-  flex-direction:column;
-  gap:14px;         /* ✅ 食慾/排便分開，不黏 */
-  height:100%;
-  min-height:0;
+/* 右上：食慾 */
+#cardActivity .appetiteBox{
+  grid-column:2;
+  grid-row:1;
 }
 
-/* 每個區塊外框 */
+/* 右下：排便排尿 */
+#cardActivity .toiletBox{
+  grid-column:2;
+  grid-row:2;
+}
+
+/* ---------- 區塊外框 ---------- */
 #cardActivity .boxSec{
   border:1px solid var(--line);
   border-radius:14px;
@@ -207,7 +207,7 @@
   background:#fff;
 }
 
-/* 食慾：早中晚 */
+/* 食慾：早中晚排版 */
 #cardActivity .mealRow{
   display:grid;
   grid-template-columns: 44px 1fr;
@@ -233,25 +233,12 @@
   border-top:1px dashed var(--line);
 }
 
-/* ✅ 關鍵：讓右邊「排便排尿」這框撐高，整列才有高度，左邊備註才能拉到底 */
-#cardActivity .toiletBox{
-  flex:1;            /* ✅ 撐到跟整列同高 */
-  min-height:0;
-  display:flex;
-  flex-direction:column;
-}
-
-/* 排便排尿的異常說明 textarea 也跟著變高 */
-#cardActivity .toiletBox textarea{
-  flex:1;
-  min-height:120px;
-}
-
-/* 手機微調 */
+/* 小螢幕 */
 @media (max-width:520px){
   #cardActivity .mealRow{ grid-template-columns: 40px 1fr; gap:6px; }
   #cardActivity .mealOpts{ gap:8px; }
   #cardActivity .mealOpts label{ font-size:13px; }
+ 
 }
 </style>
 </head>
