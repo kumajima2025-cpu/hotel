@@ -5,167 +5,207 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>CAMA CAMA｜住宿明細確認</title>
   <style>
-    :root{
-      --bg:#F6F1E9;
-      --card:#ffffff;
-      --line:#E3D8C8;
-      --title:#EDE6DA;
-      --text:#3C3A36;
-      --muted:#7B746B;
-      --btn:#2f2d2a;
-    }
-    body{
-      margin:0; background:var(--bg); color:var(--text);
-      font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
-    }
-    .wrap{max-width:900px; margin:0 auto; padding:18px;}
-    .brand{ text-align:center; font-weight:800; letter-spacing:1px; margin:6px 0 10px; }
-    .barTitle{
-      background:var(--btn); color:#fff; text-align:center;
-      padding:12px 14px; border-radius:14px; font-weight:800; letter-spacing:3px;
-    }
-    .hint{color:var(--muted); font-size:13px; line-height:1.5; margin:10px 0 14px;}
-    .card{
-      background:var(--card); border:1px solid var(--line); border-radius:18px;
-      overflow:hidden; margin:12px 0;
-    }
-    .cardTitle{background:var(--title); padding:12px 14px; font-weight:800;}
-    .cardBody{padding:14px;}
-    .grid{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
-    .grid3{display:grid; grid-template-columns:repeat(3, 1fr); gap:10px;}
-@media (max-width:920px){ .grid3{grid-template-columns:repeat(2, 1fr);} }
-@media (max-width:520px){ .grid3{grid-template-columns:1fr;} }
-    @media (max-width:760px){ .grid{grid-template-columns:1fr;} }
-  
+  :root{
+    --bg:#F6F1E9;
+    --card:#ffffff;
+    --line:#E3D8C8;
+    --title:#EDE6DA;
+    --text:#3C3A36;
+    --muted:#7B746B;
+    --btn:#2f2d2a;
+  }
 
-    label{display:block; font-size:13px; margin:2px 0 6px; color:var(--muted);}
-    input, textarea, select{
-      width:100%; box-sizing:border-box; padding:10px 10px; border-radius:12px;
-      border:1px solid var(--line); background:#fff; font-size:15px; color:var(--text);
-    }
-    textarea{min-height:86px; resize:vertical;}
-    
-    .cellTitle{font-weight:800; margin-bottom:6px;}
-    .opts{display:flex; flex-wrap:wrap; gap:10px; align-items:center;}
-    .opt{display:flex; gap:6px; align-items:center; font-size:14px;}
-    .opt input{width:auto;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+  }
 
-    .feeRow{display:grid; grid-template-columns:1fr 120px 120px 120px; gap:10px; margin-bottom:10px;}
-    @media (max-width:760px){ .feeRow{grid-template-columns:1fr 1fr; } }
-    .mono{font-variant-numeric: tabular-nums;}
-    .feeTotal{display:flex; justify-content:flex-end; gap:10px; align-items:center; margin-top:8px; font-weight:900;}
-    .feeTotal span{font-size:18px;}
+  .wrap{max-width:900px; margin:0 auto; padding:18px;}
+  .brand{ text-align:center; font-weight:800; letter-spacing:1px; margin:6px 0 10px; }
+  .barTitle{
+    background:var(--btn); color:#fff; text-align:center;
+    padding:12px 14px; border-radius:14px; font-weight:800; letter-spacing:3px;
+  }
+  .hint{color:var(--muted); font-size:13px; line-height:1.5; margin:10px 0 14px;}
 
-    .btns{display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;}
-    button{
-      padding:11px 14px; border:0; border-radius:14px; cursor:pointer; font-size:15px;
-      background:var(--btn); color:#fff;
-    }
-    .ghost{background:#fff; border:1px solid var(--line); color:var(--text);}
-    .small{font-size:12px; color:var(--muted); line-height:1.5;}
-    .linkBox{
-      margin-top:10px; padding:10px; border:1px dashed #cdbfae; border-radius:12px;
-      background:#fff; word-break:break-all; font-size:13px;
-    }
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:18px;
+    overflow:hidden;
+    margin:12px 0;
+  }
+  .cardTitle{background:var(--title); padding:12px 14px; font-weight:800;}
+  .cardBody{padding:14px;}
 
-    .sigBox{background:#fff; border:1px dashed #cdbfae; border-radius:12px; padding:10px;}
-    canvas{width:100%; height:180px; border:1px solid var(--line); border-radius:12px; touch-action:none;}
-    .status{margin-top:10px; font-size:14px;}
-    .ok{color:#1b7f3a;}
-    .bad{color:#b00020;}
+  .grid{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+  .grid3{display:grid; grid-template-columns:repeat(3, 1fr); gap:10px;}
+  @media (max-width:920px){ .grid3{grid-template-columns:repeat(2, 1fr);} }
+  @media (max-width:520px){ .grid3{grid-template-columns:1fr;} }
+  @media (max-width:760px){ .grid{grid-template-columns:1fr;} }
 
-    .modeTag{
-      display:inline-block; padding:6px 10px; border-radius:999px;
-      border:1px solid var(--line); background:#fff; font-size:12px; color:var(--muted);
-      margin:10px 0 0;
-    }
+  label{display:block; font-size:13px; margin:2px 0 6px; color:var(--muted);}
+  input, textarea, select{
+    width:100%;
+    box-sizing:border-box;
+    padding:10px 10px;
+    border-radius:12px;
+    border:1px solid var(--line);
+    background:#fff;
+    font-size:15px;
+    color:var(--text);
+  }
+  textarea{min-height:86px; resize:vertical;}
 
-    .ro input[readonly], .ro textarea[readonly], .ro select:disabled{
-      background:#fbfaf7;
-    }
-/* ===== 活動紀錄：table 欄寬穩定 ===== */
-#cardActivity .recordTable{
-  width:100%;
-  table-layout:fixed;
-  border-collapse:collapse;
-}
+  .cellTitle{font-weight:800; margin-bottom:6px;}
+  .opts{display:flex; flex-wrap:wrap; gap:10px; align-items:center;}
+  .opt{display:flex; gap:6px; align-items:center; font-size:14px;}
+  .opt input{width:auto;}
 
-#cardActivity .recordTable th,
-#cardActivity .recordTable td{
-  word-break:break-word;
-  vertical-align:top;
-}
+  .feeRow{display:grid; grid-template-columns:1fr 120px 120px 120px; gap:10px; margin-bottom:10px;}
+  @media (max-width:760px){ .feeRow{grid-template-columns:1fr 1fr; } }
+  .mono{font-variant-numeric: tabular-nums;}
+  .feeTotal{display:flex; justify-content:flex-end; gap:10px; align-items:center; margin-top:8px; font-weight:900;}
+  .feeTotal span{font-size:18px;}
 
-/* 三欄比例（手機也不會擠爆） */
-#cardActivity .recordTable th:nth-child(1){ width:26%; }
-#cardActivity .recordTable th:nth-child(2){ width:46%; }
-#cardActivity .recordTable th:nth-child(3){ width:28%; }
+  .btns{display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;}
+  button{
+    padding:11px 14px; border:0; border-radius:14px;
+    cursor:pointer; font-size:15px;
+    background:var(--btn); color:#fff;
+  }
+  .ghost{background:#fff; border:1px solid var(--line); color:var(--text);}
+  .small{font-size:12px; color:var(--muted); line-height:1.5;}
+  .linkBox{
+    margin-top:10px; padding:10px;
+    border:1px dashed #cdbfae; border-radius:12px;
+    background:#fff; word-break:break-all; font-size:13px;
+  }
 
-/* 右欄備註 textarea 一定要滿寬 */
-#cardActivity .recordTable textarea{
-  width:100%;
-  box-sizing:border-box;
-}
+  .sigBox{background:#fff; border:1px dashed #cdbfae; border-radius:12px; padding:10px;}
+  canvas{width:100%; height:180px; border:1px solid var(--line); border-radius:12px; touch-action:none;}
+  .status{margin-top:10px; font-size:14px;}
+  .ok{color:#1b7f3a;}
+  .bad{color:#b00020;}
 
-/* ===== 活動紀錄：食慾區塊防爆（LINE 小螢幕） ===== */
-#cardActivity .opts{
-  display:flex;
-  flex-wrap:wrap;
-  align-items:flex-start;
-  gap:8px;
-}
+  .modeTag{
+    display:inline-block; padding:6px 10px; border-radius:999px;
+    border:1px solid var(--line); background:#fff;
+    font-size:12px; color:var(--muted);
+    margin:10px 0 0;
+  }
 
-#cardActivity .opts > .opt{
-  display:flex;
-  flex-wrap:wrap;
-  align-items:center;
-  gap:8px;
-}
+  .ro input[readonly], .ro textarea[readonly], .ro select:disabled{
+    background:#fbfaf7;
+  }
 
-/* 避免「良好/普通/不吃」被拆得亂七八糟 */
-#cardActivity label.opt{
-  white-space:nowrap;
-}
+  /* =========================================================
+     活動紀錄：新版（左：日期+提醒；右：日常紀錄）
+     ========================================================= */
+  #cardActivity .recordTable{
+    width:100%;
+    table-layout:fixed;
+    border-collapse:collapse;
+  }
 
-@media (max-width:520px){
   #cardActivity .recordTable th,
   #cardActivity .recordTable td{
-    padding:8px;
-    font-size:13px;
+    vertical-align:top;
+    word-break:break-word;
+    padding:10px;
+    border-top:1px solid var(--line);
   }
-}
-    /* ===== 活動紀錄：早/中/晚 左右兩欄穩定版型 ===== */
-#cardActivity .mealRow{
-  display:grid;
-  grid-template-columns: 44px 1fr; /* 左：早/中/晚 右：選項 */
-  gap:8px;
-  align-items:center;
-  margin-top:6px;
-}
-#cardActivity .mealTag{
-  font-weight:800;
-  color:var(--muted);
-  white-space:nowrap;
-}
-#cardActivity .mealOpts{
-  display:flex;
-  flex-wrap:wrap;
-  gap:10px;
-  align-items:center;
-}
 
-/* 讓 label 不被拆得亂七八糟 */
-#cardActivity .mealOpts label{
-  white-space:nowrap;
-}
+  /* 兩欄比例：左 34%（日期+提醒）/ 右 66%（日常紀錄） */
+  #cardActivity .recordTable th:nth-child(1),
+  #cardActivity .recordTable td:nth-child(1){ width:34%; }
+  #cardActivity .recordTable th:nth-child(2),
+  #cardActivity .recordTable td:nth-child(2){ width:66%; }
 
-/* 手機時縮小間距與字 */
-@media (max-width:520px){
-  #cardActivity .mealRow{ grid-template-columns: 40px 1fr; gap:6px; }
-  #cardActivity .mealOpts{ gap:8px; }
-  #cardActivity .mealOpts label{ font-size:13px; }
-}
-  </style>
+  /* 左欄：日期 + 提醒堆疊 */
+  #cardActivity .leftStack{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  #cardActivity .leftStack textarea{
+    min-height:110px;
+  }
+
+  /* 右欄：日常紀錄容器 */
+  #cardActivity .dailyWrap{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+
+  /* 日常紀錄：分區外框（食慾、排便排尿各一框） */
+  #cardActivity .boxSec{
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:10px;
+    background:#fff;
+  }
+  #cardActivity .boxSec .secHead{
+    font-weight:900;
+    margin-bottom:8px;
+    color:var(--text);
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  #cardActivity .boxSec .secHead::before{
+    content:"";
+    width:6px;
+    height:14px;
+    border-radius:999px;
+    background:var(--line);
+    display:inline-block;
+  }
+
+  /* 食慾：早/中/晚 左右兩欄穩定版型 */
+  #cardActivity .mealRow{
+    display:grid;
+    grid-template-columns: 44px 1fr;
+    gap:8px;
+    align-items:center;
+    margin-top:8px;
+  }
+  #cardActivity .mealRow:first-of-type{ margin-top:0; }
+  #cardActivity .mealTag{
+    font-weight:900;
+    color:var(--muted);
+    white-space:nowrap;
+  }
+  #cardActivity .mealOpts{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    align-items:center;
+  }
+  #cardActivity .mealOpts label{ white-space:nowrap; }
+
+  /* 排便排尿：備註 textarea */
+  #cardActivity .toiletNote{
+    margin-top:8px;
+    min-height:70px;
+  }
+
+  /* 小螢幕微調 */
+  @media (max-width:520px){
+    #cardActivity .recordTable th,
+    #cardActivity .recordTable td{
+      padding:8px;
+      font-size:13px;
+    }
+    #cardActivity .leftStack textarea{ min-height:96px; }
+    #cardActivity .mealRow{ grid-template-columns: 40px 1fr; gap:6px; }
+    #cardActivity .mealOpts{ gap:8px; }
+    #cardActivity .mealOpts label{ font-size:13px; }
+  }
+</style>
 </head>
 
 <body>
