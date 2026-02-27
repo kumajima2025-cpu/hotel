@@ -272,10 +272,47 @@
     #cardActivity .recordTable th:nth-child(2),
     #cardActivity .recordTable td:nth-child(2){ width:56%; }
   }
-.grid3{ outline:4px solid red !important; }
-.opts{ outline:4px solid blue !important; }
-.opt{ outline:4px solid green !important; }
-    
+/* ===== 修正：住宿時期個性觀察 行距一致 ===== */
+
+/* 把這區的 flex-wrap 改成 grid */
+.grid3 .opts{
+  display:grid !important;
+  grid-template-columns:repeat(3, minmax(0,1fr)) !important;
+  column-gap:18px !important;
+  row-gap:12px !important;   /* ⭐ 五行間距一致的關鍵 */
+  align-items:center !important;
+}
+
+/* 每個選項 */
+.grid3 .opt{
+  display:flex !important;
+  align-items:center !important;
+  gap:10px !important;
+  margin:0 !important;
+  line-height:1.35 !important;
+}
+
+/* checkbox 大小恢復正常 */
+.grid3 .opt input[type="checkbox"]{
+  width:20px !important;
+  height:20px !important;
+  margin:0 !important;
+  flex:0 0 auto !important;
+}
+
+/* 平板 */
+@media (max-width:920px){
+  .grid3 .opts{
+    grid-template-columns:repeat(2, minmax(0,1fr)) !important;
+  }
+}
+
+/* 手機 */
+@media (max-width:520px){
+  .grid3 .opts{
+    grid-template-columns:1fr !important;
+  }
+}
   </style>
 </head>
 
