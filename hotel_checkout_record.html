@@ -275,7 +275,37 @@ body{
     #cardActivity .recordTable th:nth-child(2),
     #cardActivity .recordTable td:nth-child(2){ width:56%; }
   }
+/* ✅ 最硬鎖：把任何水平溢出直接裁掉（iOS/Android/桌機都有效） */
+body, .wrap{
+  overflow-x: hidden;
+}
 
+#cardActivity,
+#cardActivity .cardBody,
+#cardActivity .recordTable{
+  overflow-x: hidden;
+}
+
+/* ✅ table 固定版型下，防止內容把欄位撐破 */
+#cardActivity .recordTable{
+  width:100%;
+  table-layout: fixed;
+}
+
+#cardActivity .recordTable th,
+#cardActivity .recordTable td{
+  min-width:0;
+}
+
+/* ✅ 日期 input 常常被字元撐破：強制可縮 */
+#cardActivity input[id$="_date"]{
+  min-width:0;
+}
+
+/* ✅ 如果某些地方仍然溢出：最後保險（很有效） */
+*{
+  max-width:100%;
+}
   </style>
 </head>
 
@@ -1046,7 +1076,9 @@ body{
     showAll = true;
     applyVisibility();
     const last = getRows()[getRows().length-1];
-    last && last.scrollIntoView({behavior:"smooth", block:"start"});
+    if(last){
+  last.scrollIntoView({behavior:"smooth", block:"start", inline:"nearest"});
+}
   }
 
   function deleteLastDay(){
