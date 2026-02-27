@@ -12,7 +12,7 @@
   html, body{
     width:100%;
     max-width:100%;
-    overflow-x:hidden; /* ✅ 封死左右滑動 */
+    overflow-x:hidden;
   }
 
   body{
@@ -44,8 +44,6 @@
   }
 
   .secTitle{font-weight:700; margin-bottom:10px; line-height:1.5; padding-bottom:2px;}
-
-  /* ✅ 避免 grid 內容撐爆造成橫向溢出 */
   .grid{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:10px;}
   .grid3{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:10px;}
   @media (max-width:720px){ .grid,.grid3{grid-template-columns:1fr;} }
@@ -65,10 +63,7 @@
     border-radius:10px;
     border:1px solid var(--line);
     background:#fff;
-
-    /* ✅ iPhone 打字放大/重排的主因：字體 < 16px */
     font-size:16px;
-
     line-height:1.6;
     padding:12px 10px;
   }
@@ -285,8 +280,6 @@
       </div>
 
       <div style="height:10px"></div>
-
-      <!-- ✅ 這段原本結構有錯：已修成正確兩欄 -->
       <div class="grid">
         <div>
           <label>配合動物醫院</label>
