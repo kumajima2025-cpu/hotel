@@ -66,55 +66,74 @@
 
   .grid{display:grid; grid-template-columns:1fr 1fr; gap:10px; min-width:0;}
 
-/* ✅ 住宿時個性觀察：只改這一區（grid3） */
-.grid3{
-  display:grid;
-  grid-template-columns:repeat(3, 1fr);
-  column-gap:18px;
-  row-gap:10px;      /* 五行一致的行距靠這個 */
-  min-width:0;
-  align-items:start;
+/* ================= 覆蓋：住宿時個性觀察（可多選） ================= */
+/* 1) 不管 grid3 外面/裡面有沒有 .opts，都強制用 grid 排版 */
+.grid3,
+.grid3 .opts{
+  display:grid !important;
+  grid-template-columns:repeat(3, minmax(0, 1fr)) !important;
+  column-gap:18px !important;
+  row-gap:10px !important;         /* ✅ 五行一致的行距 */
+  align-items:start !important;
+  gap:unset !important;            /* ✅ 避免原本 gap:10px 影響 */
 }
 
-/* ✅ 不用 >，只要在 grid3 裡面的 label 都吃得到 */
-.grid3 label{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  margin:0;                 /* 把全域 label 的 margin 消掉 */
-  font-size:14px;
-  color:var(--text);
-  line-height:1.35;
-  min-width:0;
+/* 2) 選項本體：不管是 label 或 .opt 都套一樣 */
+.grid3 label,
+.grid3 .opt{
+  display:flex !important;
+  align-items:center !important;
+  gap:10px !important;
+  margin:0 !important;             /* ✅ 取消你全域 label 的 margin */
+  font-size:14px !important;
+  color:var(--text) !important;
+  line-height:1.35 !important;
+  min-width:0 !important;
+  white-space:normal !important;
 }
 
-/* ✅ checkbox 回原本大小 */
+/* 3) checkbox 尺寸回到原本舒服的大小 */
 .grid3 input[type="checkbox"]{
-  width:20px;
-  height:20px;
-  margin:0;
-  flex:0 0 auto;
+  width:20px !important;
+  height:20px !important;
+  margin:0 !important;
+  flex:0 0 auto !important;
 }
 
-/* ✅ 長文字可以換行 */
-.grid3 label span{
-  min-width:0;
-  word-break:break-word;
+/* 4) 文字允許換行，不會把格子撐爆 */
+.grid3 label span,
+.grid3 .opt span{
+  min-width:0 !important;
+  word-break:break-word !important;
 }
 
-/* ⭐ 互動良好是第七個（這次用「整個區塊內第七個 label」的概念）
-   ⚠️ 如果你的 label 中間混了其他非 label 元素，nth-of-type 更穩 */
-.grid3 label:nth-of-type(7){
-  grid-column:1 / -1;
+/* 5) 第 7 個（互動良好）跨三欄獨佔一排
+   - 同時寫兩種：選項是 grid3 直屬、或包在 .opts 裡 */
+.grid3 > :nth-child(7),
+.grid3 .opts > :nth-child(7){
+  grid-column:1 / -1 !important;
 }
 
+/* RWD */
 @media (max-width:920px){
-  .grid3{grid-template-columns:repeat(2, 1fr);}
-  .grid3 label:nth-of-type(7){grid-column:1 / -1;}
+  .grid3,
+  .grid3 .opts{
+    grid-template-columns:repeat(2, minmax(0, 1fr)) !important;
+  }
+  .grid3 > :nth-child(7),
+  .grid3 .opts > :nth-child(7){
+    grid-column:1 / -1 !important;
+  }
 }
 @media (max-width:520px){
-  .grid3{grid-template-columns:1fr;}
-  .grid3 label:nth-of-type(7){grid-column:auto;}
+  .grid3,
+  .grid3 .opts{
+    grid-template-columns:1fr !important;
+  }
+  .grid3 > :nth-child(7),
+  .grid3 .opts > :nth-child(7){
+    grid-column:auto !important;
+  }
 }
 
   label{display:block; font-size:13px; margin:2px 0 6px; color:var(--muted);}
