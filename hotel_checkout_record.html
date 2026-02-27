@@ -205,6 +205,17 @@
     #cardActivity .mealOpts{ gap:8px; }
     #cardActivity .mealOpts label{ font-size:13px; }
   }
+    /* ===== 食慾：早中晚分界線（不含標題下方） ===== */
+
+/* 每列本身間距 */
+#cardActivity .boxSec .mealRow{
+  padding:8px 0;
+}
+
+/* 只有「第二列開始」才加線 */
+#cardActivity .boxSec .mealRow + .mealRow{
+  border-top:1px dashed #E3D8C8;
+}
 </style>
 </head>
 
