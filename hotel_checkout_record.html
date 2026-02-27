@@ -1240,14 +1240,15 @@
   const modeTagEl = document.getElementById("modeTag");
 
   (async function initMode(){
-    if (isCreate) {
-      hintEl.innerHTML = "【店家填寫模式】<br>
-        填完後按「產生確認連結」，複製連結給客人簽名回傳。";
-      modeTagEl.textContent = "MODE: 店家填寫";
-      document.getElementById("cardConfirmActions").style.display = "none";
-      document.getElementById("cardCreateActions").style.display = "block";
-      return;
-    }
+if (isCreate) {
+  hintEl.innerHTML = `【店家填寫模式】<br>
+  填完後按「產生確認連結」，複製連結給客人簽名回傳。`;
+  modeTagEl.textContent = "MODE: 店家填寫";
+  document.getElementById("cardConfirmActions").style.display = "none";
+  document.getElementById("cardCreateActions").style.display = "block";
+
+  return;
+}
 
     if (isConfirm) {
       hintEl.innerHTML = "【客人確認模式】請確認內容無誤後勾選、簽名並送出。";
