@@ -15,29 +15,35 @@
     --btn:#2f2d2a;
   }
 
+  /* ✅ 防止整頁水平溢出（左右滑動） */
+  html{
+    width:100%;
+    overflow-x:hidden;
+  }
+  body{
+    margin:0;
+    width:100%;
+    overflow-x:clip; /* 新瀏覽器更乾淨 */
+    background:var(--bg);
+    color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+  }
+  @supports not (overflow: clip){
+    body{ overflow-x:hidden; }
+  }
 
-body{
-  margin:0;
-  background:var(--bg);
-  color:var(--text);
-  font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
-  overflow-x:hidden;
-  max-width:100%;
-}
-    html, body{
-  width:100%;
-  overflow-x:hidden;
-}
+  *{ box-sizing:border-box; }
+  img, canvas{ max-width:100%; display:block; }
 
-*{
-  box-sizing:border-box;
-}
+  .wrap{
+    width:100%;
+    max-width:900px;
+    margin:0 auto;
+    padding:18px;
+    overflow-x:hidden;
+    contain:layout paint; /* ✅ 避免子元素撐出寬度 */
+  }
 
-img, table, input, textarea, canvas{
-  max-width:100%;
-}
-
-  .wrap{max-width:900px; margin:0 auto; padding:18px;}
   .brand{ text-align:center; font-weight:800; letter-spacing:1px; margin:6px 0 10px; }
   .barTitle{
     background:var(--btn); color:#fff; text-align:center;
@@ -53,19 +59,19 @@ img, table, input, textarea, canvas{
     margin:12px 0;
   }
   .cardTitle{background:var(--title); padding:12px 14px; font-weight:800;}
-  .cardBody{padding:14px;}
+  .cardBody{padding:14px; min-width:0;}
 
-  .grid{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
-  .grid3{display:grid; grid-template-columns:repeat(3, 1fr); gap:10px;}
+  .grid{display:grid; grid-template-columns:1fr 1fr; gap:10px; min-width:0;}
+  .grid3{display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; min-width:0;}
   @media (max-width:920px){ .grid3{grid-template-columns:repeat(2, 1fr);} }
   @media (max-width:520px){ .grid3{grid-template-columns:1fr;} }
   @media (max-width:760px){ .grid{grid-template-columns:1fr;} }
 
   label{display:block; font-size:13px; margin:2px 0 6px; color:var(--muted);}
+
   input, textarea, select{
     width:100%;
-    max-width:100%;
-    box-sizing:border-box;
+    min-width:0;
     padding:10px 10px;
     border-radius:12px;
     border:1px solid var(--line);
@@ -76,21 +82,22 @@ img, table, input, textarea, canvas{
   textarea{min-height:86px; resize:vertical;}
 
   .cellTitle{font-weight:800; margin-bottom:6px;}
-  .opts{display:flex; flex-wrap:wrap; gap:10px; align-items:center;}
-  .opt{display:flex; gap:6px; align-items:center; font-size:14px;}
+  .opts{display:flex; flex-wrap:wrap; gap:10px; align-items:center; min-width:0;}
+  .opt{display:flex; gap:6px; align-items:center; font-size:14px; min-width:0;}
   .opt input{width:auto;}
 
-  .feeRow{display:grid; grid-template-columns:1fr 120px 120px 120px; gap:10px; margin-bottom:10px;}
+  .feeRow{display:grid; grid-template-columns:1fr 120px 120px 120px; gap:10px; margin-bottom:10px; min-width:0;}
   @media (max-width:760px){ .feeRow{grid-template-columns:1fr 1fr; } }
   .mono{font-variant-numeric: tabular-nums;}
   .feeTotal{display:flex; justify-content:flex-end; gap:10px; align-items:center; margin-top:8px; font-weight:900;}
   .feeTotal span{font-size:18px;}
 
-  .btns{display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;}
+  .btns{display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; min-width:0;}
   button{
     padding:11px 14px; border:0; border-radius:14px;
     cursor:pointer; font-size:15px;
     background:var(--btn); color:#fff;
+    white-space:nowrap;
   }
   .ghost{background:#fff; border:1px solid var(--line); color:var(--text);}
   .small{font-size:12px; color:var(--muted); line-height:1.5;}
@@ -98,6 +105,7 @@ img, table, input, textarea, canvas{
     margin-top:10px; padding:10px;
     border:1px dashed #cdbfae; border-radius:12px;
     background:#fff; word-break:break-all; font-size:13px;
+    overflow-wrap:anywhere;
   }
 
   .sigBox{background:#fff; border:1px dashed #cdbfae; border-radius:12px; padding:10px;}
@@ -111,49 +119,60 @@ img, table, input, textarea, canvas{
     border:1px solid var(--line); background:#fff;
     font-size:12px; color:var(--muted);
     margin:10px 0 0;
-    min-height:14px; /* ✅ 避免看起來像空框 */
+    min-height:14px;
   }
 
   .ro input[readonly], .ro textarea[readonly], .ro select:disabled{
     background:#fbfaf7;
   }
 
-  /* =========================================================
-     活動紀錄：左：日期+提醒；右：日常紀錄
-     ========================================================= */
+  /* ================= 活動紀錄 ================= */
   #cardActivity .recordTable{
     width:100%;
     max-width:100%;
     table-layout:fixed;
     border-collapse:collapse;
+    overflow:hidden;
   }
-
   #cardActivity .recordTable th,
   #cardActivity .recordTable td{
     vertical-align:top;
     word-break:break-word;
+    overflow-wrap:anywhere;
     padding:10px;
     border-top:1px solid var(--line);
-    min-width:0; /* ✅ 防止 table 撐出水平捲動 */
+    min-width:0;
+    overflow:hidden;
   }
 
-  /* 兩欄比例 */
+  /* ✅ 左欄稍微加寬，避免日期裁切 */
   #cardActivity .recordTable th:nth-child(1),
-  #cardActivity .recordTable td:nth-child(1){ width:34%; }
+  #cardActivity .recordTable td:nth-child(1){ width:40%; }
   #cardActivity .recordTable th:nth-child(2),
-  #cardActivity .recordTable td:nth-child(2){ width:66%; }
+  #cardActivity .recordTable td:nth-child(2){ width:60%; }
 
   #cardActivity .leftStack{
     display:flex;
     flex-direction:column;
     gap:10px;
+    min-width:0;
   }
+
+  /* ✅ 日期輸入更好看、避免裁切 */
+  #cardActivity input[id$="_date"]{
+    font-size:16px;
+    line-height:1.25;
+    padding:11px 10px;
+    font-variant-numeric: tabular-nums;
+  }
+
   #cardActivity .leftStack textarea{ min-height:110px; }
 
   #cardActivity .dailyWrap{
     display:flex;
     flex-direction:column;
     gap:10px;
+    min-width:0;
   }
 
   #cardActivity .boxSec{
@@ -161,6 +180,7 @@ img, table, input, textarea, canvas{
     border-radius:14px;
     padding:10px;
     background:#fff;
+    min-width:0;
   }
   #cardActivity .boxSec .secHead{
     font-weight:900;
@@ -185,6 +205,7 @@ img, table, input, textarea, canvas{
     gap:8px;
     align-items:center;
     margin-top:8px;
+    min-width:0;
   }
   #cardActivity .mealRow:first-of-type{ margin-top:0; }
   #cardActivity .mealTag{
@@ -197,6 +218,7 @@ img, table, input, textarea, canvas{
     flex-wrap:wrap;
     gap:10px;
     align-items:center;
+    min-width:0;
   }
   #cardActivity .mealOpts label{ white-space:nowrap; }
 
@@ -205,7 +227,36 @@ img, table, input, textarea, canvas{
     min-height:70px;
   }
 
+  /* 食慾列分界線 */
+  #cardActivity .boxSec .mealRow{ padding:8px 0; }
+  #cardActivity .boxSec .mealRow + .mealRow{ border-top:1px dashed #E3D8C8; }
+
+  /* ✅ 備註固定高度（妳原本的紅框） */
+  #cardActivity textarea[id$="_remind"]{
+    height:260px;
+    min-height:260px;
+    resize:vertical;
+  }
+
+  /* ✅ 三顆按鈕同一行 */
+  .actBar{
+    display:flex;
+    justify-content:flex-end;
+    gap:10px;
+    flex-wrap:nowrap;     /* 不換行 */
+    margin:0 0 10px;
+    min-width:0;
+  }
+  .actBar button{ white-space:nowrap; }
+
   @media (max-width:520px){
+    .actBar{ gap:8px; }
+    .actBar button{
+      padding:9px 10px;
+      font-size:13px;
+      border-radius:12px;
+    }
+
     #cardActivity .recordTable th,
     #cardActivity .recordTable td{
       padding:8px;
@@ -215,18 +266,14 @@ img, table, input, textarea, canvas{
     #cardActivity .mealRow{ grid-template-columns: 40px 1fr; gap:6px; }
     #cardActivity .mealOpts{ gap:8px; }
     #cardActivity .mealOpts label{ font-size:13px; }
+
+    /* 小螢幕左欄再稍微加寬避免日期裁切 */
+    #cardActivity .recordTable th:nth-child(1),
+    #cardActivity .recordTable td:nth-child(1){ width:44%; }
+    #cardActivity .recordTable th:nth-child(2),
+    #cardActivity .recordTable td:nth-child(2){ width:56%; }
   }
 
-  /* 食慾列分界線 */
-  #cardActivity .boxSec .mealRow{ padding:8px 0; }
-  #cardActivity .boxSec .mealRow + .mealRow{ border-top:1px dashed #E3D8C8; }
-
-  /* ✅ 你要的紅框大備註：固定預設高度 */
-  #cardActivity textarea[id$="_remind"]{
-    height:260px;
-    min-height:260px;
-    resize:vertical;
-  }
   </style>
 </head>
 
@@ -268,7 +315,7 @@ img, table, input, textarea, canvas{
     <div class="card" id="cardActivity">
       <div class="cardTitle">活動紀錄</div>
       <div class="cardBody">
-        <div class="btns" style="justify-content:flex-end; margin:0 0 10px;">
+        <div class="actBar">
           <button type="button" class="ghost" id="actAddDay">＋新增一天</button>
           <button type="button" class="ghost" id="actDelDay">－刪除最後一天</button>
           <button type="button" class="ghost" id="actShowAll">顯示全部</button>
@@ -287,23 +334,11 @@ img, table, input, textarea, canvas{
             <tr data-template="day">
               <td>
                 <div class="leftStack">
+                  <div>
+                    <label>日期</label>
+                    <input id="d1_date" placeholder="YYYY/MM/DD" inputmode="numeric" pattern="\d*" autocomplete="off" maxlength="10">
+                  </div>
 
-  <button type="button" class="actDelDay ghost"
-          style="align-self:flex-end;">
-    刪除這天
-  </button>
-
-  <div>
-    <label>日期</label>
-    <input id="d1_date" placeholder="YYYY/MM/DD">
-  </div>
-
-  <div>
-    <label>提醒 / 備註</label>
-    <textarea id="d1_remind"></textarea>
-  </div>
-
-</div>
                   <div>
                     <label>提醒 / 備註</label>
                     <textarea id="d1_remind" placeholder="備註"></textarea>
@@ -575,7 +610,6 @@ img, table, input, textarea, canvas{
   let dataParam = qs.get("data");
   let idParam = qs.get("id");
 
-  // LINE/LIFF 可能把 query 包進 liff.state
   const liffState = qs.get("liff.state");
   if ((!mode && !dataParam && !idParam) && liffState) {
     const decoded = decodeURIComponent(liffState);
@@ -630,7 +664,7 @@ img, table, input, textarea, canvas{
     document.body.classList.add("ro");
   }
 
-  // ========= fee =========  ✅ 問題1
+  // ========= fee =========
   const feeRowsEl = document.getElementById("feeRows");
 
   function feeRowTpl(item="", price="", qty="1"){
@@ -662,7 +696,6 @@ img, table, input, textarea, canvas{
 
   function resetFeeCommon(){
     feeRowsEl.innerHTML = "";
-    // ✅ 你原本要的常用三項（自動計算）
     feeRowsEl.appendChild(feeRowTpl("住宿費", "", "1"));
     feeRowsEl.appendChild(feeRowTpl("洗澡/美容", "", "1"));
     feeRowsEl.appendChild(feeRowTpl("加購項目", "", "1"));
@@ -799,15 +832,20 @@ img, table, input, textarea, canvas{
       owner_name: val("owner_name"),
       pet_name: val("pet_name"),
       stay_date: val("stay_date"),
+
       lifestyle: val("lifestyle"),
+
       feed_am: { kibble: cb("feed_am_kibble"), can: cb("feed_am_can"), fresh: cb("feed_am_fresh"), freeze: cb("feed_am_freeze") },
       feed_noon:{ kibble: cb("feed_noon_kibble"), can: cb("feed_noon_can"), fresh: cb("feed_noon_fresh"), freeze: cb("feed_noon_freeze") },
       feed_pm: { kibble: cb("feed_pm_kibble"), can: cb("feed_pm_can"), fresh: cb("feed_pm_fresh"), freeze: cb("feed_pm_freeze") },
+
       med_am: { before: cb("med_am_before"), after: cb("med_am_after"), with: cb("med_am_with"), note: val("med_am_note") },
       med_noon:{ before: cb("med_noon_before"), after: cb("med_noon_after"), with: cb("med_noon_with"), note: val("med_noon_note") },
       med_pm: { before: cb("med_pm_before"), after: cb("med_pm_after"), with: cb("med_pm_with"), note: val("med_pm_note") },
+
       care_rules: val("care_rules"),
       warm_remind: val("warm_remind"),
+
       personality: {
         friendly_human: cb("p_friendly_human"),
         slow: cb("p_slow"),
@@ -824,6 +862,7 @@ img, table, input, textarea, canvas{
         play_high: cb("p_play_high"),
         rest_high: cb("p_rest_high"),
       },
+
       extra: {
         brush_teeth: val("extra_brush_teeth"),
         meds: val("extra_meds"),
@@ -837,6 +876,7 @@ img, table, input, textarea, canvas{
         syringe: val("extra_syringe"),
         handfeed: val("extra_handfeed"),
       },
+
       days,
       fee_items: feeItems,
       fee_total: String(calcFee()),
@@ -853,29 +893,246 @@ img, table, input, textarea, canvas{
     if(el) el.value = v || "";
   }
 
+  // ========= Activity days + Date formatting =========
+  const stay = document.getElementById("stay_date");
+  const tbody = document.getElementById("activityBody");
+  const btnAdd = document.getElementById("actAddDay");
+  const btnDel = document.getElementById("actDelDay");
+  const btnShowAll = document.getElementById("actShowAll");
+
+  let showAll = false;
+
+  function getRows(){ return Array.from(tbody.querySelectorAll("tr")); }
+
+  function applyVisibility(){
+    const rows = getRows();
+    rows.forEach((tr, idx)=>{
+      tr.style.display = (showAll || idx===0) ? "" : "none";
+    });
+    if(btnShowAll){
+      btnShowAll.textContent = showAll ? "只顯示一天" : "顯示全部";
+    }
+  }
+
+  window.__setShowAllDays = function(on){
+    showAll = !!on;
+    applyVisibility();
+  };
+
+  function renameRow(tr, day){
+    tr.querySelectorAll("[id]").forEach(el=>{
+      el.id = el.id.replace(/^d\d+_/, `d${day}_`);
+    });
+    tr.querySelectorAll('input[type="radio"][name]').forEach(r=>{
+      r.name = r.name.replace(/^d\d+_/, `d${day}_`);
+    });
+  }
+
+  function clearRow(tr){
+    tr.querySelectorAll("input").forEach(inp=>{
+      if(inp.type === "radio" || inp.type === "checkbox") inp.checked = false;
+      else inp.value = "";
+    });
+    tr.querySelectorAll("textarea").forEach(t=> t.value = "");
+  }
+
+  function formatYMDInput(raw){
+    const s = String(raw || "").replace(/\D/g,"").slice(0,8);
+    const y = s.slice(0,4);
+    const m = s.slice(4,6);
+    const d = s.slice(6,8);
+    let out = y;
+    if(m) out += "/" + m;
+    if(d) out += "/" + d;
+    return out;
+  }
+
+  function patchDateInputs(){
+    tbody.querySelectorAll('input[id^="d"][id$="_date"]').forEach(el=>{
+      el.setAttribute("inputmode","numeric");
+      el.setAttribute("pattern","\\d*");
+      el.setAttribute("autocomplete","off");
+      el.setAttribute("maxlength","10");
+      if(!el.placeholder) el.placeholder = "YYYY/MM/DD";
+    });
+  }
+
+  function ensureDayCount(n){
+    n = Math.max(1, n);
+    const tpl = tbody.querySelector('tr[data-template="day"]') || tbody.querySelector("tr");
+    if(!tpl) return;
+
+    let rows = getRows();
+
+    while(rows.length > n){
+      tbody.removeChild(rows[rows.length-1]);
+      rows = getRows();
+    }
+
+    while(rows.length < n){
+      const tr = tpl.cloneNode(true);
+      tr.removeAttribute("data-template");
+      const day = rows.length + 1;
+      renameRow(tr, day);
+      clearRow(tr);
+      tbody.appendChild(tr);
+      rows = getRows();
+    }
+
+    patchDateInputs();
+  }
+
+  function formatYMD(digits){
+    const s = String(digits || "").replace(/\D/g, "").slice(0, 8);
+    const y = s.slice(0, 4);
+    const m = s.slice(4, 6);
+    const d = s.slice(6, 8);
+    let out = y;
+    if(m) out += "/" + m;
+    if(d) out += "/" + d;
+    return out;
+  }
+
+  function parseYMD(str){
+    const digits = String(str || "").replace(/\D/g,"").slice(0,8);
+    if(digits.length !== 8) return null;
+    const y = parseInt(digits.slice(0,4),10);
+    const m = parseInt(digits.slice(4,6),10);
+    const d = parseInt(digits.slice(6,8),10);
+    const dt = new Date(y, m-1, d);
+    if(dt.getFullYear()!==y || dt.getMonth()!==m-1 || dt.getDate()!==d) return null;
+    return dt;
+  }
+
+  function fmtDate(dt){
+    const y = dt.getFullYear();
+    const m = String(dt.getMonth()+1).padStart(2,"0");
+    const d = String(dt.getDate()).padStart(2,"0");
+    return `${y}/${m}/${d}`;
+  }
+
+  function daysBetweenInclusive(a,b){
+    const ms = 24*60*60*1000;
+    const aa = new Date(a.getFullYear(), a.getMonth(), a.getDate()).getTime();
+    const bb = new Date(b.getFullYear(), b.getMonth(), b.getDate()).getTime();
+    if(bb < aa) return 0;
+    return Math.floor((bb-aa)/ms) + 1;
+  }
+
+  function fillDatesFromRange(startDt, endDt){
+    const n = daysBetweenInclusive(startDt, endDt);
+    ensureDayCount(n);
+    for(let i=0;i<n;i++){
+      const dt = new Date(startDt);
+      dt.setDate(startDt.getDate() + i);
+      const el = document.getElementById(`d${i+1}_date`);
+      if(el) el.value = fmtDate(dt);
+    }
+  }
+
+  function addDayManual(){
+    const rows = getRows();
+    ensureDayCount(rows.length + 1);
+    showAll = true;
+    applyVisibility();
+    const last = getRows()[getRows().length-1];
+    last && last.scrollIntoView({behavior:"smooth", block:"start"});
+  }
+
+  function deleteLastDay(){
+    const rows = getRows();
+    if(rows.length <= 1){
+      alert("至少需要保留一天紀錄");
+      return;
+    }
+    tbody.removeChild(rows[rows.length - 1]);
+
+    // 重新編號（保險）
+    const afterRows = getRows();
+    afterRows.forEach((row, idx)=> renameRow(row, idx + 1));
+
+    patchDateInputs();
+    applyVisibility();
+  }
+
+  btnAdd.addEventListener("click", addDayManual);
+  btnDel.addEventListener("click", deleteLastDay);
+  btnShowAll.addEventListener("click", ()=>{
+    showAll = !showAll;
+    applyVisibility();
+  });
+
+  // Day 日期自動補 /
+  tbody.addEventListener("input", (e)=>{
+    const el = e.target;
+    if(!(el instanceof HTMLInputElement)) return;
+    if(!/^d\d+_date$/.test(el.id)) return;
+    const after = formatYMDInput(el.value);
+    if(el.value !== after) el.value = after;
+  });
+
+  // ✅ stay_date：刪除時不強制補 ~（現在從尾巴刪很順）
+  stay.addEventListener("input", (e)=>{
+    const inputType = e && e.inputType ? e.inputType : "";
+    const isDeleting = inputType.startsWith("delete");
+
+    let value = stay.value || "";
+    value = value.replace(/[～\-]/g, "~").replace(/\s+/g, "");
+
+    const parts = value.split("~");
+    const leftDigits  = (parts[0] || "").replace(/\D/g, "");
+    const rightDigits = (parts[1] || "").replace(/\D/g, "");
+
+    const leftFormatted  = formatYMD(leftDigits);
+    const rightFormatted = formatYMD(rightDigits);
+
+    const hasTilde = value.includes("~");
+
+    if(!hasTilde){
+      // 沒有 ~：只顯示左邊日期；非刪除狀態且輸入滿 8 碼才自動補 ~
+      if(!isDeleting && leftDigits.length === 8){
+        stay.value = leftFormatted + "~";
+      }else{
+        stay.value = leftFormatted;
+      }
+    }else{
+      // 有 ~：照實顯示左右（右邊可空）
+      stay.value = leftFormatted + "~" + rightFormatted;
+    }
+
+    const s = parseYMD(leftFormatted);
+    const e2 = parseYMD(rightFormatted);
+    if(s && e2){
+      fillDatesFromRange(s, e2);
+      showAll = false;
+      applyVisibility();
+    }
+  });
+
+  // 初始化
+  patchDateInputs();
+  showAll = false;
+  applyVisibility();
+
+  // ========= applyAllData =========
   function applyAllData(data){
     setVal("owner_name", data.owner_name);
     setVal("pet_name", data.pet_name);
     setVal("stay_date", data.stay_date);
 
-    // days
-    const tbody = document.getElementById("activityBody");
-    const tpl = tbody.querySelector('tr[data-template="day"]');
-    if(tpl){
-      const list = data.days || [];
-      ensureDayCount(Math.max(1, list.length));
+    const list = data.days || [];
+    ensureDayCount(Math.max(1, list.length));
 
-      list.forEach((d, i)=>{
-        const idx = i + 1;
-        setVal(`d${idx}_date`, d.date);
-        setRadio(`d${idx}_am`, d.appetite_am || "");
-        setRadio(`d${idx}_noon`, d.appetite_noon || "");
-        setRadio(`d${idx}_pm`, d.appetite_pm || "");
-        setRadio(`d${idx}_toilet`, d.toilet || "");
-        setVal(`d${idx}_toilet_note`, d.toilet_note);
-        setVal(`d${idx}_remind`, d.remind);
-      });
-    }
+    list.forEach((d, i)=>{
+      const idx = i + 1;
+      setVal(`d${idx}_date`, d.date);
+      setRadio(`d${idx}_am`, d.appetite_am || "");
+      setRadio(`d${idx}_noon`, d.appetite_noon || "");
+      setRadio(`d${idx}_pm`, d.appetite_pm || "");
+      setRadio(`d${idx}_toilet`, d.toilet || "");
+      setVal(`d${idx}_toilet_note`, d.toilet_note);
+      setVal(`d${idx}_remind`, d.remind);
+    });
 
     setVal("lifestyle", data.lifestyle);
 
@@ -947,7 +1204,6 @@ img, table, input, textarea, canvas{
     setVal("extra_syringe", ex.syringe);
     setVal("extra_handfeed", ex.handfeed);
 
-    // fee
     feeRowsEl.innerHTML = "";
     (data.fee_items || []).forEach(x=>{
       feeRowsEl.appendChild(feeRowTpl(x.item || "", x.price || "", x.qty || "1"));
@@ -956,233 +1212,7 @@ img, table, input, textarea, canvas{
     calcFee();
   }
 
-  // ========= Activity days + Date formatting =========
-  const stay = document.getElementById("stay_date");
-  const tbody = document.getElementById("activityBody");
-  const btnAdd = document.getElementById("actAddDay");
-  const btnDel = document.getElementById("actDelDay");
-  const btnShowAll = document.getElementById("actShowAll");
-
-  let showAll = false;
-
-  function getRows(){ return Array.from(tbody.querySelectorAll("tr")); }
-
-  function applyVisibility(){
-    const rows = getRows();
-    rows.forEach((tr, idx)=>{
-      tr.style.display = (showAll || idx===0) ? "" : "none";
-    });
-    if(btnShowAll){
-      btnShowAll.textContent = showAll ? "只顯示一天" : "顯示全部";
-    }
-  }
-
-  window.__setShowAllDays = function(on){
-    showAll = !!on;
-    applyVisibility();
-  };
-
-  function renameRow(tr, day){
-    tr.querySelectorAll("[id]").forEach(el=>{
-      el.id = el.id.replace(/^d\d+_/, `d${day}_`);
-    });
-    tr.querySelectorAll('input[type="radio"][name]').forEach(r=>{
-      r.name = r.name.replace(/^d\d+_/, `d${day}_`);
-    });
-  }
-
-  function clearRow(tr){
-    tr.querySelectorAll("input").forEach(inp=>{
-      if(inp.type === "radio" || inp.type === "checkbox") inp.checked = false;
-      else inp.value = "";
-    });
-    tr.querySelectorAll("textarea").forEach(t=> t.value = "");
-  }
-
-  // ✅ 問題2：日期格式化（YYYY/MM/DD）
-  function formatYMDInput(raw){
-    const s = String(raw || "").replace(/\D/g,"").slice(0,8);
-    const y = s.slice(0,4);
-    const m = s.slice(4,6);
-    const d = s.slice(6,8);
-    let out = y;
-    if(m) out += "/" + m;
-    if(d) out += "/" + d;
-    return out;
-  }
-
-  function patchDateInputs(){
-    tbody.querySelectorAll('input[id^="d"][id$="_date"]').forEach(el=>{
-      el.setAttribute("inputmode","numeric");
-      el.setAttribute("pattern","\\d*");
-      el.setAttribute("autocomplete","off");
-      el.setAttribute("maxlength","10");
-      if(!el.placeholder) el.placeholder = "YYYY/MM/DD";
-    });
-  }
-
-  // ✅ 問題4：新增列會出現 + 日期欄位也會套規則
-  function ensureDayCount(n){
-    n = Math.max(1, n);
-    const tpl = tbody.querySelector('tr[data-template="day"]') || tbody.querySelector("tr");
-    if(!tpl) return;
-
-    let rows = getRows();
-
-    while(rows.length > n){
-      tbody.removeChild(rows[rows.length-1]);
-      rows = getRows();
-    }
-
-    while(rows.length < n){
-      const tr = tpl.cloneNode(true);
-      tr.removeAttribute("data-template");
-      const day = rows.length + 1;
-      renameRow(tr, day);
-      clearRow(tr);
-      tbody.appendChild(tr);
-      rows = getRows();
-    }
-
-    patchDateInputs();
-  }
-
-  // ✅ stay_date 自動補 / 也支援 ~ 區間
-  function formatYMD(digits){
-    const s = String(digits || "").replace(/\D/g, "").slice(0, 8);
-    const y = s.slice(0, 4);
-    const m = s.slice(4, 6);
-    const d = s.slice(6, 8);
-    let out = y;
-    if(m) out += "/" + m;
-    if(d) out += "/" + d;
-    return out;
-  }
-
-  function parseYMD(str){
-    const digits = String(str || "").replace(/\D/g,"").slice(0,8);
-    if(digits.length !== 8) return null;
-    const y = parseInt(digits.slice(0,4),10);
-    const m = parseInt(digits.slice(4,6),10);
-    const d = parseInt(digits.slice(6,8),10);
-    const dt = new Date(y, m-1, d);
-    if(dt.getFullYear()!==y || dt.getMonth()!==m-1 || dt.getDate()!==d) return null;
-    return dt;
-  }
-
-  function fmtDate(dt){
-    const y = dt.getFullYear();
-    const m = String(dt.getMonth()+1).padStart(2,"0");
-    const d = String(dt.getDate()).padStart(2,"0");
-    return `${y}/${m}/${d}`;
-  }
-
-  function daysBetweenInclusive(a,b){
-    const ms = 24*60*60*1000;
-    const aa = new Date(a.getFullYear(), a.getMonth(), a.getDate()).getTime();
-    const bb = new Date(b.getFullYear(), b.getMonth(), b.getDate()).getTime();
-    if(bb < aa) return 0;
-    return Math.floor((bb-aa)/ms) + 1;
-  }
-
-  function fillDatesFromRange(startDt, endDt){
-    const n = daysBetweenInclusive(startDt, endDt);
-    ensureDayCount(n);
-    for(let i=0;i<n;i++){
-      const dt = new Date(startDt);
-      dt.setDate(startDt.getDate() + i);
-      const el = document.getElementById(`d${i+1}_date`);
-      if(el) el.value = fmtDate(dt);
-    }
-  }
-
-  function addDayManual(){
-    const rows = getRows();
-    ensureDayCount(rows.length + 1);
-    showAll = true;
-    applyVisibility();
-    const last = getRows()[getRows().length-1];
-    last && last.scrollIntoView({behavior:"smooth", block:"start"});
-  }
-function deleteDayRow(tr){
-  const rows = getRows();
-  if(rows.length <= 1){
-    alert("至少需要保留一天紀錄");
-    return;
-  }
-  tr.remove();
-
-  const afterRows = getRows();
-  afterRows.forEach((row, idx)=>{
-    const day = idx + 1;
-    renameRow(row, day);
-  });
-
-  applyVisibility();
-}
-
-  // 事件委派：點每列的「刪除這天」
-  tbody.addEventListener("click", (e)=>{
-    const btn = e.target.closest(".actDelDay");
-    if(!btn) return;
-    const tr = btn.closest("tr");
-    if(!tr) return;
-
-    // 避免誤刪：簡單確認
-    if(!confirm("確定要刪除這一天的紀錄嗎？")) return;
-
-    deleteDayRow(tr);
-  });
-  
-  btnAdd.addEventListener("click", addDayManual);
-  btnShowAll.addEventListener("click", ()=>{
-    showAll = !showAll;
-    applyVisibility();
-  });
-
-  // Day 日期事件委派：✅ 問題2
-  tbody.addEventListener("input", (e)=>{
-    const el = e.target;
-    if(!(el instanceof HTMLInputElement)) return;
-    if(!/^d\d+_date$/.test(el.id)) return;
-    const after = formatYMDInput(el.value);
-    if(el.value !== after) el.value = after;
-  });
-
-  // stay_date 事件：✅ 問題6
-  stay.addEventListener("input", ()=>{
-    let value = stay.value;
-    value = value.replace(/[～\-]/g, "~").replace(/\s+/g, "");
-    const parts = value.split("~");
-    const leftDigits  = (parts[0] || "").replace(/\D/g, "");
-    const rightDigits = (parts[1] || "").replace(/\D/g, "");
-
-    const leftFormatted  = formatYMD(leftDigits);
-    const rightFormatted = formatYMD(rightDigits);
-
-    if(leftDigits.length === 8 && parts.length === 1){
-      stay.value = leftFormatted + "~";
-    } else if(parts.length > 1){
-      stay.value = leftFormatted + "~" + rightFormatted;
-    } else {
-      stay.value = leftFormatted;
-    }
-
-    const s = parseYMD(leftFormatted);
-    const e = parseYMD(rightFormatted);
-    if(s && e){
-      fillDatesFromRange(s, e);
-      showAll = false;
-      applyVisibility();
-    }
-  });
-
-  // 初始化
-  patchDateInputs();
-  showAll = false;
-  applyVisibility();
-
-  // ========= mode UI =========  ✅ 問題5
+  // ========= mode UI =========
   const hintEl = document.getElementById("hint");
   const modeTagEl = document.getElementById("modeTag");
 
