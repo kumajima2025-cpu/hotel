@@ -216,6 +216,12 @@
 #cardActivity .boxSec .mealRow + .mealRow{
   border-top:1px dashed #E3D8C8;
 }
+    /* ===== 備註框固定高度（紅框版本）===== */
+#cardActivity textarea[id$="_remind"]{
+  height:260px;        /* ← 紅框高度，可自行改 */
+  min-height:260px;
+  resize:vertical;     /* 可手動拉高，但預設就是大框 */
+}
 </style>
 </head>
 
@@ -277,7 +283,13 @@
             <div class="leftStack">
               <div>
                 <label>日期</label>
-                <input id="d1_date" placeholder="日期">
+                <input
+  id="d1_date"
+  placeholder="YYYY/MM/DD"
+  inputmode="numeric"
+  maxlength="10"
+  autocomplete="off"
+/>
               </div>
 
               <div>
@@ -1275,15 +1287,150 @@ window.__setShowAllDays = function(on){
   showAll = false;
   applyVisibility();
 
+ // ========= stay_date format + auto-generate days =========
+(function(){
+  const stay = document.getElementById("stay_date");
+  const tbody = document.getElementById("activityBody");
+  const btnAdd = document.getElementById("actAddDay");
+  const btnShowAll = document.getElementById("actShowAll");
+  if(!stay || !tbody) return;
+
+  function formatYMD(digits){
+    const s = String(digits || "").replace(/\D/g, "").slice(0, 8);
+    const y = s.slice(0, 4);
+    const m = s.slice(4, 6);
+    const d = s.slice(6, 8);
+    let out = y;
+    if(m) out += "/" + m;
+    if(d) out += "/" + d;
+    return out;
+  }
+
+  function parseYMD(str){
+    const digits = String(str || "").replace(/\D/g,"").slice(0,8);
+    if(digits.length !== 8) return null;
+    const y = parseInt(digits.slice(0,4),10);
+    const m = parseInt(digits.slice(4,6),10);
+    const d = parseInt(digits.slice(6,8),10);
+    const dt = new Date(y, m-1, d);
+    if(dt.getFullYear()!==y || dt.getMonth()!==m-1 || dt.getDate()!==d) return null;
+    return dt;
+  }
+
+  function fmtDate(dt){
+    const y = dt.getFullYear();
+    const m = String(dt.getMonth()+1).padStart(2,"0");
+    const d = String(dt.getDate()).padStart(2,"0");
+    return `${y}/${m}/${d}`;
+  }
+
+  function daysBetweenInclusive(a,b){
+    const ms = 24*60*60*1000;
+    const aa = new Date(a.getFullYear(), a.getMonth(), a.getDate()).getTime();
+    const bb = new Date(b.getFullYear(), b.getMonth(), b.getDate()).getTime();
+    if(bb < aa) return 0;
+    return Math.floor((bb-aa)/ms) + 1;
+  }
+
+  function getRows(){ return Array.from(tbody.querySelectorAll("tr")); }
+
+  function renameRow(tr, day){
+    tr.querySelectorAll("[id]").forEach(el=>{
+      el.id = el.id.replace(/^d\d+_/, `d${day}_`);
+    });
+    tr.querySelectorAll('input[type="radio"][name]').forEach(r=>{
+      r.name = r.name.replace(/^d\d+_/, `d${day}_`);
+    });
+  }
+
+  function clearRow(tr){
+    tr.querySelectorAll("input").forEach(inp=>{
+      if(inp.type === "radio" || inp.type === "checkbox") inp.checked = false;
+      else inp.value = "";
+    });
+    tr.querySelectorAll("textarea").forEach(t=> t.value = "");
+  }
+
+  let showAll = false;
+
+  function applyVisibility(){
+    const rows = getRows();
+    rows.forEach((tr, idx)=>{
+      tr.style.display = (showAll || idx===0) ? "" : "none";
+    });
+    if(btnShowAll){
+      btnShowAll.textContent = showAll ? "只顯示一天" : "顯示全部";
+    }
+  }
+
+  window.__setShowAllDays = function(on){
+    showAll = !!on;
+    applyVisibility();
+  };
+
+  function ensureDayCount(n){
+    n = Math.max(1, n);
+    const tpl = tbody.querySelector('tr[data-template="day"]') || tbody.querySelector("tr");
+    if(!tpl) return;
+
+    let rows = getRows();
+
+    while(rows.length > n){
+      tbody.removeChild(rows[rows.length-1]);
+      rows = getRows();
+    }
+
+    while(rows.length < n){
+      const tr = tpl.cloneNode(true);
+      tr.removeAttribute("data-template");
+      const day = rows.length + 1;
+      renameRow(tr, day);
+      clearRow(tr);
+      tbody.appendChild(tr);
+      rows = getRows();
+    }
+  }
+
+  function fillDatesFromRange(startDt, endDt){
+    const n = daysBetweenInclusive(startDt, endDt);
+    ensureDayCount(n);
+    for(let i=0;i<n;i++){
+      const dt = new Date(startDt);
+      dt.setDate(startDt.getDate() + i);
+      const el = document.getElementById(`d${i+1}_date`);
+      if(el) el.value = fmtDate(dt);
+    }
+  }
+
+  function addDayManual(){
+    const rows = getRows();
+    ensureDayCount(rows.length + 1);
+    showAll = true;
+    applyVisibility();
+    const last = getRows()[getRows().length-1];
+    last && last.scrollIntoView({behavior:"smooth", block:"start"});
+  }
+
+  if(btnAdd) btnAdd.addEventListener("click", addDayManual);
+  if(btnShowAll) btnShowAll.addEventListener("click", ()=>{
+    showAll = !showAll;
+    applyVisibility();
+  });
+
+  // 初始化：只顯示一天
+  showAll = false;
+  applyVisibility();
+
   // stay_date 輸入：格式化 + 兩邊滿8碼就自動生成天數
   stay.addEventListener("input", ()=>{
     let value = stay.value;
     value = value.replace(/[～\-]/g, "~").replace(/\s+/g, "");
     const parts = value.split("~");
-    const leftDigits = (parts[0] || "").replace(/\D/g, "");
+
+    const leftDigits  = (parts[0] || "").replace(/\D/g, "");
     const rightDigits = (parts[1] || "").replace(/\D/g, "");
 
-    const leftFormatted = formatYMD(leftDigits);
+    const leftFormatted  = formatYMD(leftDigits);
     const rightFormatted = formatYMD(rightDigits);
 
     if(leftDigits.length === 8 && parts.length === 1){
@@ -1303,7 +1450,39 @@ window.__setShowAllDays = function(on){
     }
   });
 
+  /* ===== Day 日期：iPhone 數字鍵盤 + 自動 YYYY/MM/DD（含動態新增的列） ===== */
+  function formatYMDInput(raw){
+    const s = String(raw || "").replace(/\D/g,"").slice(0,8);
+    const y = s.slice(0,4);
+    const m = s.slice(4,6);
+    const d = s.slice(6,8);
+    let out = y;
+    if(m) out += "/" + m;
+    if(d) out += "/" + d;
+    return out;
+  }
+
+  // 初始補 inputmode / pattern / maxlength
+  tbody.querySelectorAll('input[id^="d"][id$="_date"]').forEach(el=>{
+    el.setAttribute("inputmode","numeric");
+    el.setAttribute("pattern","\\d*");      // iOS 更容易出數字鍵盤
+    el.setAttribute("autocomplete","off");
+    el.setAttribute("maxlength","10");
+    if(!el.placeholder) el.placeholder = "YYYY/MM/DD";
+  });
+
+  // 事件委派：動態新增的日期欄位也會自動補 /
+  tbody.addEventListener("input", (e)=>{
+    const el = e.target;
+    if(!(el instanceof HTMLInputElement)) return;
+    if(!/^d\d+_date$/.test(el.id)) return;
+
+    const after = formatYMDInput(el.value);
+    if(el.value !== after) el.value = after;
+  });
+
 })();
 </script>
+
 </body>
 </html>
