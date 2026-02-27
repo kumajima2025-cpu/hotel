@@ -272,38 +272,9 @@
     #cardActivity .recordTable th:nth-child(2),
     #cardActivity .recordTable td:nth-child(2){ width:56%; }
   }
-.grid3 .opts{
-  display:grid !important;
-  grid-template-columns:repeat(3, minmax(0, 1fr)) !important;
-  column-gap:18px !important;
-  row-gap:10px !important;   /* ✅ 這個就是你要的「每行一樣的行距」 */
-  gap:unset !important;      /* 避免原本 flex gap 干擾 */
-}
-
-/* 每個選項（opt）不要有 margin，避免上下被撐開 */
-.grid3 .opt{
-  margin:0 !important;
-  display:flex !important;
-  align-items:center !important;
-  gap:10px !important;
-  line-height:1.35 !important;
-}
-
-/* checkbox 回到舒服的大小 */
-.grid3 .opt input[type="checkbox"]{
-  width:20px !important;
-  height:20px !important;
-  margin:0 !important;
-  flex:0 0 auto !important;
-}
-
-/* RWD：平板 2 欄、手機 1 欄 */
-@media (max-width:920px){
-  .grid3 .opts{ grid-template-columns:repeat(2, minmax(0, 1fr)) !important; }
-}
-@media (max-width:520px){
-  .grid3 .opts{ grid-template-columns:1fr !important; }
-}
+.grid3{ outline:4px solid red !important; }
+.opts{ outline:4px solid blue !important; }
+.opt{ outline:4px solid green !important; }
     
   </style>
 </head>
