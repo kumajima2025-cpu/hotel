@@ -18,7 +18,7 @@
   html, body{
     width:100%;
     max-width:100%;
-    overflow-x:hidden; /* ✅ 基本鎖 */
+    overflow-x:hidden;
   }
 
   body{
@@ -26,13 +26,8 @@
     background:var(--bg);
     color:var(--text);
     font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
-
-    /* ✅ 觸控/觸控板：只允許上下滑 */
     touch-action: pan-y;
-
-    /* ✅ iOS 避免 focus 放大導致水平滑 */
     -webkit-text-size-adjust: 100%;
-
     overflow-x:hidden;
   }
 
@@ -49,7 +44,7 @@
     margin:0 auto;
     padding:18px;
     overflow-x:hidden;
-    contain:layout paint; /* ✅ 避免子元素撐出寬度 */
+    contain:layout paint; 
   }
 
   .brand{ text-align:center; font-weight:800; letter-spacing:1px; margin:6px 0 10px; }
@@ -84,7 +79,7 @@
     border-radius:12px;
     border:1px solid var(--line);
     background:#fff;
-    font-size:16px; /* ✅ iOS 避免 focus 放大 */
+    font-size:16px;
     color:var(--text);
   }
   textarea{min-height:86px; resize:vertical;}
@@ -153,12 +148,10 @@
     overflow:hidden;
   }
 
-  /* ✅ 左欄稍微加寬，避免日期裁切 */
   #cardActivity .recordTable th:nth-child(1),
   #cardActivity .recordTable td:nth-child(1){ width:40%; }
   #cardActivity .recordTable th:nth-child(2),
   #cardActivity .recordTable td:nth-child(2){ width:60%; }
-
   #cardActivity .leftStack{
     display:flex;
     flex-direction:column;
@@ -166,7 +159,6 @@
     min-width:0;
   }
 
-  /* ✅ 日期輸入更好看、避免裁切 */
   #cardActivity input[id$="_date"]{
     font-size:16px;
     line-height:1.25;
@@ -236,18 +228,15 @@
     min-height:70px;
   }
 
-  /* 食慾列分界線 */
+
   #cardActivity .boxSec .mealRow{ padding:8px 0; }
   #cardActivity .boxSec .mealRow + .mealRow{ border-top:1px dashed #E3D8C8; }
-
-  /* ✅ 備註固定高度 */
   #cardActivity textarea[id$="_remind"]{
     height:260px;
     min-height:260px;
     resize:vertical;
   }
 
-  /* ✅ 三顆按鈕同一行 */
   .actBar{
     display:flex;
     justify-content:flex-end;
@@ -507,7 +496,6 @@
       <div class="cardTitle">額外附加</div>
       <div class="cardBody">
         <div class="grid3">
-          <!-- ✅ 這區全部改成「文字鍵盤」(不設 inputmode numeric) + id 唯一 -->
           <div><label>刷牙</label><input id="extra_brush_teeth" autocomplete="off" inputmode="text"></div>
           <div><label>餵藥/保養品</label><input id="extra_meds" autocomplete="off" inputmode="text"></div>
           <div><label>點眼藥水</label><input id="extra_eye" autocomplete="off" inputmode="text"></div>
@@ -519,8 +507,6 @@
           <div><label>傷口換藥</label><input id="extra_wound_change" autocomplete="off" inputmode="text"></div>
           <div><label>針管餵水</label><input id="extra_syringe" autocomplete="off" inputmode="text"></div>
           <div><label>手餵飯</label><input id="extra_handfeed" autocomplete="off" inputmode="text"></div>
-
-          <!-- ✅ 你新增的欄位：同步加進資料收集/回填 -->
           <div><label>退房後有無其它注意事項</label><input id="extra_aftercare_note" autocomplete="off" inputmode="text"></div>
         </div>
       </div>
@@ -606,9 +592,6 @@
       </div>
     </div>
 
-    <div class="hint" style="margin-top:12px;">
-      若開到舊版，請在網址最後加 <span class="mono">?v=1</span> 或 <span class="mono">&v=2</span> 重新整理。
-    </div>
   </div>
 
 <script>
@@ -912,7 +895,6 @@
   const btnDel = document.getElementById("actDelDay");
   const btnShowAll = document.getElementById("actShowAll");
 
-  // ✅ 客人模式：鎖住活動日按鈕（不顯示）
   if (isConfirm) {
     [btnAdd, btnDel, btnShowAll].forEach(b => {
       if (!b) return;
