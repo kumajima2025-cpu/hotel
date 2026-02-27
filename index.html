@@ -7,6 +7,14 @@
 <style>
   :root { --bg:#fff; --card:#faf7f2; --line:#e7dfd2; --text:#2b2b2b; --muted:#6b6b6b; }
 
+  *{ box-sizing:border-box; }
+
+  html, body{
+    width:100%;
+    max-width:100%;
+    overflow-x:hidden; /* ✅ 封死左右滑動 */
+  }
+
   body{
     font-family: -apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
     margin:0; background:var(--bg); color:var(--text);
@@ -14,7 +22,14 @@
     -webkit-text-size-adjust: 100%;
   }
 
-  .wrap{max-width:860px; margin:0 auto; padding:18px; overflow:visible;}
+  .wrap{
+    max-width:860px;
+    width:100%;
+    margin:0 auto;
+    padding:18px;
+    overflow:visible;
+  }
+
   h1{font-size:20px; margin:10px 0 6px;}
 
   .hint{color:var(--muted); font-size:13px; margin-bottom:14px; line-height:1.6;}
@@ -30,8 +45,9 @@
 
   .secTitle{font-weight:700; margin-bottom:10px; line-height:1.5; padding-bottom:2px;}
 
-  .grid{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
-  .grid3{display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;}
+  /* ✅ 避免 grid 內容撐爆造成橫向溢出 */
+  .grid{display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:10px;}
+  .grid3{display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:10px;}
   @media (max-width:720px){ .grid,.grid3{grid-template-columns:1fr;} }
 
   label{
@@ -44,11 +60,15 @@
 
   input,select,textarea{
     width:100%;
-    box-sizing:border-box;
+    max-width:100%;
+    min-width:0;
     border-radius:10px;
     border:1px solid var(--line);
     background:#fff;
-    font-size:15px;
+
+    /* ✅ iPhone 打字放大/重排的主因：字體 < 16px */
+    font-size:16px;
+
     line-height:1.6;
     padding:12px 10px;
   }
@@ -61,7 +81,7 @@
     padding:8px 10px; border:1px solid var(--line);
     border-radius:999px; background:#fff; font-size:14px;
   }
-  .chip input{width:auto;}
+  .chip input{width:auto; max-width:none;}
 
   .small{font-size:12px; color:var(--muted);}
 
@@ -93,203 +113,206 @@
       請於住宿前填寫完成本資料表!
     </div>
 
-<div class="card">
-  <div class="secTitle">飼主資料</div>
-  <div class="grid">
-    <div>
-      <label>主要聯絡人</label>
-      <input id="owner_name" placeholder="例：陳小美" required />
-    </div>
-    <div>
-      <label>手機號碼</label>
-      <input id="owner_phone" inputmode="tel" placeholder="09xxxxxxxx" required />
-    </div>
-    <div>
-      <label>Email（寄送副本用）</label>
-      <input id="owner_email" inputmode="email" placeholder="you@example.com" />
-    </div>
-    <div>
-      <label>現居地址</label>
-      <input id="owner_address" placeholder="縣市／區／路／號（可留空）" />
-    </div>
-  </div>
+    <div class="card">
+      <div class="secTitle">飼主資料</div>
+      <div class="grid">
+        <div>
+          <label>主要聯絡人</label>
+          <input id="owner_name" placeholder="例：陳小美" required />
+        </div>
+        <div>
+          <label>手機號碼</label>
+          <input id="owner_phone" inputmode="tel" placeholder="09xxxxxxxx" required />
+        </div>
+        <div>
+          <label>Email（寄送副本用）</label>
+          <input id="owner_email" inputmode="email" placeholder="you@example.com" />
+        </div>
+        <div>
+          <label>現居地址</label>
+          <input id="owner_address" placeholder="縣市／區／路／號（可留空）" />
+        </div>
+      </div>
 
-  <div style="height:10px"></div>
-  <div class="secTitle">備用聯絡人</div>
-  <div class="grid">
-    <div>
-      <label>備用聯絡人</label>
-      <input id="backup_name" placeholder="例：王小名" />
-    </div>
-    <div>
-      <label>聯絡人手機</label>
-      <input id="backup_phone" inputmode="tel" placeholder="09xxxxxxxx" />
-    </div>
-  </div>
-</div>
-
-<div class="card">
-  <div class="secTitle">寵物資料</div>
-
-  <div class="grid3">
-    <div>
-      <label>名字</label>
-      <input id="pet_name" placeholder="例：Lucky" required />
-    </div>
-
-    <div>
-      <label>性別</label>
-      <select id="pet_sex" required>
-        <option value="">請選擇</option>
-        <option>男</option>
-        <option>女</option>
-      </select>
-    </div>
-
-    <div>
-      <label>品種</label>
-      <input id="pet_breed" placeholder="例：貴賓" required />
-    </div>
-
-    <div>
-      <label>毛色</label>
-      <input id="pet_color" placeholder="例：白色／奶油色／黑白..." />
-    </div>
-
-    <div>
-      <label>出生日期</label>
-      <input
-        id="pet_birth_date"
-        inputmode="numeric"
-        pattern="[0-9]*"
-        maxlength="10"
-        placeholder="例：2021/02/14"
-      />
-      <div class="small">格式：YYYY/MM/DD（可直接輸入8碼數字）</div>
-    </div>
-
-    <div>
-      <label>是否已絕育</label>
-      <select id="pet_neutered">
-        <option value="">請選擇</option>
-        <option>已絕育</option>
-        <option>未絕育</option>
-      </select>
-    </div>
-
-    <div>
-      <label>體外驅蟲時間</label>
-      <input
-        id="pet_deworm_date"
-        inputmode="numeric"
-        pattern="[0-9]*"
-        maxlength="10"
-        placeholder="例：2023/06/11"
-      />
-      <div class="small">格式：YYYY/MM/DD（可直接輸入8碼數字）</div>
-    </div>
-
-    <div>
-      <label>體外驅蟲方式</label>
-      <select id="pet_deworm_way">
-        <option value="">請選擇</option>
-        <option>滴劑</option>
-        <option>口服</option>
-        <option>無</option>
-      </select>
-      <div class="small" style="margin-top:6px; line-height:1.4; color:#C0392B;">
-  *飼養寵物皆須施打晶片、絕育並按時施打狂犬病疫苗*
-</div>
-    </div>
-  </div>
-
-  <div style="height:10px"></div>
-  <div class="grid">
-    <div>
-      <label>晶片號碼</label>
-      <input 
-  id="pet_chip" 
-  inputmode="numeric" 
-  pattern="[0-9]*"
-  placeholder="例：900xxxxxxxxx" 
-/>
-    </div>
-    <div>
-      <label>狂犬疫苗注射時間</label>
-      <input id="pet_rabies" inputmode="numeric" placeholder="例：2023/06/11" />
-    </div>
-  </div>
-
-  <div style="height:10px"></div>
-  <label>寵物生理狀況（目視）</label>
-  <div class="row" id="phys_row">
-    <label class="chip"><input type="radio" name="phys_status" value="正常" checked>正常</label>
-    <label class="chip"><input type="radio" name="phys_status" value="異常">異常</label>
-  </div>
-  <div class="grid" style="margin-top:8px;">
-    <div>
-      <label>異常狀況說明</label>
-      <input id="phys_abnormal_note" placeholder="若選異常，請簡述（選填）" />
-      <div class="small">若上方選「異常」，請在此補充說明。</div>
-    </div>
-  </div>
-
-  <div style="height:10px"></div>
-  <label>特殊疾病 / 舊疾（可複選）</label>
-  <div class="row" id="disease_row">
-    <label class="chip"><input type="checkbox" value="心臟病">心臟病</label>
-    <label class="chip"><input type="checkbox" value="氣喘">氣喘</label>
-    <label class="chip"><input type="checkbox" value="氣管塌陷">氣管塌陷</label>
-    <label class="chip"><input type="checkbox" value="關節問題">關節問題</label>
-    <label class="chip"><input type="checkbox" value="糖尿病">糖尿病</label>
-    <label class="chip"><input type="checkbox" value="白內障">白內障</label>
-    <label class="chip"><input type="checkbox" value="癲癇">癲癇</label>
-    <label class="chip"><input type="checkbox" value="骨折">骨折</label>
-    <label class="chip"><input type="checkbox" value="懷孕">懷孕</label>
-    <label class="chip"><input type="checkbox" value="腸炎">腸炎</label>
-    <label class="chip"><input type="checkbox" value="血便">血便</label>
-    <label class="chip"><input type="checkbox" value="血尿">血尿</label>
-    <label class="chip"><input type="checkbox" value="外傷未癒合">外傷未癒合</label>
-    <label class="chip"><input type="checkbox" value="其它">其它</label>
-  </div>
-
-  <div class="grid">
-    <div>
-      <label>手術外傷尚未癒合狀況說明</label>
-      <input id="pet_wound" placeholder="例：左後腳手術傷口" />
-    </div>
-    <div>
-      <label>其它（選填）</label>
-      <input id="pet_other_disease" placeholder="例：皮膚過敏、腸胃敏感..." />
-    </div>
-  </div>
-
-  <div style="height:10px"></div>
-  <div class="grid">
-    <div>
-      <label>配合動物醫院</label>
-        惟心動物醫院<br>
-        地址：桃園市桃園區大興路207號<br>
-        電話：03—3259001
+      <div style="height:10px"></div>
+      <div class="secTitle">備用聯絡人</div>
+      <div class="grid">
+        <div>
+          <label>備用聯絡人</label>
+          <input id="backup_name" placeholder="例：王小名" />
+        </div>
+        <div>
+          <label>聯絡人手機</label>
+          <input id="backup_phone" inputmode="tel" placeholder="09xxxxxxxx" />
+        </div>
       </div>
     </div>
-      <label>緊急情況授權（必填）*</label>
-      <select id="emergency_consent" required>
-        <option value="">請選擇</option>
-        <option value="同意">同意緊急送醫</option>
-        <option value="不同意">不同意（請於備註說明處理方式）</option>
-      </select>
-      <div class="small" style="margin-top:6px; line-height:1.5;">
-        住宿期間若寵物有就醫需求，<br>
-        本人同意由CAMA CAMA帶往惟心動物醫院就診。
-      </div>
-    </div>
-  </div>
 
-  <div style="height:10px"></div>
-  <label>住宿備註（飲食、藥物、分離焦慮、注意事項等）</label>
-  <textarea id="note" placeholder="例：早晚各半杯飼料；會吃藥；怕生；不與陌生狗互動..."></textarea>
-</div>
+    <div class="card">
+      <div class="secTitle">寵物資料</div>
+
+      <div class="grid3">
+        <div>
+          <label>名字</label>
+          <input id="pet_name" placeholder="例：Lucky" required />
+        </div>
+
+        <div>
+          <label>性別</label>
+          <select id="pet_sex" required>
+            <option value="">請選擇</option>
+            <option>男</option>
+            <option>女</option>
+          </select>
+        </div>
+
+        <div>
+          <label>品種</label>
+          <input id="pet_breed" placeholder="例：貴賓" required />
+        </div>
+
+        <div>
+          <label>毛色</label>
+          <input id="pet_color" placeholder="例：白色／奶油色／黑白..." />
+        </div>
+
+        <div>
+          <label>出生日期</label>
+          <input
+            id="pet_birth_date"
+            inputmode="numeric"
+            pattern="[0-9]*"
+            maxlength="10"
+            placeholder="例：2021/02/14"
+          />
+          <div class="small">格式：YYYY/MM/DD（可直接輸入8碼數字）</div>
+        </div>
+
+        <div>
+          <label>是否已絕育</label>
+          <select id="pet_neutered">
+            <option value="">請選擇</option>
+            <option>已絕育</option>
+            <option>未絕育</option>
+          </select>
+        </div>
+
+        <div>
+          <label>體外驅蟲時間</label>
+          <input
+            id="pet_deworm_date"
+            inputmode="numeric"
+            pattern="[0-9]*"
+            maxlength="10"
+            placeholder="例：2023/06/11"
+          />
+          <div class="small">格式：YYYY/MM/DD（可直接輸入8碼數字）</div>
+        </div>
+
+        <div>
+          <label>體外驅蟲方式</label>
+          <select id="pet_deworm_way">
+            <option value="">請選擇</option>
+            <option>滴劑</option>
+            <option>口服</option>
+            <option>無</option>
+          </select>
+          <div class="small" style="margin-top:6px; line-height:1.4; color:#C0392B;">
+            *飼養寵物皆須施打晶片、絕育並按時施打狂犬病疫苗*
+          </div>
+        </div>
+      </div>
+
+      <div style="height:10px"></div>
+      <div class="grid">
+        <div>
+          <label>晶片號碼</label>
+          <input
+            id="pet_chip"
+            inputmode="numeric"
+            pattern="[0-9]*"
+            placeholder="例：900xxxxxxxxx"
+          />
+        </div>
+        <div>
+          <label>狂犬疫苗注射時間</label>
+          <input id="pet_rabies" inputmode="numeric" placeholder="例：2023/06/11" />
+        </div>
+      </div>
+
+      <div style="height:10px"></div>
+      <label>寵物生理狀況（目視）</label>
+      <div class="row" id="phys_row">
+        <label class="chip"><input type="radio" name="phys_status" value="正常" checked>正常</label>
+        <label class="chip"><input type="radio" name="phys_status" value="異常">異常</label>
+      </div>
+      <div class="grid" style="margin-top:8px;">
+        <div>
+          <label>異常狀況說明</label>
+          <input id="phys_abnormal_note" placeholder="若選異常，請簡述（選填）" />
+          <div class="small">若上方選「異常」，請在此補充說明。</div>
+        </div>
+      </div>
+
+      <div style="height:10px"></div>
+      <label>特殊疾病 / 舊疾（可複選）</label>
+      <div class="row" id="disease_row">
+        <label class="chip"><input type="checkbox" value="心臟病">心臟病</label>
+        <label class="chip"><input type="checkbox" value="氣喘">氣喘</label>
+        <label class="chip"><input type="checkbox" value="氣管塌陷">氣管塌陷</label>
+        <label class="chip"><input type="checkbox" value="關節問題">關節問題</label>
+        <label class="chip"><input type="checkbox" value="糖尿病">糖尿病</label>
+        <label class="chip"><input type="checkbox" value="白內障">白內障</label>
+        <label class="chip"><input type="checkbox" value="癲癇">癲癇</label>
+        <label class="chip"><input type="checkbox" value="骨折">骨折</label>
+        <label class="chip"><input type="checkbox" value="懷孕">懷孕</label>
+        <label class="chip"><input type="checkbox" value="腸炎">腸炎</label>
+        <label class="chip"><input type="checkbox" value="血便">血便</label>
+        <label class="chip"><input type="checkbox" value="血尿">血尿</label>
+        <label class="chip"><input type="checkbox" value="外傷未癒合">外傷未癒合</label>
+        <label class="chip"><input type="checkbox" value="其它">其它</label>
+      </div>
+
+      <div class="grid">
+        <div>
+          <label>手術外傷尚未癒合狀況說明</label>
+          <input id="pet_wound" placeholder="例：左後腳手術傷口" />
+        </div>
+        <div>
+          <label>其它（選填）</label>
+          <input id="pet_other_disease" placeholder="例：皮膚過敏、腸胃敏感..." />
+        </div>
+      </div>
+
+      <div style="height:10px"></div>
+
+      <!-- ✅ 這段原本結構有錯：已修成正確兩欄 -->
+      <div class="grid">
+        <div>
+          <label>配合動物醫院</label>
+          惟心動物醫院<br>
+          地址：桃園市桃園區大興路207號<br>
+          電話：03—3259001
+        </div>
+
+        <div>
+          <label>緊急情況授權（必填）*</label>
+          <select id="emergency_consent" required>
+            <option value="">請選擇</option>
+            <option value="同意">同意緊急送醫</option>
+            <option value="不同意">不同意（請於備註說明處理方式）</option>
+          </select>
+          <div class="small" style="margin-top:6px; line-height:1.5;">
+            住宿期間若寵物有就醫需求，<br>
+            本人同意由CAMA CAMA帶往惟心動物醫院就診。
+          </div>
+        </div>
+      </div>
+
+      <div style="height:10px"></div>
+      <label>住宿備註（飲食、藥物、分離焦慮、注意事項等）</label>
+      <textarea id="note" placeholder="例：早晚各半杯飼料；會吃藥；怕生；不與陌生狗互動..."></textarea>
+    </div>
 
     <div class="card">
       <div class="secTitle">飼主簽名</div>
@@ -319,19 +342,21 @@
     </div>
 
     <div class="footer">
-      送出即表示您所填資料為真，並同意住宿期間店家依照安全與衛生原則進行照護。如遇緊急狀況，依您勾選之授權處理。
+      送出即表示您所填資料為真、並同意住宿期間店家依照安全與衛生原則進行照護。<br>
+      如遇緊急狀況，依您勾選之授權處理。
     </div>
   </div>
 
 <script>
   const GAS_URL = "https://script.google.com/macros/s/AKfycbzBrEWUbjBd1UJjKPX_5sHlxkyQ6XQJD9J0tULNC_a_0bafN6OEyIosBR52-b4-d6Zb/exec";
+
   const d = new Date();
   const pad = n => String(n).padStart(2,'0');
   document.getElementById("signed_date").value = `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
 
   const canvas = document.getElementById('sig');
   const ctx = canvas.getContext('2d');
-  
+
   function resizeCanvas(){
     const rect = canvas.getBoundingClientRect();
     const ratio = Math.max(window.devicePixelRatio || 1, 1);
@@ -377,7 +402,6 @@
     drawing = false;
     last = null;
   }
-  
 
   canvas.addEventListener('mousedown', start);
   canvas.addEventListener('mousemove', move);
@@ -402,47 +426,49 @@
   }
 
   function val(id){
-  const el = document.getElementById(id);
-  return (el && typeof el.value === "string") ? el.value.trim() : "";
-}
+    const el = document.getElementById(id);
+    return (el && typeof el.value === "string") ? el.value.trim() : "";
+  }
 
   function setStatus(msg, ok=false){
     const el = document.getElementById('status');
     el.textContent = msg;
     el.className = "status " + (ok ? "ok":"bad");
   }
-function formatDateSlash(v){
-  const digits = (v || "").replace(/\D/g, "").slice(0, 8);
-  const y = digits.slice(0, 4);
-  const m = digits.slice(4, 6);
-  const dd = digits.slice(6, 8);
 
-  if(digits.length <= 4) return y;
-  if(digits.length <= 6) return `${y}/${m}`;
-  return `${y}/${m}/${dd}`;
-}
+  function formatDateSlash(v){
+    const digits = (v || "").replace(/\D/g, "").slice(0, 8);
+    const y = digits.slice(0, 4);
+    const m = digits.slice(4, 6);
+    const dd = digits.slice(6, 8);
 
-const dewormDateInput = document.getElementById("pet_deworm_date");
-if (dewormDateInput) {
-  dewormDateInput.addEventListener("input", (e) => {
-    e.target.value = formatDateSlash(e.target.value);
-  });
-}
+    if(digits.length <= 4) return y;
+    if(digits.length <= 6) return `${y}/${m}`;
+    return `${y}/${m}/${dd}`;
+  }
 
-const birthInput = document.getElementById("pet_birth_date");
-if (birthInput) {
-  birthInput.addEventListener("input", (e) => {
-    e.target.value = formatDateSlash(e.target.value);
-  });
-}
+  const dewormDateInput = document.getElementById("pet_deworm_date");
+  if (dewormDateInput) {
+    dewormDateInput.addEventListener("input", (e) => {
+      e.target.value = formatDateSlash(e.target.value);
+    });
+  }
+
+  const birthInput = document.getElementById("pet_birth_date");
+  if (birthInput) {
+    birthInput.addEventListener("input", (e) => {
+      e.target.value = formatDateSlash(e.target.value);
+    });
+  }
+
   const rabiesInput = document.getElementById("pet_rabies");
-if (rabiesInput) {
-  rabiesInput.addEventListener("input", (e) => {
-    e.target.value = formatDateSlash(e.target.value);
-  });
-}
-  
-document.getElementById('submitBtn').addEventListener('click', async ()=>{
+  if (rabiesInput) {
+    rabiesInput.addEventListener("input", (e) => {
+      e.target.value = formatDateSlash(e.target.value);
+    });
+  }
+
+  document.getElementById('submitBtn').addEventListener('click', async ()=>{
     try{
       const required = [
         ["owner_name","請填主要聯絡人姓名"],
