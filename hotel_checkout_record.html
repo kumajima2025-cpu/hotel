@@ -44,12 +44,7 @@
       border:1px solid var(--line); background:#fff; font-size:15px; color:var(--text);
     }
     textarea{min-height:86px; resize:vertical;}
-
-    .tbl{width:100%; border-collapse:separate; border-spacing:0; border:1px solid var(--line); border-radius:14px; overflow:hidden; background:#fff;}
-    .tbl th,.tbl td{border-bottom:1px solid var(--line); border-right:1px solid var(--line); padding:10px; vertical-align:top; font-size:14px;}
-    .tbl th{background:#f4efe6; text-align:left; font-weight:800;}
-    .tbl tr:last-child td{border-bottom:0;}
-    .tbl td:last-child,.tbl th:last-child{border-right:0;}
+    
     .cellTitle{font-weight:800; margin-bottom:6px;}
     .opts{display:flex; flex-wrap:wrap; gap:10px; align-items:center;}
     .opt{display:flex; gap:6px; align-items:center; font-size:14px;}
@@ -88,21 +83,87 @@
     .ro input[readonly], .ro textarea[readonly], .ro select:disabled{
       background:#fbfaf7;
     }
-#cardActivity .tbl{ table-layout: fixed; width:100%; }
-#cardActivity .tbl th:first-child,
-#cardActivity .tbl td:first-child{
-  width: 26% !important;
-  min-width: 110px; 
-  padding-left: 12px;
-  padding-right: 12px;
-  box-sizing: border-box;
+/* ===== 活動紀錄：table 欄寬穩定 ===== */
+#cardActivity .recordTable{
+  width:100%;
+  table-layout:fixed;
+  border-collapse:collapse;
 }
-#cardActivity .tbl th:first-child{
-  white-space: nowrap;
+
+#cardActivity .recordTable th,
+#cardActivity .recordTable td{
+  word-break:break-word;
+  vertical-align:top;
 }
-#cardActivity .tbl td:first-child input{
+
+/* 三欄比例（手機也不會擠爆） */
+#cardActivity .recordTable th:nth-child(1){ width:26%; }
+#cardActivity .recordTable th:nth-child(2){ width:46%; }
+#cardActivity .recordTable th:nth-child(3){ width:28%; }
+
+/* 右欄備註 textarea 一定要滿寬 */
+#cardActivity .recordTable textarea{
   width:100%;
   box-sizing:border-box;
+}
+
+/* ===== 活動紀錄：食慾區塊防爆（LINE 小螢幕） ===== */
+#cardActivity .opts{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:flex-start;
+  gap:8px;
+}
+
+#cardActivity .opts > .opt{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:8px;
+}
+
+/* 避免「良好/普通/不吃」被拆得亂七八糟 */
+#cardActivity label.opt{
+  white-space:nowrap;
+}
+
+@media (max-width:520px){
+  #cardActivity .recordTable th,
+  #cardActivity .recordTable td{
+    padding:8px;
+    font-size:13px;
+  }
+}
+    /* ===== 活動紀錄：早/中/晚 左右兩欄穩定版型 ===== */
+#cardActivity .mealRow{
+  display:grid;
+  grid-template-columns: 44px 1fr; /* 左：早/中/晚 右：選項 */
+  gap:8px;
+  align-items:center;
+  margin-top:6px;
+}
+#cardActivity .mealTag{
+  font-weight:800;
+  color:var(--muted);
+  white-space:nowrap;
+}
+#cardActivity .mealOpts{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  align-items:center;
+}
+
+/* 讓 label 不被拆得亂七八糟 */
+#cardActivity .mealOpts label{
+  white-space:nowrap;
+}
+
+/* 手機時縮小間距與字 */
+@media (max-width:520px){
+  #cardActivity .mealRow{ grid-template-columns: 40px 1fr; gap:6px; }
+  #cardActivity .mealOpts{ gap:8px; }
+  #cardActivity .mealOpts label{ font-size:13px; }
 }
   </style>
 </head>
@@ -146,14 +207,14 @@
       <div class="cardBody">
         <div class="btns" style="justify-content:flex-end; margin:0 0 10px;">
   <button type="button" class="ghost" id="actAddDay">＋新增一天</button>
-  <button type="button" class="ghost" id="actShowAll">顯示全部</button>
+  <button type="button" class="ghost" id="actShowAll"></button>
 </div>
-        <table class="tbl">
+        <table class="recordTable">
           <thead>
             <tr>
-              <th style="width:18%;">日期</th>
-              <th style="width:54%;">日常紀錄</th>
-              <th style="width:28%;">提醒</th>
+              <th>日期</th>
+              <th>日常紀錄</th>
+              <th>提醒</th>
             </tr>
           </thead>
         <tbody id="activityBody">
@@ -163,27 +224,33 @@
 
   <td>
     <div class="cellTitle">食慾</div>
-    <div class="opts">
-      <span class="opt">早：
-        <label class="opt"><input type="radio" name="d1_am" value="良好">良好</label>
-        <label class="opt"><input type="radio" name="d1_am" value="普通">普通</label>
-        <label class="opt"><input type="radio" name="d1_am" value="不吃">不吃</label>
-      </span>
-    </div>
-    <div class="opts" style="margin-top:6px;">
-      <span class="opt">中：
-        <label class="opt"><input type="radio" name="d1_noon" value="良好">良好</label>
-        <label class="opt"><input type="radio" name="d1_noon" value="普通">普通</label>
-        <label class="opt"><input type="radio" name="d1_noon" value="不吃">不吃</label>
-      </span>
-    </div>
-    <div class="opts" style="margin-top:6px;">
-      <span class="opt">晚：
-        <label class="opt"><input type="radio" name="d1_pm" value="良好">良好</label>
-        <label class="opt"><input type="radio" name="d1_pm" value="普通">普通</label>
-        <label class="opt"><input type="radio" name="d1_pm" value="不吃">不吃</label>
-      </span>
-    </div>
+
+<div class="mealRow">
+  <div class="mealTag">早</div>
+  <div class="mealOpts">
+    <label class="opt"><input type="radio" name="d1_am" value="良好">良好</label>
+    <label class="opt"><input type="radio" name="d1_am" value="普通">普通</label>
+    <label class="opt"><input type="radio" name="d1_am" value="不吃">不吃</label>
+  </div>
+</div>
+
+<div class="mealRow">
+  <div class="mealTag">中</div>
+  <div class="mealOpts">
+    <label class="opt"><input type="radio" name="d1_noon" value="良好">良好</label>
+    <label class="opt"><input type="radio" name="d1_noon" value="普通">普通</label>
+    <label class="opt"><input type="radio" name="d1_noon" value="不吃">不吃</label>
+  </div>
+</div>
+
+<div class="mealRow">
+  <div class="mealTag">晚</div>
+  <div class="mealOpts">
+    <label class="opt"><input type="radio" name="d1_pm" value="良好">良好</label>
+    <label class="opt"><input type="radio" name="d1_pm" value="普通">普通</label>
+    <label class="opt"><input type="radio" name="d1_pm" value="不吃">不吃</label>
+  </div>
+</div>
 
     <div style="height:10px"></div>
     <div class="cellTitle">排便 / 排尿次數</div>
@@ -414,9 +481,9 @@
   const qs = new URLSearchParams(location.search);
 
   // 先抓一般 query
-  let mode = qs.get("mode");       // create
-  let dataParam = qs.get("data");  // 舊版
-  let idParam = qs.get("id");      // ✅ 新版短連結
+  let mode = qs.get("mode");
+  let dataParam = qs.get("data");
+  let idParam = qs.get("id"); 
 
   // LINE/LIFF 可能把 query 包進 liff.state
   const liffState = qs.get("liff.state");
@@ -435,7 +502,7 @@
   const pad = n => String(n).padStart(2,'0');
   function setStatus(msg, ok=false){
   const el = document.getElementById('status');
-  if(!el) return; // ✅ 沒有 status 區塊就直接結束，避免報錯
+  if(!el) return;
   el.textContent = msg;
   el.className = "status " + (ok ? "ok":"bad");
 }
