@@ -293,6 +293,15 @@
   height:20px !important;
   margin:0 !important;
 }
+.leftCard{
+  grid-row: span 2;
+}
+
+@media (max-width:760px){
+  .leftCard{
+    grid-row:auto;
+  }
+} 
   </style>
 </head>
 
@@ -343,6 +352,7 @@
         <table class="recordTable">
           <thead>
             <tr>
+              <div class="card leftCard">
               <th>日期 / 提醒</th>
               <th>日常紀錄</th>
             </tr>
