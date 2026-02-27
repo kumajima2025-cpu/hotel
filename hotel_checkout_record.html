@@ -4,6 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>CAMA CAMA｜住宿明細確認</title>
+
   <style>
   :root{
     --bg:#F6F1E9;
@@ -101,79 +102,67 @@
     background:#fbfaf7;
   }
 
-  /* =========================================================
-     活動紀錄：新版（左：日期+提醒；右：日常紀錄）
-     ========================================================= */
-  #cardActivity .recordTable{
-    width:100%;
-    table-layout:fixed;
-    border-collapse:collapse;
-  }
-
+  /* =========================
+     活動紀錄：2欄版型
+     左：日期+提醒備註
+     右：日常紀錄
+  ========================== */
+  #cardActivity .recordTable{ width:100%; table-layout:fixed; border-collapse:collapse; }
   #cardActivity .recordTable th,
-  #cardActivity .recordTable td{
-    vertical-align:top;
-    word-break:break-word;
-    padding:10px;
-    border-top:1px solid var(--line);
+  #cardActivity .recordTable td{ vertical-align:top; word-break:break-word; }
+
+  /* 左欄更寬：確保 1111/11/11 不被截掉 */
+  #cardActivity .recordTable th:nth-child(1){ width:34%; }
+  #cardActivity .recordTable th:nth-child(2){ width:66%; }
+
+  @media (max-width:520px){
+    #cardActivity .recordTable th,
+    #cardActivity .recordTable td{ padding:8px; font-size:13px; }
+    #cardActivity .recordTable th:nth-child(1){ width:44%; }
+    #cardActivity .recordTable th:nth-child(2){ width:56%; }
   }
 
-  /* 兩欄比例：左 34%（日期+提醒）/ 右 66%（日常紀錄） */
-  #cardActivity .recordTable th:nth-child(1),
-  #cardActivity .recordTable td:nth-child(1){ width:34%; }
-  #cardActivity .recordTable th:nth-child(2),
-  #cardActivity .recordTable td:nth-child(2){ width:66%; }
-
-  /* 左欄：日期 + 提醒堆疊 */
-  #cardActivity .leftStack{
+  /* 左欄：日期+備註（備註拉到底） */
+  #cardActivity td.dateCol{
     display:flex;
     flex-direction:column;
     gap:10px;
+    height:100%;
+    min-width:0;
   }
-  #cardActivity .leftStack textarea{
-    min-height:110px;
+  #cardActivity td.dateCol *{ min-width:0; }
+
+  /* 日期：一定顯示完整 YYYY/MM/DD */
+  #cardActivity td.dateCol input[id$="_date"]{
+    font-variant-numeric: tabular-nums;
+    letter-spacing:0;
+    font-size:14px;
+    padding:10px 8px;
   }
 
-  /* 右欄：日常紀錄容器 */
-  #cardActivity .dailyWrap{
-    display:flex;
-    flex-direction:column;
-    gap:10px;
+  /* 備註：拉到底，視覺與右邊外框更齊 */
+  #cardActivity .remindFill{
+    flex:1;
+    min-height:200px; /* 需要更長就加大 */
   }
 
-  /* 日常紀錄：分區外框（食慾、排便排尿各一框） */
+  /* 右欄：每個區塊有外框線（食慾、排便排尿） */
   #cardActivity .boxSec{
     border:1px solid var(--line);
     border-radius:14px;
-    padding:10px;
+    padding:12px;
     background:#fff;
-  }
-  #cardActivity .boxSec .secHead{
-    font-weight:900;
-    margin-bottom:8px;
-    color:var(--text);
-    display:flex;
-    align-items:center;
-    gap:8px;
-  }
-  #cardActivity .boxSec .secHead::before{
-    content:"";
-    width:6px;
-    height:14px;
-    border-radius:999px;
-    background:var(--line);
-    display:inline-block;
+    margin-bottom:12px;
   }
 
-  /* 食慾：早/中/晚 左右兩欄穩定版型 */
+  /* 食慾：早/中/晚 排版（左短標籤、右選項） */
   #cardActivity .mealRow{
     display:grid;
     grid-template-columns: 44px 1fr;
     gap:8px;
     align-items:center;
-    margin-top:8px;
+    padding:8px 0;
   }
-  #cardActivity .mealRow:first-of-type{ margin-top:0; }
   #cardActivity .mealTag{
     font-weight:900;
     color:var(--muted);
@@ -187,36 +176,18 @@
   }
   #cardActivity .mealOpts label{ white-space:nowrap; }
 
-  /* 排便排尿：備註 textarea */
-  #cardActivity .toiletNote{
-    margin-top:8px;
-    min-height:70px;
+  /* 早/中/晚 中間分界線（只在列與列之間，不在標題下方） */
+  #cardActivity .boxSec .mealRow + .mealRow{
+    border-top:1px dashed var(--line);
   }
 
   /* 小螢幕微調 */
   @media (max-width:520px){
-    #cardActivity .recordTable th,
-    #cardActivity .recordTable td{
-      padding:8px;
-      font-size:13px;
-    }
-    #cardActivity .leftStack textarea{ min-height:96px; }
     #cardActivity .mealRow{ grid-template-columns: 40px 1fr; gap:6px; }
     #cardActivity .mealOpts{ gap:8px; }
     #cardActivity .mealOpts label{ font-size:13px; }
   }
-    /* ===== 食慾：早中晚分界線（不含標題下方） ===== */
-
-/* 每列本身間距 */
-#cardActivity .boxSec .mealRow{
-  padding:8px 0;
-}
-
-/* 只有「第二列開始」才加線 */
-#cardActivity .boxSec .mealRow + .mealRow{
-  border-top:1px dashed #E3D8C8;
-}
-</style>
+  </style>
 </head>
 
 <body>
@@ -239,228 +210,212 @@
             <label>寵物名字</label>
             <input id="pet_name" placeholder="例：Lucky">
           </div>
-<div>
-  <label>住宿日期</label>
-  <input
-    id="stay_date"
-    inputmode="numeric"
-    autocomplete="off"
-    placeholder="例：2026/03/18~2026/03/20"
-  >
-</div>
+          <div>
+            <label>住宿日期</label>
+            <input id="stay_date" inputmode="numeric" autocomplete="off" placeholder="例：2026/03/18~2026/03/20">
+          </div>
         </div>
       </div>
     </div>
 
-   <!-- 活動紀錄 -->
-<div class="card" id="cardActivity">
-  <div class="cardTitle">活動紀錄</div>
-  <div class="cardBody">
-    <div class="btns" style="justify-content:flex-end; margin:0 0 10px;">
-      <button type="button" class="ghost" id="actAddDay">＋新增一天</button>
-      <button type="button" class="ghost" id="actShowAll">顯示全部</button>
+    <!-- 活動紀錄 -->
+    <div class="card" id="cardActivity">
+      <div class="cardTitle">活動紀錄</div>
+      <div class="cardBody">
+        <div class="btns" style="justify-content:flex-end; margin:0 0 10px;">
+          <button type="button" class="ghost" id="actAddDay">＋新增一天</button>
+          <button type="button" class="ghost" id="actShowAll"></button>
+        </div>
+
+        <table class="recordTable">
+          <thead>
+            <tr>
+              <th>日期 / 提醒備註</th>
+              <th>日常紀錄</th>
+            </tr>
+          </thead>
+
+          <tbody id="activityBody">
+            <!-- Day 1 (template) -->
+            <tr data-template="day">
+              <!-- 左欄：日期 + 備註（備註拉到底） -->
+              <td class="dateCol">
+                <input id="d1_date" placeholder="YYYY/MM/DD" inputmode="numeric" autocomplete="off">
+                <textarea id="d1_remind" class="remindFill" placeholder="提醒 / 備註（可填藥、注意事項...）"></textarea>
+              </td>
+
+              <!-- 右欄：日常紀錄 -->
+              <td>
+                <!-- 食慾（外框線） -->
+                <div class="boxSec">
+                  <div class="cellTitle">食慾</div>
+
+                  <div class="mealRow">
+                    <div class="mealTag">早</div>
+                    <div class="mealOpts">
+                      <label class="opt"><input type="radio" name="d1_am" value="良好">良好</label>
+                      <label class="opt"><input type="radio" name="d1_am" value="普通">普通</label>
+                      <label class="opt"><input type="radio" name="d1_am" value="不吃">不吃</label>
+                    </div>
+                  </div>
+
+                  <div class="mealRow">
+                    <div class="mealTag">中</div>
+                    <div class="mealOpts">
+                      <label class="opt"><input type="radio" name="d1_noon" value="良好">良好</label>
+                      <label class="opt"><input type="radio" name="d1_noon" value="普通">普通</label>
+                      <label class="opt"><input type="radio" name="d1_noon" value="不吃">不吃</label>
+                    </div>
+                  </div>
+
+                  <div class="mealRow">
+                    <div class="mealTag">晚</div>
+                    <div class="mealOpts">
+                      <label class="opt"><input type="radio" name="d1_pm" value="良好">良好</label>
+                      <label class="opt"><input type="radio" name="d1_pm" value="普通">普通</label>
+                      <label class="opt"><input type="radio" name="d1_pm" value="不吃">不吃</label>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 排便排尿（外框線） -->
+                <div class="boxSec">
+                  <div class="cellTitle">排便 / 排尿次數</div>
+                  <div class="opts">
+                    <label class="opt"><input type="radio" name="d1_toilet" value="正常">正常</label>
+                    <label class="opt"><input type="radio" name="d1_toilet" value="異常">異常</label>
+                  </div>
+                  <textarea id="d1_toilet_note" placeholder="異常狀況說明"></textarea>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
-
-    <table class="recordTable">
-      <thead>
-        <tr>
-          <th>日期 / 提醒</th>
-          <th>日常紀錄</th>
-        </tr>
-      </thead>
-
-      <tbody id="activityBody">
-        <!-- Day 1 (template) -->
-        <tr data-template="day">
-          <!-- 左欄：日期 + 提醒 -->
-          <td>
-            <div class="leftStack">
-              <div>
-                <label>日期</label>
-                <input id="d1_date" placeholder="日期">
-              </div>
-
-              <div>
-                <label>提醒 / 備註</label>
-                <textarea id="d1_remind" placeholder="備註"></textarea>
-              </div>
-            </div>
-          </td>
-
-          <!-- 右欄：日常紀錄 -->
-          <td>
-            <div class="dailyWrap">
-
-              <!-- 食慾（外框） -->
-              <div class="boxSec">
-                <div class="secHead">食慾</div>
-
-                <div class="mealRow">
-                  <div class="mealTag">早</div>
-                  <div class="mealOpts">
-                    <label class="opt"><input type="radio" name="d1_am" value="良好">良好</label>
-                    <label class="opt"><input type="radio" name="d1_am" value="普通">普通</label>
-                    <label class="opt"><input type="radio" name="d1_am" value="不吃">不吃</label>
-                  </div>
-                </div>
-
-                <div class="mealRow">
-                  <div class="mealTag">中</div>
-                  <div class="mealOpts">
-                    <label class="opt"><input type="radio" name="d1_noon" value="良好">良好</label>
-                    <label class="opt"><input type="radio" name="d1_noon" value="普通">普通</label>
-                    <label class="opt"><input type="radio" name="d1_noon" value="不吃">不吃</label>
-                  </div>
-                </div>
-
-                <div class="mealRow">
-                  <div class="mealTag">晚</div>
-                  <div class="mealOpts">
-                    <label class="opt"><input type="radio" name="d1_pm" value="良好">良好</label>
-                    <label class="opt"><input type="radio" name="d1_pm" value="普通">普通</label>
-                    <label class="opt"><input type="radio" name="d1_pm" value="不吃">不吃</label>
-                  </div>
-                </div>
-              </div>
-
-              <!-- 排便/排尿（外框） -->
-              <div class="boxSec">
-                <div class="secHead">排便 / 排尿次數</div>
-                <div class="opts">
-                  <label class="opt"><input type="radio" name="d1_toilet" value="正常">正常</label>
-                  <label class="opt"><input type="radio" name="d1_toilet" value="異常">異常</label>
-                </div>
-                <textarea class="toiletNote" id="d1_toilet_note" placeholder="異常狀況說明"></textarea>
-              </div>
-
-            </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
 
     <!-- 照顧細節 -->
-<div class="card" id="cardCare">
-  <div class="cardTitle">照顧細節</div>
-  <div class="cardBody">
+    <div class="card" id="cardCare">
+      <div class="cardTitle">照顧細節</div>
+      <div class="cardBody">
 
-    <label>生活習慣：</label>
-    <textarea id="lifestyle" placeholder="例：怕吵、喜歡被摸頭、午睡多..."></textarea>
+        <label>生活習慣：</label>
+        <textarea id="lifestyle" placeholder="例：怕吵、喜歡被摸頭、午睡多..."></textarea>
 
-    <div style="height:16px"></div>
+        <div style="height:16px"></div>
 
-    <label>餵食習慣（可多選）</label>
+        <label>餵食習慣（可多選）</label>
 
-    <div class="cellTitle">早</div>
-    <div class="opts">
-      <label class="opt"><input type="checkbox" id="feed_am_kibble">飼料</label>
-      <label class="opt"><input type="checkbox" id="feed_am_can">罐頭</label>
-      <label class="opt"><input type="checkbox" id="feed_am_fresh">鮮食</label>
-      <label class="opt"><input type="checkbox" id="feed_am_freeze">凍乾</label>
+        <div class="cellTitle">早</div>
+        <div class="opts">
+          <label class="opt"><input type="checkbox" id="feed_am_kibble">飼料</label>
+          <label class="opt"><input type="checkbox" id="feed_am_can">罐頭</label>
+          <label class="opt"><input type="checkbox" id="feed_am_fresh">鮮食</label>
+          <label class="opt"><input type="checkbox" id="feed_am_freeze">凍乾</label>
+        </div>
+
+        <div class="cellTitle">中</div>
+        <div class="opts">
+          <label class="opt"><input type="checkbox" id="feed_noon_kibble">飼料</label>
+          <label class="opt"><input type="checkbox" id="feed_noon_can">罐頭</label>
+          <label class="opt"><input type="checkbox" id="feed_noon_fresh">鮮食</label>
+          <label class="opt"><input type="checkbox" id="feed_noon_freeze">凍乾</label>
+        </div>
+
+        <div class="cellTitle">晚</div>
+        <div class="opts">
+          <label class="opt"><input type="checkbox" id="feed_pm_kibble">飼料</label>
+          <label class="opt"><input type="checkbox" id="feed_pm_can">罐頭</label>
+          <label class="opt"><input type="checkbox" id="feed_pm_fresh">鮮食</label>
+          <label class="opt"><input type="checkbox" id="feed_pm_freeze">凍乾</label>
+        </div>
+
+        <div style="height:20px"></div>
+
+        <label>藥品 / 保健品</label>
+
+        <div class="cellTitle">早</div>
+        <div class="opts">
+          <label class="opt"><input type="checkbox" id="med_am_before">飯前</label>
+          <label class="opt"><input type="checkbox" id="med_am_after">飯後</label>
+          <label class="opt"><input type="checkbox" id="med_am_with">隨餐</label>
+        </div>
+        <textarea id="med_am_note" placeholder="備註"></textarea>
+
+        <div class="cellTitle">中</div>
+        <div class="opts">
+          <label class="opt"><input type="checkbox" id="med_noon_before">飯前</label>
+          <label class="opt"><input type="checkbox" id="med_noon_after">飯後</label>
+          <label class="opt"><input type="checkbox" id="med_noon_with">隨餐</label>
+        </div>
+        <textarea id="med_noon_note" placeholder="備註"></textarea>
+
+        <div class="cellTitle">晚</div>
+        <div class="opts">
+          <label class="opt"><input type="checkbox" id="med_pm_before">飯前</label>
+          <label class="opt"><input type="checkbox" id="med_pm_after">飯後</label>
+          <label class="opt"><input type="checkbox" id="med_pm_with">隨餐</label>
+        </div>
+        <textarea id="med_pm_note" placeholder="備註"></textarea>
+
+        <div style="height:16px"></div>
+
+        <label>照顧須知（選填）</label>
+        <textarea id="care_rules" placeholder="例：需要慢慢親近／怕生／不喜歡突然抱起..."></textarea>
+
+        <label>溫馨提醒（選填）</label>
+        <textarea id="warm_remind" placeholder="例：回家後先清淡飲食一天，若有軟便請觀察..."></textarea>
+
+      </div>
     </div>
 
-    <div class="cellTitle">中</div>
-    <div class="opts">
-      <label class="opt"><input type="checkbox" id="feed_noon_kibble">飼料</label>
-      <label class="opt"><input type="checkbox" id="feed_noon_can">罐頭</label>
-      <label class="opt"><input type="checkbox" id="feed_noon_fresh">鮮食</label>
-      <label class="opt"><input type="checkbox" id="feed_noon_freeze">凍乾</label>
+    <div class="card">
+      <div class="cardTitle">住宿時期個性觀察（可多選）</div>
+      <div class="cardBody">
+        <div class="opts">
+          <label class="opt"><input type="checkbox" id="p_friendly_human">親人</label>
+          <label class="opt"><input type="checkbox" id="p_slow">需慢慢靠近</label>
+          <label class="opt"><input type="checkbox" id="p_not_human">不親人</label>
+        </div>
+
+        <div class="opts">
+          <label class="opt"><input type="checkbox" id="p_friendly_dog">親狗</label>
+          <label class="opt"><input type="checkbox" id="p_annoyed">不喜狗過度打擾</label>
+          <label class="opt"><input type="checkbox" id="p_not_dog">不親狗</label>
+        </div>
+
+        <div class="opts">
+          <label class="opt"><input type="checkbox" id="p_stable">互動良好自在，性格穩定</label>
+          <label class="opt"><input type="checkbox" id="p_shy">害羞</label>
+          <label class="opt"><input type="checkbox" id="p_nervous">緊張</label>
+          <label class="opt"><input type="checkbox" id="p_timidy">膽小</label>
+          <label class="opt"><input type="checkbox" id="p_anxious">焦慮</label>
+          <label class="opt"><input type="checkbox" id="p_hyper">極度熱情活潑</label>
+          <label class="opt"><input type="checkbox" id="p_play_high">玩樂需求高</label>
+          <label class="opt"><input type="checkbox" id="p_rest_high">休息需求高</label>
+        </div>
+      </div>
     </div>
 
-    <div class="cellTitle">晚</div>
-    <div class="opts">
-      <label class="opt"><input type="checkbox" id="feed_pm_kibble">飼料</label>
-      <label class="opt"><input type="checkbox" id="feed_pm_can">罐頭</label>
-      <label class="opt"><input type="checkbox" id="feed_pm_fresh">鮮食</label>
-      <label class="opt"><input type="checkbox" id="feed_pm_freeze">凍乾</label>
+    <div class="card">
+      <div class="cardTitle">額外附加</div>
+      <div class="cardBody">
+        <div class="grid3">
+          <div><label>刷牙</label><input id="extra_brush_teeth" inputmode="numeric"></div>
+          <div><label>餵藥/保養品</label><input id="extra_meds" inputmode="numeric"></div>
+          <div><label>點眼藥水</label><input id="extra_eye" inputmode="numeric"></div>
+          <div><label>散步</label><input id="extra_walk" inputmode="numeric"></div>
+          <div><label>梳毛</label><input id="extra_brush" inputmode="numeric"></div>
+          <div><label>特殊照顧</label><input id="extra_special" inputmode="numeric"></div>
+          <div><label>陪診服務</label><input id="extra_hospital" inputmode="numeric"></div>
+          <div><label>傷口擦藥</label><input id="extra_wound_med" inputmode="numeric"></div>
+          <div><label>傷口換藥</label><input id="extra_wound_change" inputmode="numeric"></div>
+          <div><label>針管餵水</label><input id="extra_syringe" inputmode="numeric"></div>
+          <div><label>手餵飯</label><input id="extra_handfeed" inputmode="numeric"></div>
+        </div>
+      </div>
     </div>
 
-    <div style="height:20px"></div>
-
-    <label>藥品 / 保健品</label>
-
-    <div class="cellTitle">早</div>
-    <div class="opts">
-      <label class="opt"><input type="checkbox" id="med_am_before">飯前</label>
-      <label class="opt"><input type="checkbox" id="med_am_after">飯後</label>
-      <label class="opt"><input type="checkbox" id="med_am_with">隨餐</label>
-    </div>
-    <textarea id="med_am_note" placeholder="備註"></textarea>
-
-    <div class="cellTitle">中</div>
-    <div class="opts">
-      <label class="opt"><input type="checkbox" id="med_noon_before">飯前</label>
-      <label class="opt"><input type="checkbox" id="med_noon_after">飯後</label>
-      <label class="opt"><input type="checkbox" id="med_noon_with">隨餐</label>
-    </div>
-    <textarea id="med_noon_note" placeholder="備註"></textarea>
-
-    <div class="cellTitle">晚</div>
-    <div class="opts">
-      <label class="opt"><input type="checkbox" id="med_pm_before">飯前</label>
-      <label class="opt"><input type="checkbox" id="med_pm_after">飯後</label>
-      <label class="opt"><input type="checkbox" id="med_pm_with">隨餐</label>
-    </div>
-    <textarea id="med_pm_note" placeholder="備註"></textarea>
-
-    <div style="height:16px"></div>
-
-    <label>照顧須知（選填）</label>
-    <textarea id="care_rules" placeholder="例：需要慢慢親近／怕生／不喜歡突然抱起..."></textarea>
-
-    <label>溫馨提醒（選填）</label>
-    <textarea id="warm_remind" placeholder="例：回家後先清淡飲食一天，若有軟便請觀察..."></textarea>
-
-  </div>
-</div>
-<div class="card">
-  <div class="cardTitle">住宿時期個性觀察（可多選）</div>
-  <div class="cardBody">
-    <div class="opts">
-      <label class="opt"><input type="checkbox" id="p_friendly_human">親人</label>
-      <label class="opt"><input type="checkbox" id="p_slow">需慢慢靠近</label>
-      <label class="opt"><input type="checkbox" id="p_not_human">不親人</label>
-    </div>
-
-    <div class="opts">
-      <label class="opt"><input type="checkbox" id="p_friendly_dog">親狗</label>
-      <label class="opt"><input type="checkbox" id="p_annoyed">不喜狗過度打擾</label>
-      <label class="opt"><input type="checkbox" id="p_not_dog">不親狗</label>
-    </div>
-
-    <div class="opts">
-      <label class="opt"><input type="checkbox" id="p_stable">互動良好自在，性格穩定</label>
-      <label class="opt"><input type="checkbox" id="p_shy">害羞</label>
-      <label class="opt"><input type="checkbox" id="p_nervous">緊張</label>
-      <label class="opt"><input type="checkbox" id="p_timidy">膽小</label>
-      <label class="opt"><input type="checkbox" id="p_anxious">焦慮</label>
-      <label class="opt"><input type="checkbox" id="p_hyper">極度熱情活潑</label>
-      <label class="opt"><input type="checkbox" id="p_play_high">玩樂需求高</label>
-      <label class="opt"><input type="checkbox" id="p_rest_high">休息需求高</label>
-    </div>
-  </div>
-</div>
-  <div class="card">
-  <div class="cardTitle">額外附加</div>
-  <div class="cardBody">
-    <div class="grid3">
-      <div><label>刷牙</label><input id="extra_brush_teeth" inputmode="numeric"></div>
-      <div><label>餵藥/保養品</label><input id="extra_meds" inputmode="numeric"></div>
-      <div><label>點眼藥水</label><input id="extra_eye" inputmode="numeric"></div>
-      <div><label>散步</label><input id="extra_walk" inputmode="numeric"></div>
-      <div><label>梳毛</label><input id="extra_brush" inputmode="numeric"></div>
-      <div><label>特殊照顧</label><input id="extra_special" inputmode="numeric"></div>
-      <div><label>陪診服務</label><input id="extra_hospital" inputmode="numeric"></div>
-      <div><label>傷口擦藥</label><input id="extra_wound_med" inputmode="numeric"></div>
-      <div><label>傷口換藥</label><input id="extra_wound_change" inputmode="numeric"></div>
-      <div><label>針管餵水</label><input id="extra_syringe" inputmode="numeric"></div>
-      <div><label>手餵飯</label><input id="extra_handfeed" inputmode="numeric"></div>
-    </div>
-  </div>
-</div>
-  
     <!-- 費用明細 -->
     <div class="card" id="cardFee">
       <div class="cardTitle">費用明細</div>
@@ -556,7 +511,7 @@
   // 先抓一般 query
   let mode = qs.get("mode");
   let dataParam = qs.get("data");
-  let idParam = qs.get("id"); 
+  let idParam = qs.get("id");
 
   // LINE/LIFF 可能把 query 包進 liff.state
   const liffState = qs.get("liff.state");
@@ -573,12 +528,14 @@
   const isConfirm = !!dataParam || !!idParam;
 
   const pad = n => String(n).padStart(2,'0');
+
   function setStatus(msg, ok=false){
-  const el = document.getElementById('status');
-  if(!el) return;
-  el.textContent = msg;
-  el.className = "status " + (ok ? "ok":"bad");
-}
+    const el = document.getElementById('status');
+    if(!el) return;
+    el.textContent = msg;
+    el.className = "status " + (ok ? "ok":"bad");
+  }
+
   function escapeB64Json(obj){
     return btoa(unescape(encodeURIComponent(JSON.stringify(obj))));
   }
@@ -594,23 +551,24 @@
     const el = document.querySelector(`input[name="${name}"][value="${CSS.escape(value)}"]`);
     if(el) el.checked = true;
   }
-  function setReadonlyAll(){
-     // inputs & textarea: 除了客人要填的 confirm_email / signed_date / owner_name
-  document.querySelectorAll('input, textarea').forEach(el=>{
-    const allow = ["confirm_email","signed_date"];
-    if(allow.includes(el.id)) return;
-    el.setAttribute('readonly','readonly');
-  });
 
-  // radio/checkbox/select: 除了 confirm_record / confirm_fee
-  document.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(el=>{
-    const allow = ["confirm_record","confirm_fee"];
-    if(allow.includes(el.id)) return;
-    el.disabled = true;
-  });
-  document.querySelectorAll('select').forEach(el=> el.disabled = true);
-  document.body.classList.add("ro");
-}
+  function setReadonlyAll(){
+    // inputs & textarea: 除了客人要填的 confirm_email / signed_date
+    document.querySelectorAll('input, textarea').forEach(el=>{
+      const allow = ["confirm_email","signed_date"];
+      if(allow.includes(el.id)) return;
+      el.setAttribute('readonly','readonly');
+    });
+
+    // radio/checkbox/select: 除了 confirm_record / confirm_fee
+    document.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(el=>{
+      const allow = ["confirm_record","confirm_fee"];
+      if(allow.includes(el.id)) return;
+      el.disabled = true;
+    });
+    document.querySelectorAll('select').forEach(el=> el.disabled = true);
+    document.body.classList.add("ro");
+  }
 
   // ========= fee =========
   const feeRowsEl = document.getElementById("feeRows");
@@ -661,393 +619,381 @@
   resetFeeCommon();
 
   // ========= signature =========
-const canvas = document.getElementById('sig');
-const ctx = canvas ? canvas.getContext('2d') : null;
+  const canvas = document.getElementById('sig');
+  const ctx = canvas ? canvas.getContext('2d') : null;
 
-function resizeCanvas(){
-  if(!canvas || !ctx) return;
-  const rect = canvas.getBoundingClientRect();
-  const ratio = Math.max(window.devicePixelRatio || 1, 1);
+  function resizeCanvas(){
+    if(!canvas || !ctx) return;
+    const rect = canvas.getBoundingClientRect();
+    const ratio = Math.max(window.devicePixelRatio || 1, 1);
 
-  canvas.width = Math.floor(rect.width * ratio);
-  canvas.height = Math.floor(rect.height * ratio);
-  ctx.setTransform(1,0,0,1,0,0);
-  ctx.scale(ratio, ratio);
-  ctx.lineWidth = 2;
-  ctx.lineCap = 'round';
-  ctx.strokeStyle = '#111';
-}
-window.addEventListener('resize', resizeCanvas);
-
-let drawing = false;
-let last = null;
-
-function getPos(e){
-  if(!canvas) return { x:0, y:0 };
-  const rect = canvas.getBoundingClientRect();
-  const touch = e.touches ? e.touches[0] : null;
-  const clientX = touch ? touch.clientX : e.clientX;
-  const clientY = touch ? touch.clientY : e.clientY;
-  return { x: clientX - rect.left, y: clientY - rect.top };
-}
-
-function start(e){
-  if(!canvas || !ctx) return;
-  e.preventDefault();
-  drawing = true;
-  last = getPos(e);
-}
-function move(e){
-  if(!canvas || !ctx) return;
-  if(!drawing) return;
-  e.preventDefault();
-  const p = getPos(e);
-  ctx.beginPath();
-  ctx.moveTo(last.x, last.y);
-  ctx.lineTo(p.x, p.y);
-  ctx.stroke();
-  last = p;
-}
-function end(e){
-  if(!canvas || !ctx) return;
-  if(!drawing) return;
-  e.preventDefault();
-  drawing = false;
-  last = null;
-}
-
-function clearSig(){
-  if(!canvas || !ctx) return;
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-}
-
-function canvasIsBlank(){
-  if(!canvas || !ctx) return true;
-  const w = canvas.width, h = canvas.height;
-  const img = ctx.getImageData(0, 0, w, h).data;
-  for(let i = 3; i < img.length; i += 4){
-    if(img[i] !== 0) return false; // alpha 有值代表有畫到
+    canvas.width = Math.floor(rect.width * ratio);
+    canvas.height = Math.floor(rect.height * ratio);
+    ctx.setTransform(1,0,0,1,0,0);
+    ctx.scale(ratio, ratio);
+    ctx.lineWidth = 2;
+    ctx.lineCap = 'round';
+    ctx.strokeStyle = '#111';
   }
-  return true;
-}
+  window.addEventListener('resize', resizeCanvas);
 
-const clearBtn = document.getElementById('clearBtn');
-if(clearBtn) clearBtn.addEventListener('click', clearSig);
+  let drawing = false;
+  let last = null;
 
-if(canvas){
-  canvas.addEventListener('mousedown', start);
-  canvas.addEventListener('mousemove', move);
-  window.addEventListener('mouseup', end);
-  canvas.addEventListener('touchstart', start, {passive:false});
-  canvas.addEventListener('touchmove', move, {passive:false});
-  canvas.addEventListener('touchend', end, {passive:false});
-}
+  function getPos(e){
+    if(!canvas) return { x:0, y:0 };
+    const rect = canvas.getBoundingClientRect();
+    const touch = e.touches ? e.touches[0] : null;
+    const clientX = touch ? touch.clientX : e.clientX;
+    const clientY = touch ? touch.clientY : e.clientY;
+    return { x: clientX - rect.left, y: clientY - rect.top };
+  }
+
+  function start(e){
+    if(!canvas || !ctx) return;
+    e.preventDefault();
+    drawing = true;
+    last = getPos(e);
+  }
+  function move(e){
+    if(!canvas || !ctx) return;
+    if(!drawing) return;
+    e.preventDefault();
+    const p = getPos(e);
+    ctx.beginPath();
+    ctx.moveTo(last.x, last.y);
+    ctx.lineTo(p.x, p.y);
+    ctx.stroke();
+    last = p;
+  }
+  function end(e){
+    if(!canvas || !ctx) return;
+    if(!drawing) return;
+    e.preventDefault();
+    drawing = false;
+    last = null;
+  }
+
+  function clearSig(){
+    if(!canvas || !ctx) return;
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+  }
+
+  function canvasIsBlank(){
+    if(!canvas || !ctx) return true;
+    const w = canvas.width, h = canvas.height;
+    const img = ctx.getImageData(0, 0, w, h).data;
+    for(let i = 3; i < img.length; i += 4){
+      if(img[i] !== 0) return false;
+    }
+    return true;
+  }
+
+  const clearBtn = document.getElementById('clearBtn');
+  if(clearBtn) clearBtn.addEventListener('click', clearSig);
+
+  if(canvas){
+    canvas.addEventListener('mousedown', start);
+    canvas.addEventListener('mousemove', move);
+    window.addEventListener('mouseup', end);
+    canvas.addEventListener('touchstart', start, {passive:false});
+    canvas.addEventListener('touchmove', move, {passive:false});
+    canvas.addEventListener('touchend', end, {passive:false});
+  }
+
   // ========= data collect / apply =========
-function cb(id){ return !!document.getElementById(id)?.checked; }
-function val(id){ return document.getElementById(id)?.value?.trim?.() || ""; }
+  function cb(id){ return !!document.getElementById(id)?.checked; }
+  function val(id){ return document.getElementById(id)?.value?.trim?.() || ""; }
 
-function collectAllData(){
-  const feeItems = [];
-  feeRowsEl.querySelectorAll(".feeRow").forEach(row=>{
-    feeItems.push({
-      item: row.querySelector(".fee_item").value.trim(),
-      price: row.querySelector(".fee_price").value.trim(),
-      qty: row.querySelector(".fee_qty").value.trim(),
-      sub: row.querySelector(".fee_sub").value.trim()
+  function collectAllData(){
+    const feeItems = [];
+    feeRowsEl.querySelectorAll(".feeRow").forEach(row=>{
+      feeItems.push({
+        item: row.querySelector(".fee_item").value.trim(),
+        price: row.querySelector(".fee_price").value.trim(),
+        qty: row.querySelector(".fee_qty").value.trim(),
+        sub: row.querySelector(".fee_sub").value.trim()
+      });
     });
-  });
 
-  function getDayIndices(){
-    const set = new Set();
-    document.querySelectorAll('input[id^="d"][id$="_date"]').forEach(el=>{
-      const m = el.id.match(/^d(\d+)_date$/);
-      if(m) set.add(parseInt(m[1],10));
-    });
-    return Array.from(set).sort((a,b)=>a-b);
+    function getDayIndices(){
+      const set = new Set();
+      document.querySelectorAll('input[id^="d"][id$="_date"]').forEach(el=>{
+        const m = el.id.match(/^d(\d+)_date$/);
+        if(m) set.add(parseInt(m[1],10));
+      });
+      return Array.from(set).sort((a,b)=>a-b);
+    }
+
+    const dayIdx = getDayIndices();
+    const days = dayIdx.map(i => ({
+      date: val(`d${i}_date`),
+      appetite_am: readRadio(`d${i}_am`),
+      appetite_noon: readRadio(`d${i}_noon`),
+      appetite_pm: readRadio(`d${i}_pm`),
+      toilet: readRadio(`d${i}_toilet`),
+      toilet_note: val(`d${i}_toilet_note`),
+      remind: val(`d${i}_remind`)
+    }));
+
+    return {
+      owner_name: val("owner_name"),
+      pet_name: val("pet_name"),
+      stay_date: val("stay_date"),
+
+      lifestyle: val("lifestyle"),
+
+      feed_am: { kibble: cb("feed_am_kibble"), can: cb("feed_am_can"), fresh: cb("feed_am_fresh"), freeze: cb("feed_am_freeze") },
+      feed_noon:{ kibble: cb("feed_noon_kibble"), can: cb("feed_noon_can"), fresh: cb("feed_noon_fresh"), freeze: cb("feed_noon_freeze") },
+      feed_pm: { kibble: cb("feed_pm_kibble"), can: cb("feed_pm_can"), fresh: cb("feed_pm_fresh"), freeze: cb("feed_pm_freeze") },
+
+      med_am: { before: cb("med_am_before"), after: cb("med_am_after"), with: cb("med_am_with"), note: val("med_am_note") },
+      med_noon:{ before: cb("med_noon_before"), after: cb("med_noon_after"), with: cb("med_noon_with"), note: val("med_noon_note") },
+      med_pm: { before: cb("med_pm_before"), after: cb("med_pm_after"), with: cb("med_pm_with"), note: val("med_pm_note") },
+
+      personality: {
+        friendly_human: cb("p_friendly_human"),
+        slow: cb("p_slow"),
+        not_human: cb("p_not_human"),
+        friendly_dog: cb("p_friendly_dog"),
+        annoyed: cb("p_annoyed"),
+        not_dog: cb("p_not_dog"),
+        stable: cb("p_stable"),
+        shy: cb("p_shy"),
+        nervous: cb("p_nervous"),
+        timidy: cb("p_timidy"),
+        anxious: cb("p_anxious"),
+        hyper: cb("p_hyper"),
+        play_high: cb("p_play_high"),
+        rest_high: cb("p_rest_high"),
+      },
+
+      extra: {
+        brush_teeth: val("extra_brush_teeth"),
+        meds: val("extra_meds"),
+        eye: val("extra_eye"),
+        walk: val("extra_walk"),
+        brush: val("extra_brush"),
+        special: val("extra_special"),
+        hospital: val("extra_hospital"),
+        wound_med: val("extra_wound_med"),
+        wound_change: val("extra_wound_change"),
+        syringe: val("extra_syringe"),
+        handfeed: val("extra_handfeed"),
+      },
+
+      days,
+
+      fee_items: feeItems,
+      fee_total: String(calcFee()),
+      created_at: new Date().toISOString()
+    };
   }
-
-  const dayIdx = getDayIndices();
-  const days = dayIdx.map(i => ({
-    date: val(`d${i}_date`),
-    appetite_am: readRadio(`d${i}_am`),
-    appetite_noon: readRadio(`d${i}_noon`),
-    appetite_pm: readRadio(`d${i}_pm`),
-    toilet: readRadio(`d${i}_toilet`),
-    toilet_note: val(`d${i}_toilet_note`),
-    remind: val(`d${i}_remind`)
-  }));
-
-  return {
-    owner_name: val("owner_name"),
-    pet_name: val("pet_name"),
-    stay_date: val("stay_date"),
-
-    lifestyle: val("lifestyle"),
-
-    // 餵食習慣
-    feed_am: { kibble: cb("feed_am_kibble"), can: cb("feed_am_can"), fresh: cb("feed_am_fresh"), freeze: cb("feed_am_freeze") },
-    feed_noon:{ kibble: cb("feed_noon_kibble"), can: cb("feed_noon_can"), fresh: cb("feed_noon_fresh"), freeze: cb("feed_noon_freeze") },
-    feed_pm: { kibble: cb("feed_pm_kibble"), can: cb("feed_pm_can"), fresh: cb("feed_pm_fresh"), freeze: cb("feed_pm_freeze") },
-
-    // 藥品/保健品
-    med_am: { before: cb("med_am_before"), after: cb("med_am_after"), with: cb("med_am_with"), note: val("med_am_note") },
-    med_noon:{ before: cb("med_noon_before"), after: cb("med_noon_after"), with: cb("med_noon_with"), note: val("med_noon_note") },
-    med_pm: { before: cb("med_pm_before"), after: cb("med_pm_after"), with: cb("med_pm_with"), note: val("med_pm_note") },
-
-    // 個性觀察
-    personality: {
-      friendly_human: cb("p_friendly_human"),
-      slow: cb("p_slow"),
-      not_human: cb("p_not_human"),
-      friendly_dog: cb("p_friendly_dog"),
-      annoyed: cb("p_annoyed"),
-      not_dog: cb("p_not_dog"),
-      stable: cb("p_stable"),
-      shy: cb("p_shy"),
-      nervous: cb("p_nervous"),
-      timidy: cb("p_timidy"),
-      anxious: cb("p_anxious"),
-      hyper: cb("p_hyper"),
-      play_high: cb("p_play_high"),
-      rest_high: cb("p_rest_high"),
-    },
-
-    // 額外附加
-    extra: {
-      brush_teeth: val("extra_brush_teeth"),
-      meds: val("extra_meds"),
-      eye: val("extra_eye"),
-      walk: val("extra_walk"),
-      brush: val("extra_brush"),
-      special: val("extra_special"),
-      hospital: val("extra_hospital"),
-      wound_med: val("extra_wound_med"),
-      wound_change: val("extra_wound_change"),
-      syringe: val("extra_syringe"),
-      handfeed: val("extra_handfeed"),
-    },
-
-    days,
-
-    fee_items: feeItems,
-    fee_total: String(calcFee()),
-    created_at: new Date().toISOString()
-  };
-}
 
   function setCb(id, v){
-  const el = document.getElementById(id);
-  if(el) el.checked = !!v;
-}
-function setVal(id, v){
-  const el = document.getElementById(id);
-  if(el) el.value = v || "";
-}
-
-function applyAllData(data){
-  setVal("owner_name", data.owner_name);
-  setVal("pet_name", data.pet_name);
-  setVal("stay_date", data.stay_date);
-
-  // days
-function ensureDays(n){
-  const tbody = document.getElementById("activityBody");
-  const tpl = tbody.querySelector('tr[data-template="day"]');
-  if(!tpl) return;
-
-  n = Math.max(1, n);
-
-  // 先刪到剛好 n
-  let rows = Array.from(tbody.querySelectorAll("tr"));
-  while(rows.length > n){
-    tbody.removeChild(rows[rows.length - 1]);
-    rows = Array.from(tbody.querySelectorAll("tr"));
+    const el = document.getElementById(id);
+    if(el) el.checked = !!v;
+  }
+  function setVal(id, v){
+    const el = document.getElementById(id);
+    if(el) el.value = v || "";
   }
 
-  // 再補到剛好 n
-  while(rows.length < n){
-    const day = rows.length + 1;
-    const tr = tpl.cloneNode(true);
-    tr.removeAttribute("data-template");
+  function applyAllData(data){
+    setVal("owner_name", data.owner_name);
+    setVal("pet_name", data.pet_name);
+    setVal("stay_date", data.stay_date);
 
-    tr.querySelectorAll("[id]").forEach(el=>{
-      el.id = el.id.replace(/^d\d+_/, `d${day}_`);
-    });
-    tr.querySelectorAll('input[type="radio"][name]').forEach(r=>{
-      r.name = r.name.replace(/^d\d+_/, `d${day}_`);
+    function ensureDays(n){
+      const tbody = document.getElementById("activityBody");
+      const tpl = tbody.querySelector('tr[data-template="day"]');
+      if(!tpl) return;
+
+      n = Math.max(1, n);
+
+      let rows = Array.from(tbody.querySelectorAll("tr"));
+      while(rows.length > n){
+        tbody.removeChild(rows[rows.length - 1]);
+        rows = Array.from(tbody.querySelectorAll("tr"));
+      }
+
+      while(rows.length < n){
+        const day = rows.length + 1;
+        const tr = tpl.cloneNode(true);
+        tr.removeAttribute("data-template");
+
+        tr.querySelectorAll("[id]").forEach(el=>{
+          el.id = el.id.replace(/^d\d+_/, `d${day}_`);
+        });
+        tr.querySelectorAll('input[type="radio"][name]').forEach(r=>{
+          r.name = r.name.replace(/^d\d+_/, `d${day}_`);
+        });
+
+        tr.querySelectorAll("input").forEach(inp=>{
+          if(inp.type === "radio" || inp.type === "checkbox") inp.checked = false;
+          else inp.value = "";
+        });
+        tr.querySelectorAll("textarea").forEach(t=> t.value = "");
+
+        tbody.appendChild(tr);
+        rows = Array.from(tbody.querySelectorAll("tr"));
+      }
+    }
+
+    const list = data.days || [];
+    ensureDays(list.length || 1);
+
+    list.forEach((d, i)=>{
+      const idx = i + 1;
+      setVal(`d${idx}_date`, d.date);
+      setRadio(`d${idx}_am`, d.appetite_am || "");
+      setRadio(`d${idx}_noon`, d.appetite_noon || "");
+      setRadio(`d${idx}_pm`, d.appetite_pm || "");
+      setRadio(`d${idx}_toilet`, d.toilet || "");
+      setVal(`d${idx}_toilet_note`, d.toilet_note);
+      setVal(`d${idx}_remind`, d.remind);
     });
 
-    tr.querySelectorAll("input").forEach(inp=>{
-      if(inp.type === "radio" || inp.type === "checkbox") inp.checked = false;
-      else inp.value = "";
-    });
-    tr.querySelectorAll("textarea").forEach(t=> t.value = "");
+    setVal("lifestyle", data.lifestyle);
 
-    tbody.appendChild(tr);
-    rows = Array.from(tbody.querySelectorAll("tr"));
+    const fam = data.feed_am || {};
+    setCb("feed_am_kibble", fam.kibble);
+    setCb("feed_am_can", fam.can);
+    setCb("feed_am_fresh", fam.fresh);
+    setCb("feed_am_freeze", fam.freeze);
+
+    const fnoon = data.feed_noon || {};
+    setCb("feed_noon_kibble", fnoon.kibble);
+    setCb("feed_noon_can", fnoon.can);
+    setCb("feed_noon_fresh", fnoon.fresh);
+    setCb("feed_noon_freeze", fnoon.freeze);
+
+    const fpm = data.feed_pm || {};
+    setCb("feed_pm_kibble", fpm.kibble);
+    setCb("feed_pm_can", fpm.can);
+    setCb("feed_pm_fresh", fpm.fresh);
+    setCb("feed_pm_freeze", fpm.freeze);
+
+    const mam = data.med_am || {};
+    setCb("med_am_before", mam.before);
+    setCb("med_am_after", mam.after);
+    setCb("med_am_with", mam.with);
+    setVal("med_am_note", mam.note);
+
+    const mnoon = data.med_noon || {};
+    setCb("med_noon_before", mnoon.before);
+    setCb("med_noon_after", mnoon.after);
+    setCb("med_noon_with", mnoon.with);
+    setVal("med_noon_note", mnoon.note);
+
+    const mpm = data.med_pm || {};
+    setCb("med_pm_before", mpm.before);
+    setCb("med_pm_after", mpm.after);
+    setCb("med_pm_with", mpm.with);
+    setVal("med_pm_note", mpm.note);
+
+    setVal("care_rules", data.care_rules);
+    setVal("warm_remind", data.warm_remind);
+
+    const p = data.personality || {};
+    setCb("p_friendly_human", p.friendly_human);
+    setCb("p_slow", p.slow);
+    setCb("p_not_human", p.not_human);
+    setCb("p_friendly_dog", p.friendly_dog);
+    setCb("p_annoyed", p.annoyed);
+    setCb("p_not_dog", p.not_dog);
+    setCb("p_stable", p.stable);
+    setCb("p_shy", p.shy);
+    setCb("p_nervous", p.nervous);
+    setCb("p_timidy", p.timidy);
+    setCb("p_anxious", p.anxious);
+    setCb("p_hyper", p.hyper);
+    setCb("p_play_high", p.play_high);
+    setCb("p_rest_high", p.rest_high);
+
+    const ex = data.extra || {};
+    setVal("extra_brush_teeth", ex.brush_teeth);
+    setVal("extra_meds", ex.meds);
+    setVal("extra_eye", ex.eye);
+    setVal("extra_walk", ex.walk);
+    setVal("extra_brush", ex.brush);
+    setVal("extra_special", ex.special);
+    setVal("extra_hospital", ex.hospital);
+    setVal("extra_wound_med", ex.wound_med);
+    setVal("extra_wound_change", ex.wound_change);
+    setVal("extra_syringe", ex.syringe);
+    setVal("extra_handfeed", ex.handfeed);
+
+    feeRowsEl.innerHTML = "";
+    (data.fee_items || []).forEach(x=>{
+      feeRowsEl.appendChild(feeRowTpl(x.item || "", x.price || "", x.qty || "1"));
+    });
+    if((data.fee_items || []).length === 0) resetFeeCommon();
+    calcFee();
   }
-}
-
-  const list = data.days || [];
-  ensureDays(list.length || 1);
-
-  list.forEach((d, i)=>{
-    const idx = i + 1;
-    setVal(`d${idx}_date`, d.date);
-    setRadio(`d${idx}_am`, d.appetite_am || "");
-    setRadio(`d${idx}_noon`, d.appetite_noon || "");
-    setRadio(`d${idx}_pm`, d.appetite_pm || "");
-    setRadio(`d${idx}_toilet`, d.toilet || "");
-    setVal(`d${idx}_toilet_note`, d.toilet_note);
-    setVal(`d${idx}_remind`, d.remind);
-  });
-
-  // 照顧細節
-  setVal("lifestyle", data.lifestyle);
-
-  // 餵食
-  const fam = data.feed_am || {};
-  setCb("feed_am_kibble", fam.kibble);
-  setCb("feed_am_can", fam.can);
-  setCb("feed_am_fresh", fam.fresh);
-  setCb("feed_am_freeze", fam.freeze);
-
-  const fnoon = data.feed_noon || {};
-  setCb("feed_noon_kibble", fnoon.kibble);
-  setCb("feed_noon_can", fnoon.can);
-  setCb("feed_noon_fresh", fnoon.fresh);
-  setCb("feed_noon_freeze", fnoon.freeze);
-
-  const fpm = data.feed_pm || {};
-  setCb("feed_pm_kibble", fpm.kibble);
-  setCb("feed_pm_can", fpm.can);
-  setCb("feed_pm_fresh", fpm.fresh);
-  setCb("feed_pm_freeze", fpm.freeze);
-
-  // 藥品/保健品
-  const mam = data.med_am || {};
-  setCb("med_am_before", mam.before);
-  setCb("med_am_after", mam.after);
-  setCb("med_am_with", mam.with);
-  setVal("med_am_note", mam.note);
-
-  const mnoon = data.med_noon || {};
-  setCb("med_noon_before", mnoon.before);
-  setCb("med_noon_after", mnoon.after);
-  setCb("med_noon_with", mnoon.with);
-  setVal("med_noon_note", mnoon.note);
-
-  const mpm = data.med_pm || {};
-  setCb("med_pm_before", mpm.before);
-  setCb("med_pm_after", mpm.after);
-  setCb("med_pm_with", mpm.with);
-  setVal("med_pm_note", mpm.note);
-
-  // 照顧須知/溫馨提醒
-  setVal("care_rules", data.care_rules);
-  setVal("warm_remind", data.warm_remind);
-
-  // 個性觀察
-  const p = data.personality || {};
-  setCb("p_friendly_human", p.friendly_human);
-  setCb("p_slow", p.slow);
-  setCb("p_not_human", p.not_human);
-  setCb("p_friendly_dog", p.friendly_dog);
-  setCb("p_annoyed", p.annoyed);
-  setCb("p_not_dog", p.not_dog);
-  setCb("p_stable", p.stable);
-  setCb("p_shy", p.shy);
-  setCb("p_nervous", p.nervous);
-  setCb("p_timidy", p.timidy);
-  setCb("p_anxious", p.anxious);
-  setCb("p_hyper", p.hyper);
-  setCb("p_play_high", p.play_high);
-  setCb("p_rest_high", p.rest_high);
-
-  // 額外附加
-  const ex = data.extra || {};
-  setVal("extra_brush_teeth", ex.brush_teeth);
-  setVal("extra_meds", ex.meds);
-  setVal("extra_eye", ex.eye);
-  setVal("extra_walk", ex.walk);
-  setVal("extra_brush", ex.brush);
-  setVal("extra_special", ex.special);
-  setVal("extra_hospital", ex.hospital);
-  setVal("extra_wound_med", ex.wound_med);
-  setVal("extra_wound_change", ex.wound_change);
-  setVal("extra_syringe", ex.syringe);
-  setVal("extra_handfeed", ex.handfeed);
-
-  // fee
-  feeRowsEl.innerHTML = "";
-  (data.fee_items || []).forEach(x=>{
-    feeRowsEl.appendChild(feeRowTpl(x.item || "", x.price || "", x.qty || "1"));
-  });
-  if((data.fee_items || []).length === 0) resetFeeCommon();
-  calcFee();
-}
 
   // ========= mode UI =========
   const hintEl = document.getElementById("hint");
   const modeTagEl = document.getElementById("modeTag");
 
-(async function init(){
-  if (isCreate) {
-    hintEl.innerHTML = "【店家填寫模式】填完後按「產生確認連結」，把連結傳給客人簽名回傳。";
-    modeTagEl.textContent = "MODE: 店家填寫";
-    document.getElementById("cardConfirmActions").style.display = "none";
-    document.getElementById("cardCreateActions").style.display = "block";
-    return;
-  }
-
-  if (isConfirm) {
-    hintEl.innerHTML = "【客人確認模式】請確認內容無誤後勾選、簽名並送出。";
-    modeTagEl.textContent = "MODE: 客人確認";
-    document.getElementById("cardConfirmActions").style.display = "block";
-    document.getElementById("cardCreateActions").style.display = "none";
-
-    const now = new Date();
-    document.getElementById("signed_date").value =
-      `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
-
-    try {
-      if (idParam) {
-        const r = await fetch(GAS_URL, {
-          method: "POST",
-          headers: { "Content-Type": "text/plain;charset=utf-8" },
-          body: JSON.stringify({ action: "getCheckoutRecord", id: idParam })
-        });
-
-        const j = await r.json();
-        if (!j.ok) throw new Error(j.error || "getCheckoutRecord failed");
-        applyAllData(j.data || {});
-      } else {
-        const decoded = unescapeB64Json(dataParam);
-        applyAllData(decoded);
-      }
-    } catch (e) {
-      setStatus("連結資料解析失敗，請向店家重新取得連結。");
+  (async function init(){
+    if (isCreate) {
+      hintEl.innerHTML = "【店家填寫模式】填完後按「產生確認連結」，把連結傳給客人簽名回傳。";
+      modeTagEl.textContent = "MODE: 店家填寫";
+      document.getElementById("cardConfirmActions").style.display = "none";
+      document.getElementById("cardCreateActions").style.display = "block";
       return;
     }
 
-    if (window.__setShowAllDays) window.__setShowAllDays(true);
-    setReadonlyAll();
-resizeCanvas(); 
-requestAnimationFrame(resizeCanvas);
-return;
-  }
+    if (isConfirm) {
+      hintEl.innerHTML = "【客人確認模式】請確認內容無誤後勾選、簽名並送出。";
+      modeTagEl.textContent = "MODE: 客人確認";
+      document.getElementById("cardConfirmActions").style.display = "block";
+      document.getElementById("cardCreateActions").style.display = "none";
 
-  hintEl.innerHTML = "請用店家填寫模式開啟：在網址後加 <span class='mono'>?mode=create</span>。";
-  modeTagEl.textContent = "MODE: 未指定";
-  document.getElementById("cardConfirmActions").style.display = "none";
-  document.getElementById("cardCreateActions").style.display = "none";
-})();
-    // ========= create: generate link =========
+      const now = new Date();
+      document.getElementById("signed_date").value =
+        `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+
+      try {
+        if (idParam) {
+          const r = await fetch(GAS_URL, {
+            method: "POST",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify({ action: "getCheckoutRecord", id: idParam })
+          });
+
+          const j = await r.json();
+          if (!j.ok) throw new Error(j.error || "getCheckoutRecord failed");
+          applyAllData(j.data || {});
+        } else {
+          const decoded = unescapeB64Json(dataParam);
+          applyAllData(decoded);
+        }
+      } catch (e) {
+        setStatus("連結資料解析失敗，請向店家重新取得連結。");
+        return;
+      }
+
+      if (window.__setShowAllDays) window.__setShowAllDays(true);
+      setReadonlyAll();
+      resizeCanvas();
+      requestAnimationFrame(resizeCanvas);
+      return;
+    }
+
+    hintEl.innerHTML = "請用店家填寫模式開啟：在網址後加 <span class='mono'>?mode=create</span>。";
+    modeTagEl.textContent = "MODE: 未指定";
+    document.getElementById("cardConfirmActions").style.display = "none";
+    document.getElementById("cardCreateActions").style.display = "none";
+  })();
+
+  // ========= create: generate link =========
   const genBtn = document.getElementById("genLinkBtn");
   const linkBox = document.getElementById("linkBox");
   const copyBtn = document.getElementById("copyLinkBtn");
 
- if (isCreate && genBtn){
+  if (isCreate && genBtn){
     genBtn.addEventListener("click", async ()=>{
       try{
         const data = collectAllData();
@@ -1086,224 +1032,259 @@ return;
     });
   }
 
- // ========= confirm: submit =========
-const submitBtn = document.getElementById("submitBtn");
-if(submitBtn){
-  submitBtn.addEventListener("click", async ()=>{
-    try{
-      const confirmEmail = document.getElementById("confirm_email").value.trim();
-if(!confirmEmail){
-  setStatus("請填寫您的 Email"); return;
-}
-if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(confirmEmail)){
-  setStatus("Email 格式不正確，請重新確認"); return;
-}
-      if(!document.getElementById("confirm_record").checked){
-        setStatus("請勾選：我已確認住宿期間紀錄內容無誤"); return;
-      }
-      if(!document.getElementById("confirm_fee").checked){
-        setStatus("請勾選：我已確認費用明細與總金額無誤"); return;
-      }
-      if(canvasIsBlank()){
-        setStatus("請先簽名"); return;
-      }
-
-      setStatus("送出中…請稍候");
-
-      const data = collectAllData();
-
-      const payload = {
-        action: "submitHotelCheckoutConfirm",
-        data: {
-          ...data,
-          record_id: idParam || "",
-          customer_email: confirmEmail,              // ✅ 只靠客人填的 email
-          confirm_record: true,
-          confirm_fee: true,
-          signed_date: document.getElementById("signed_date").value.trim(),
-          signature_png: canvas.toDataURL("image/png"),
-          ua: navigator.userAgent,
-          confirmed_at: new Date().toISOString()
+  // ========= confirm: submit =========
+  const submitBtn = document.getElementById("submitBtn");
+  if(submitBtn){
+    submitBtn.addEventListener("click", async ()=>{
+      try{
+        const confirmEmail = document.getElementById("confirm_email").value.trim();
+        if(!confirmEmail){
+          setStatus("請填寫您的 Email"); return;
         }
-      };
+        if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(confirmEmail)){
+          setStatus("Email 格式不正確，請重新確認"); return;
+        }
+        if(!document.getElementById("confirm_record").checked){
+          setStatus("請勾選：我已確認住宿期間紀錄內容無誤"); return;
+        }
+        if(!document.getElementById("confirm_fee").checked){
+          setStatus("請勾選：我已確認費用明細與總金額無誤"); return;
+        }
+        if(canvasIsBlank()){
+          setStatus("請先簽名"); return;
+        }
 
-      const res = await fetch(GAS_URL, {
-        method: "POST",
-        headers: {"Content-Type":"text/plain;charset=utf-8"},
-        body: JSON.stringify(payload)
+        setStatus("送出中…請稍候");
+
+        const data = collectAllData();
+
+        const payload = {
+          action: "submitHotelCheckoutConfirm",
+          data: {
+            ...data,
+            record_id: idParam || "",
+            customer_email: confirmEmail,
+            confirm_record: true,
+            confirm_fee: true,
+            signed_date: document.getElementById("signed_date").value.trim(),
+            signature_png: canvas.toDataURL("image/png"),
+            ua: navigator.userAgent,
+            confirmed_at: new Date().toISOString()
+          }
+        };
+
+        const res = await fetch(GAS_URL, {
+          method: "POST",
+          headers: {"Content-Type":"text/plain;charset=utf-8"},
+          body: JSON.stringify(payload)
+        });
+
+        const json = await res.json();
+        if(!json.ok){
+          setStatus("送出失敗：" + (json.error || "未知錯誤"));
+          return;
+        }
+
+        setStatus("✅ 已送出！PDF 會寄送至店家與您的 Email", true);
+        submitBtn.disabled = true;
+      }catch(err){
+        setStatus("送出失敗：" + (err && err.message ? err.message : String(err)));
+      }
+    });
+  }
+
+  // ========= stay_date format + auto-generate days =========
+  (function(){
+    const stay = document.getElementById("stay_date");
+    const tbody = document.getElementById("activityBody");
+    const btnAdd = document.getElementById("actAddDay");
+    const btnShowAll = document.getElementById("actShowAll");
+    if(!stay || !tbody) return;
+
+    function formatYMD(digits){
+      const s = digits.replace(/\D/g, "").slice(0, 8);
+      const y = s.slice(0, 4);
+      const m = s.slice(4, 6);
+      const d = s.slice(6, 8);
+      let out = y;
+      if(m) out += "/" + m;
+      if(d) out += "/" + d;
+      return out;
+    }
+    function parseYMD(str){
+      const digits = (str || "").replace(/\D/g,"").slice(0,8);
+      if(digits.length !== 8) return null;
+      const y = parseInt(digits.slice(0,4),10);
+      const m = parseInt(digits.slice(4,6),10);
+      const d = parseInt(digits.slice(6,8),10);
+      const dt = new Date(y, m-1, d);
+      if(dt.getFullYear()!==y || dt.getMonth()!==m-1 || dt.getDate()!==d) return null;
+      return dt;
+    }
+    function fmtDate(dt){
+      const y = dt.getFullYear();
+      const m = String(dt.getMonth()+1).padStart(2,"0");
+      const d = String(dt.getDate()).padStart(2,"0");
+      return `${y}/${m}/${d}`;
+    }
+    function daysBetweenInclusive(a,b){
+      const ms = 24*60*60*1000;
+      const aa = new Date(a.getFullYear(), a.getMonth(), a.getDate()).getTime();
+      const bb = new Date(b.getFullYear(), b.getMonth(), b.getDate()).getTime();
+      if(bb < aa) return 0;
+      return Math.floor((bb-aa)/ms) + 1;
+    }
+
+    function getRows(){ return Array.from(tbody.querySelectorAll("tr")); }
+
+    function renameRow(tr, day){
+      tr.querySelectorAll("[id]").forEach(el=>{
+        el.id = el.id.replace(/^d\d+_/, `d${day}_`);
       });
+      tr.querySelectorAll('input[type="radio"][name]').forEach(r=>{
+        r.name = r.name.replace(/^d\d+_/, `d${day}_`);
+      });
+    }
+    function clearRow(tr){
+      tr.querySelectorAll("input").forEach(inp=>{
+        if(inp.type === "radio" || inp.type === "checkbox") inp.checked = false;
+        else inp.value = "";
+      });
+      tr.querySelectorAll("textarea").forEach(t=> t.value = "");
+    }
 
-      const json = await res.json();
-      if(!json.ok){
-        setStatus("送出失敗：" + (json.error || "未知錯誤"));
-        return;
+    let showAll = false;
+
+    function applyVisibility(){
+      const rows = getRows();
+      rows.forEach((tr, idx)=>{
+        tr.style.display = (showAll || idx===0) ? "" : "none";
+      });
+      if(btnShowAll){
+        btnShowAll.textContent = showAll ? "只顯示一天" : "顯示全部";
+      }
+    }
+
+    window.__setShowAllDays = function(on){
+      showAll = !!on;
+      applyVisibility();
+    };
+
+    function ensureDayCount(n){
+      n = Math.max(1, n);
+      const tpl = tbody.querySelector('tr[data-template="day"]') || tbody.querySelector("tr");
+      if(!tpl) return;
+
+      let rows = getRows();
+      while(rows.length > n){
+        tbody.removeChild(rows[rows.length-1]);
+        rows = getRows();
+      }
+      while(rows.length < n){
+        const tr = tpl.cloneNode(true);
+        tr.removeAttribute("data-template");
+        const day = rows.length + 1;
+        renameRow(tr, day);
+        clearRow(tr);
+        tbody.appendChild(tr);
+        rows = getRows();
+      }
+    }
+
+    function fillDatesFromRange(startDt, endDt){
+      const n = daysBetweenInclusive(startDt, endDt);
+      ensureDayCount(n);
+      for(let i=0;i<n;i++){
+        const dt = new Date(startDt);
+        dt.setDate(startDt.getDate() + i);
+        const el = document.getElementById(`d${i+1}_date`);
+        if(el) el.value = fmtDate(dt);
+      }
+    }
+
+    function addDayManual(){
+      const rows = getRows();
+      ensureDayCount(rows.length + 1);
+      showAll = true;
+      applyVisibility();
+      const last = getRows()[getRows().length-1];
+      last && last.scrollIntoView({behavior:"smooth", block:"start"});
+    }
+
+    if(btnAdd) btnAdd.addEventListener("click", addDayManual);
+    if(btnShowAll) btnShowAll.addEventListener("click", ()=>{
+      showAll = !showAll;
+      applyVisibility();
+    });
+
+    // 初始化：只顯示一天
+    showAll = false;
+    applyVisibility();
+
+    // stay_date 輸入：格式化 + 兩邊滿8碼就自動生成天數
+    stay.addEventListener("input", ()=>{
+      let value = stay.value;
+      value = value.replace(/[～\-]/g, "~").replace(/\s+/g, "");
+      const parts = value.split("~");
+      const leftDigits = (parts[0] || "").replace(/\D/g, "");
+      const rightDigits = (parts[1] || "").replace(/\D/g, "");
+
+      const leftFormatted = formatYMD(leftDigits);
+      const rightFormatted = formatYMD(rightDigits);
+
+      if(leftDigits.length === 8 && parts.length === 1){
+        stay.value = leftFormatted + "~";
+      } else if(parts.length > 1){
+        stay.value = leftFormatted + "~" + rightFormatted;
+      } else {
+        stay.value = leftFormatted;
       }
 
-      setStatus("✅ 已送出！PDF 會寄送至店家與您的 Email", true);
-      submitBtn.disabled = true;
-    }catch(err){
-      setStatus("送出失敗：" + (err && err.message ? err.message : String(err)));
-    }
-  });
-}
-
-
-// ========= stay_date format + auto-generate days =========
-(function(){
-  const stay = document.getElementById("stay_date");
-  const tbody = document.getElementById("activityBody");
-  const btnAdd = document.getElementById("actAddDay");
-  const btnShowAll = document.getElementById("actShowAll");
-  if(!stay || !tbody) return;
-
-  function formatYMD(digits){
-    const s = digits.replace(/\D/g, "").slice(0, 8);
-    const y = s.slice(0, 4);
-    const m = s.slice(4, 6);
-    const d = s.slice(6, 8);
-    let out = y;
-    if(m) out += "/" + m;
-    if(d) out += "/" + d;
-    return out;
-  }
-  function parseYMD(str){
-    const digits = (str || "").replace(/\D/g,"").slice(0,8);
-    if(digits.length !== 8) return null;
-    const y = parseInt(digits.slice(0,4),10);
-    const m = parseInt(digits.slice(4,6),10);
-    const d = parseInt(digits.slice(6,8),10);
-    const dt = new Date(y, m-1, d);
-    if(dt.getFullYear()!==y || dt.getMonth()!==m-1 || dt.getDate()!==d) return null;
-    return dt;
-  }
-  function fmtDate(dt){
-    const y = dt.getFullYear();
-    const m = String(dt.getMonth()+1).padStart(2,"0");
-    const d = String(dt.getDate()).padStart(2,"0");
-    return `${y}/${m}/${d}`;
-  }
-  function daysBetweenInclusive(a,b){
-    const ms = 24*60*60*1000;
-    const aa = new Date(a.getFullYear(), a.getMonth(), a.getDate()).getTime();
-    const bb = new Date(b.getFullYear(), b.getMonth(), b.getDate()).getTime();
-    if(bb < aa) return 0;
-    return Math.floor((bb-aa)/ms) + 1;
-  }
-
-  function getRows(){ return Array.from(tbody.querySelectorAll("tr")); }
-
-  function renameRow(tr, day){
-    tr.querySelectorAll("[id]").forEach(el=>{
-      el.id = el.id.replace(/^d\d+_/, `d${day}_`);
+      const s = parseYMD(leftFormatted);
+      const e = parseYMD(rightFormatted);
+      if(s && e){
+        fillDatesFromRange(s, e);
+        showAll = false;
+        applyVisibility();
+      }
     });
-    tr.querySelectorAll('input[type="radio"][name]').forEach(r=>{
-      r.name = r.name.replace(/^d\d+_/, `d${day}_`);
+
+  })();
+
+  // ===== Day 日期：數字鍵盤 + 自動 YYYY/MM/DD（含動態新增的列）=====
+  (function(){
+    const tbody = document.getElementById("activityBody");
+    if(!tbody) return;
+
+    function formatYMDInput(raw){
+      const s = String(raw || "").replace(/\D/g,"").slice(0,8);
+      const y = s.slice(0,4);
+      const m = s.slice(4,6);
+      const d = s.slice(6,8);
+      let out = y;
+      if(m) out += "/" + m;
+      if(d) out += "/" + d;
+      return out;
+    }
+
+    // 事件委派：新增一天 clone 出來的 input 也會生效
+    tbody.addEventListener("input", (e)=>{
+      const el = e.target;
+      if(!(el instanceof HTMLInputElement)) return;
+      if(!/^d\d+_date$/.test(el.id)) return;
+
+      const before = el.value;
+      const after = formatYMDInput(before);
+      if(before !== after) el.value = after;
     });
-  }
-  function clearRow(tr){
-    tr.querySelectorAll("input").forEach(inp=>{
-      if(inp.type === "radio" || inp.type === "checkbox") inp.checked = false;
-      else inp.value = "";
+
+    // 初始也補一下
+    tbody.querySelectorAll('input[id^="d"][id$="_date"]').forEach(el=>{
+      el.setAttribute("inputmode","numeric");
+      el.setAttribute("autocomplete","off");
+      if(!el.placeholder) el.placeholder = "YYYY/MM/DD";
     });
-    tr.querySelectorAll("textarea").forEach(t=> t.value = "");
-  }
-let showAll = false;
-
-function applyVisibility(){
-  const rows = getRows();
-  rows.forEach((tr, idx)=>{
-    tr.style.display = (showAll || idx===0) ? "" : "none";
-  });
-  if(btnShowAll){
-    btnShowAll.textContent = showAll ? "只顯示一天" : "顯示全部";
-  }
-}
-
-window.__setShowAllDays = function(on){
-  showAll = !!on;
-  applyVisibility();
-};
-
-  function ensureDayCount(n){
-    n = Math.max(1, n);
-    const tpl = tbody.querySelector('tr[data-template="day"]') || tbody.querySelector("tr");
-    if(!tpl) return;
-
-    let rows = getRows();
-    while(rows.length > n){
-      tbody.removeChild(rows[rows.length-1]);
-      rows = getRows();
-    }
-    while(rows.length < n){
-      const tr = tpl.cloneNode(true);
-      tr.removeAttribute("data-template");
-      const day = rows.length + 1;
-      renameRow(tr, day);
-      clearRow(tr);
-      tbody.appendChild(tr);
-      rows = getRows();
-    }
-  }
-
-  function fillDatesFromRange(startDt, endDt){
-    const n = daysBetweenInclusive(startDt, endDt);
-    ensureDayCount(n);
-    for(let i=0;i<n;i++){
-      const dt = new Date(startDt);
-      dt.setDate(startDt.getDate() + i);
-      const el = document.getElementById(`d${i+1}_date`);
-      if(el) el.value = fmtDate(dt);
-    }
-  }
-
-  function addDayManual(){
-    const rows = getRows();
-    ensureDayCount(rows.length + 1);
-    showAll = true;
-    applyVisibility();
-    const last = getRows()[getRows().length-1];
-    last && last.scrollIntoView({behavior:"smooth", block:"start"});
-  }
-
-  if(btnAdd) btnAdd.addEventListener("click", addDayManual);
-  if(btnShowAll) btnShowAll.addEventListener("click", ()=>{
-    showAll = !showAll;
-    applyVisibility();
-  });
-
-  // 初始化：只顯示一天
-  showAll = false;
-  applyVisibility();
-
-  // stay_date 輸入：格式化 + 兩邊滿8碼就自動生成天數
-  stay.addEventListener("input", ()=>{
-    let value = stay.value;
-    value = value.replace(/[～\-]/g, "~").replace(/\s+/g, "");
-    const parts = value.split("~");
-    const leftDigits = (parts[0] || "").replace(/\D/g, "");
-    const rightDigits = (parts[1] || "").replace(/\D/g, "");
-
-    const leftFormatted = formatYMD(leftDigits);
-    const rightFormatted = formatYMD(rightDigits);
-
-    if(leftDigits.length === 8 && parts.length === 1){
-      stay.value = leftFormatted + "~";
-    } else if(parts.length > 1){
-      stay.value = leftFormatted + "~" + rightFormatted;
-    } else {
-      stay.value = leftFormatted;
-    }
-
-    const s = parseYMD(leftFormatted);
-    const e = parseYMD(rightFormatted);
-    if(s && e){
-      fillDatesFromRange(s, e);
-      showAll = false;
-      applyVisibility();
-    }
-  });
-
-})();
+  })();
 </script>
 </body>
 </html>
