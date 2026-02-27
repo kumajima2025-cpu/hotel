@@ -212,6 +212,70 @@ input, textarea{
   width:100%;
   max-width:100%;
 }
+/* ===== 活動紀錄：讓左右兩欄同高，備註才能真正拉到底 ===== */
+#cardActivity .recordTable thead{ display:table-header-group; }
+
+/* 讓每一列變成 grid（兩欄同高） */
+#cardActivity .recordTable tbody tr{
+  display:grid;
+  grid-template-columns: 34% 66%;
+  gap:10px;
+  align-items:stretch;
+}
+
+/* 小螢幕欄寬 */
+@media (max-width:520px){
+  #cardActivity .recordTable tbody tr{
+    grid-template-columns: 44% 56%;
+    gap:8px;
+  }
+}
+
+/* td 變成 grid item：取消 table cell 的一些限制 */
+#cardActivity .recordTable tbody td{
+  display:block;
+  padding:0;          /* 你原本 td padding 會影響對齊，這裡先歸零 */
+  border:0;           /* 需要表格線再另外加 */
+  min-width:0;
+}
+
+/* 左欄：日期 + 備註（上下排列，吃滿整列高度） */
+#cardActivity td.dateCol{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  height:100%;
+  min-height:100%;
+}
+
+/* 備註：吃掉剩餘高度（這次真的會長到右邊底） */
+#cardActivity td.dateCol .remindFill{
+  flex:1;
+  min-height:0;          /* 關鍵：允許在 flex 容器內縮放 */
+  height:auto;
+}
+
+/* 右欄：日常紀錄也做成可撐高的 column */
+#cardActivity .dailyCol{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  height:100%;
+  min-height:100%;
+}
+
+/* 讓「排便排尿」那個外框吃滿剩餘高度，跟左邊備註對齊到底 */
+#cardActivity .dailyCol .boxSec.toiletBox{
+  flex:1;
+  min-height:0;
+  display:flex;
+  flex-direction:column;
+}
+#cardActivity .dailyCol .boxSec.toiletBox textarea{
+  flex:1;
+  min-height:120px;   /* 你想更長可以調大 */
+}
+    
   </style>
 </head>
 
@@ -270,7 +334,7 @@ input, textarea{
               </td>
 
               <!-- 右欄：日常紀錄 -->
-              <td>
+             <td class="dailyCol">
                 <!-- 食慾（外框線） -->
                 <div class="boxSec">
                   <div class="cellTitle">食慾</div>
@@ -304,7 +368,7 @@ input, textarea{
                 </div>
 
                 <!-- 排便排尿（外框線） -->
-                <div class="boxSec">
+               <div class="boxSec toiletBox">
                   <div class="cellTitle">排便 / 排尿次數</div>
                   <div class="opts">
                     <label class="opt"><input type="radio" name="d1_toilet" value="正常">正常</label>
