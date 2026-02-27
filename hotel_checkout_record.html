@@ -15,14 +15,27 @@
     --btn:#2f2d2a;
   }
 
-  html, body{ width:100%; max-width:100%; overflow-x:hidden; } /* ✅ 問題3：防止左右滑 */
 
-  body{
-    margin:0;
-    background:var(--bg);
-    color:var(--text);
-    font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
-  }
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+  overflow-x:hidden;
+  max-width:100%;
+}
+    html, body{
+  width:100%;
+  overflow-x:hidden;
+}
+
+*{
+  box-sizing:border-box;
+}
+
+img, table, input, textarea, canvas{
+  max-width:100%;
+}
 
   .wrap{max-width:900px; margin:0 auto; padding:18px;}
   .brand{ text-align:center; font-weight:800; letter-spacing:1px; margin:6px 0 10px; }
@@ -257,6 +270,7 @@
       <div class="cardBody">
         <div class="btns" style="justify-content:flex-end; margin:0 0 10px;">
           <button type="button" class="ghost" id="actAddDay">＋新增一天</button>
+          <button type="button" class="ghost" id="actDelDay">－刪除最後一天</button>
           <button type="button" class="ghost" id="actShowAll">顯示全部</button>
         </div>
 
@@ -273,18 +287,23 @@
             <tr data-template="day">
               <td>
                 <div class="leftStack">
-                  <div>
-                    <label>日期</label>
-                    <input
-                      id="d1_date"
-                      placeholder="YYYY/MM/DD"
-                      inputmode="numeric"
-                      pattern="\d*"
-                      maxlength="10"
-                      autocomplete="off"
-                    />
-                  </div>
 
+  <button type="button" class="actDelDay ghost"
+          style="align-self:flex-end;">
+    刪除這天
+  </button>
+
+  <div>
+    <label>日期</label>
+    <input id="d1_date" placeholder="YYYY/MM/DD">
+  </div>
+
+  <div>
+    <label>提醒 / 備註</label>
+    <textarea id="d1_remind"></textarea>
+  </div>
+
+</div>
                   <div>
                     <label>提醒 / 備註</label>
                     <textarea id="d1_remind" placeholder="備註"></textarea>
@@ -941,6 +960,7 @@
   const stay = document.getElementById("stay_date");
   const tbody = document.getElementById("activityBody");
   const btnAdd = document.getElementById("actAddDay");
+  const btnDel = document.getElementById("actDelDay");
   const btnShowAll = document.getElementById("actShowAll");
 
   let showAll = false;
@@ -1084,7 +1104,36 @@
     const last = getRows()[getRows().length-1];
     last && last.scrollIntoView({behavior:"smooth", block:"start"});
   }
+function deleteDayRow(tr){
+  const rows = getRows();
+  if(rows.length <= 1){
+    alert("至少需要保留一天紀錄");
+    return;
+  }
+  tr.remove();
 
+  const afterRows = getRows();
+  afterRows.forEach((row, idx)=>{
+    const day = idx + 1;
+    renameRow(row, day);
+  });
+
+  applyVisibility();
+}
+
+  // 事件委派：點每列的「刪除這天」
+  tbody.addEventListener("click", (e)=>{
+    const btn = e.target.closest(".actDelDay");
+    if(!btn) return;
+    const tr = btn.closest("tr");
+    if(!tr) return;
+
+    // 避免誤刪：簡單確認
+    if(!confirm("確定要刪除這一天的紀錄嗎？")) return;
+
+    deleteDayRow(tr);
+  });
+  
   btnAdd.addEventListener("click", addDayManual);
   btnShowAll.addEventListener("click", ()=>{
     showAll = !showAll;
