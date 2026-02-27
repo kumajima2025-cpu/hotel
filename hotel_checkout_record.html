@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>CAMA CAMA｜住宿明細確認</title>
-  <style>
+<style>
   :root{
     --bg:#F6F1E9;
     --card:#ffffff;
@@ -15,7 +15,7 @@
     --btn:#2f2d2a;
   }
 
-  /* ===== 基礎 / Reset ===== */
+  /* ===== 基礎 ===== */
   html, body{
     width:100%;
     max-width:100%;
@@ -30,7 +30,7 @@
     color:var(--text);
     font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
     touch-action: pan-y;
-    -webkit-text-size-adjust: 100%;
+    -webkit-text-size-adjust:100%;
   }
 
   .wrap{
@@ -39,7 +39,6 @@
     margin:0 auto;
     padding:18px;
     overflow-x:hidden;
-    /* contain:layout paint;  ← 若未遇到特殊排版問題，可保留或移除。先保守移除以免副作用 */
   }
 
   .brand{ text-align:center; font-weight:800; letter-spacing:1px; margin:6px 0 10px; }
@@ -61,15 +60,19 @@
   .cardBody{padding:14px; min-width:0;}
 
   /* ===== Grid ===== */
-  .grid{display:grid; grid-template-columns:1fr 1fr; gap:10px; min-width:0;}
+  .grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    min-width:0;
+    align-items:stretch;
+  }
   .grid3{display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; min-width:0;}
   @media (max-width:920px){ .grid3{grid-template-columns:repeat(2, 1fr);} }
   @media (max-width:520px){ .grid3{grid-template-columns:1fr;} }
-  @media (max-width:760px){ #cardNote{grid-row:auto;}
-}
+  @media (max-width:760px){ .grid{grid-template-columns:1fr;} }
 
-  /* ===== 表單元件 ===== */
-  /* 注意：全域 label 會影響 radio/checkbox 選項行距，所以後面對「選項區」會做局部覆蓋 */
+  /* ===== 表單 ===== */
   label{display:block; font-size:13px; margin:2px 0 6px; color:var(--muted);}
 
   input, textarea, select{
@@ -85,8 +88,6 @@
   textarea{min-height:86px; resize:vertical;}
 
   .cellTitle{font-weight:800; margin-bottom:6px;}
-
-  /* 通用選項（如果其他卡片也用 .opts/.opt） */
   .opts{display:flex; flex-wrap:wrap; gap:10px; align-items:center; min-width:0;}
   .opt{display:flex; gap:6px; align-items:center; font-size:14px; min-width:0;}
   .opt input{width:auto;}
@@ -173,8 +174,49 @@
     min-width:0;
   }
 
-  #cardActivity .leftStack textarea{ min-height:110px; }
+  /* ===== 方案 B：左欄整組（日期+備註）跨兩列 ===== */
+  #cardActivity #leftCol{
+    grid-row: span 2;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    min-width:0;
+  }
 
+  /* 備註區塊（跟右邊 boxSec 一樣的盒子） */
+  #cardActivity .noteBox{
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:10px;
+    background:#fff;
+    min-width:0;
+  }
+
+  #cardActivity .noteHead{
+    font-weight:900;
+    margin:0 0 8px;
+    color:var(--text);
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  #cardActivity .noteHead::before{
+    content:"";
+    width:6px;
+    height:14px;
+    border-radius:999px;
+    background:var(--line);
+    display:inline-block;
+  }
+
+  /* 讓備註高度穩定，視覺跟右邊一致 */
+  #cardActivity textarea[id$="_remind"]{
+    height:260px;
+    min-height:260px;
+    resize:vertical;
+  }
+
+  /* 右欄容器 */
   #cardActivity .dailyWrap{
     display:flex;
     flex-direction:column;
@@ -214,19 +256,14 @@
     align-items:center;
     min-width:0;
   }
-  /* 原本用 margin-top + padding 造成列距較大；合併成更可控的版本 */
   #cardActivity .boxSec .mealRow{
     padding:4px 0;
     margin-top:6px;
   }
-  #cardActivity .boxSec .mealRow:first-of-type{
-    margin-top:0;
-  }
-  #cardActivity .boxSec .mealRow + .mealRow{
-    border-top:1px dashed #E3D8C8;
-  }
+  #cardActivity .boxSec .mealRow:first-of-type{ margin-top:0; }
+  #cardActivity .boxSec .mealRow + .mealRow{ border-top:1px dashed #E3D8C8; }
 
-  /* 早/中/晚：置中＋徽章感 */
+  /* 早/中/晚：置中 badge */
   #cardActivity .mealTag{
     font-weight:900;
     color:var(--muted);
@@ -241,18 +278,16 @@
     padding:4px 0;
   }
 
-  /* 良好/普通/不吃：縮間距 + 避免被全域 label 撐開 */
+  /* 良好/普通/不吃：縮間距 + 覆蓋全域 label */
   #cardActivity .mealOpts{
     display:flex;
     flex-wrap:wrap;
-    gap:2px 10px;            /* 上下 / 左右 */
+    gap:2px 10px;
     align-items:center;
     min-width:0;
   }
   #cardActivity .mealOpts label{
     white-space:nowrap;
-
-    /* 覆蓋全域 label 的 block + margin，避免行距被撐開 */
     display:inline-flex;
     align-items:center;
     margin:0;
@@ -269,12 +304,7 @@
     min-height:70px;
   }
 
-  #cardActivity textarea[id$="_remind"]{
-    height:260px;
-    min-height:260px;
-    resize:vertical;
-  }
-
+  /* 工具列 */
   .actBar{
     display:flex;
     justify-content:flex-end;
@@ -284,6 +314,11 @@
     min-width:0;
   }
   .actBar button{ white-space:nowrap; }
+
+  /* 手機：取消跨列 */
+  @media (max-width:760px){
+    #cardActivity #leftCol{ grid-row:auto; }
+  }
 
   @media (max-width:520px){
     .actBar{ gap:8px; }
@@ -298,7 +333,7 @@
       padding:8px;
       font-size:13px;
     }
-    #cardActivity .leftStack textarea{ min-height:96px; }
+
     #cardActivity .mealRow{ grid-template-columns: 40px 1fr; gap:6px; }
     #cardActivity .mealOpts{ gap:2px 8px; }
     #cardActivity .mealOpts label{ font-size:13px; }
@@ -318,21 +353,15 @@
     height:auto !important;
     min-height:0 !important;
   }
-
   #cardPersonality .opt{
     margin:0 !important;
     line-height:1.35 !important;
   }
-
   #cardPersonality .opt input[type="checkbox"]{
     width:20px !important;
     height:20px !important;
     margin:0 !important;
   }
-    /* 備註卡片高度對齊右側兩區 */
-#cardNote{
-  grid-row: span 2;
-}
 </style>
 </head>
 
@@ -380,80 +409,97 @@
           <button type="button" class="ghost" id="actShowAll">顯示全部</button>
         </div>
 
-        <table class="recordTable">
-          <thead>
-            <tr>
-              <th>日期 / 提醒</th>
-              <th>日常紀錄</th>
-            </tr>
-          </thead>
+<table class="recordTable">
+  <thead>
+    <tr>
+      <th>日期 / 提醒</th>
+      <th>日常紀錄</th>
+    </tr>
+  </thead>
 
-          <tbody id="activityBody">
-            <!-- Day 1 (template) -->
-            <tr data-template="day">
-              <td>
-                <div class="leftStack">
-                  <div>
-                    <label>日期</label>
-                    <input id="d1_date" placeholder="YYYY/MM/DD" inputmode="numeric" pattern="\d*" autocomplete="off" maxlength="10">
-                  </div>
+  <tbody id="activityBody">
+    <!-- Day 1 (template) -->
+    <tr data-template="day">
+      <!-- 左欄 -->
+      <td>
+        <div class="leftStack">
 
-                 <div class="card" id="cardNote">
-  <label>提醒 / 備註</label>
-  <textarea id="d1_remind" placeholder="備註"></textarea>
-</div>
-                </div>
-              </td>
+          <!-- ✅ 兩欄容器：左(日期+備註) 右(食慾+排便) -->
+          <div class="activityGrid">
 
-              <td>
-                <div class="dailyWrap">
-                  <div class="boxSec">
-                    <div class="secHead">食慾</div>
+            <!-- 左：日期 + 備註 -->
+            <div class="leftCol">
+              <div>
+                <label>日期</label>
+                <input id="d1_date" placeholder="YYYY/MM/DD">
+              </div>
 
-                    <div class="mealRow">
-                      <div class="mealTag">早</div>
-                      <div class="mealOpts">
-                        <label class="opt"><input type="radio" name="d1_am" value="良好">良好</label>
-                        <label class="opt"><input type="radio" name="d1_am" value="普通">普通</label>
-                        <label class="opt"><input type="radio" name="d1_am" value="不吃">不吃</label>
-                      </div>
-                    </div>
+              <div class="noteBox">
+                <div class="noteHead">提醒 / 備註</div>
+                <textarea id="d1_remind" placeholder="備註"></textarea>
+              </div>
+            </div>
 
-                    <div class="mealRow">
-                      <div class="mealTag">中</div>
-                      <div class="mealOpts">
-                        <label class="opt"><input type="radio" name="d1_noon" value="良好">良好</label>
-                        <label class="opt"><input type="radio" name="d1_noon" value="普通">普通</label>
-                        <label class="opt"><input type="radio" name="d1_noon" value="不吃">不吃</label>
-                      </div>
-                    </div>
+            <!-- 右：日常紀錄（食慾 + 排便） -->
+            <div class="dailyWrap">
+              <div class="boxSec">
+                <div class="secHead">食慾</div>
 
-                    <div class="mealRow">
-                      <div class="mealTag">晚</div>
-                      <div class="mealOpts">
-                        <label class="opt"><input type="radio" name="d1_pm" value="良好">良好</label>
-                        <label class="opt"><input type="radio" name="d1_pm" value="普通">普通</label>
-                        <label class="opt"><input type="radio" name="d1_pm" value="不吃">不吃</label>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="boxSec">
-                    <div class="secHead">排便 / 排尿次數</div>
-                    <div class="opts">
-                      <label class="opt"><input type="radio" name="d1_toilet" value="正常">正常</label>
-                      <label class="opt"><input type="radio" name="d1_toilet" value="異常">異常</label>
-                    </div>
-                    <textarea class="toiletNote" id="d1_toilet_note" placeholder="異常狀況說明"></textarea>
+                <div class="mealRow">
+                  <div class="mealTag">早</div>
+                  <div class="mealOpts">
+                    <label class="opt"><input type="radio" name="d1_am" value="良好">良好</label>
+                    <label class="opt"><input type="radio" name="d1_am" value="普通">普通</label>
+                    <label class="opt"><input type="radio" name="d1_am" value="不吃">不吃</label>
                   </div>
                 </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
 
+                <div class="mealRow">
+                  <div class="mealTag">中</div>
+                  <div class="mealOpts">
+                    <label class="opt"><input type="radio" name="d1_noon" value="良好">良好</label>
+                    <label class="opt"><input type="radio" name="d1_noon" value="普通">普通</label>
+                    <label class="opt"><input type="radio" name="d1_noon" value="不吃">不吃</label>
+                  </div>
+                </div>
+
+                <div class="mealRow">
+                  <div class="mealTag">晚</div>
+                  <div class="mealOpts">
+                    <label class="opt"><input type="radio" name="d1_pm" value="良好">良好</label>
+                    <label class="opt"><input type="radio" name="d1_pm" value="普通">普通</label>
+                    <label class="opt"><input type="radio" name="d1_pm" value="不吃">不吃</label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="boxSec">
+                <div class="secHead">排便 / 排尿次數</div>
+
+                <div class="opts">
+                  <label class="opt"><input type="radio" name="d1_toilet" value="正常">正常</label>
+                  <label class="opt"><input type="radio" name="d1_toilet" value="異常">異常</label>
+                </div>
+
+                <textarea class="toiletNote" id="d1_toilet_note" placeholder="異常狀況說明"></textarea>
+              </div>
+            </div>
+
+          </div><!-- /.activityGrid -->
+
+        </div><!-- /.leftStack -->
+      </td>
+
+      <!-- 右欄（表頭「日常紀錄」那格） -->
+      <td>
+        <!-- 你原本把日常紀錄塞在左 td 了，這裡如果你表格設計要右 td 放內容，
+             那就把上面 dailyWrap 整段移到這裡。
+             但依你目前畫面需求，其實把兩欄都放在左 td 會更像你截圖那種「一列一組」。
+             如果你要嚴格符合表頭左右欄位，我也可以幫你再拆一次。 -->
+      </td>
+    </tr>
+  </tbody>
+</table>
     <!-- 照顧細節 -->
     <div class="card" id="cardCare">
       <div class="cardTitle">照顧細節</div>
