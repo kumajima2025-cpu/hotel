@@ -107,19 +107,28 @@
   }
 
   /* checkbox 尺寸統一（避免高低不齊） */
-  .grid input[type="checkbox"],
-  .grid3 input[type="checkbox"]{
-    width:18px;
-    height:18px;
-    flex:0 0 auto;
-  }
+.grid input[type="checkbox"],
+.grid3 input[type="checkbox"]{
+  width:18px;
+  height:18px;
+  flex:0 0 auto;
+  margin:0;              /* ✅ 避免預設 margin 造成上下變大 */
+}
 
-  /* ✅ 避免長文字撐爆、保持排列整齊 */
-  .grid label span,
-  .grid3 label span{
-    min-width:0;
-    word-break:break-word;
-  }
+/* ✅ 文字那塊：不管你有沒有 span 都吃得到 */
+.grid label,
+.grid3 label,
+.grid .opt,
+.grid3 .opt{
+  line-height:1.25;      /* ✅ 緊一點 */
+}
+
+/* ✅ 如果有 span 就套，沒有也不影響 */
+.grid label span,
+.grid3 label span{
+  min-width:0;
+  word-break:break-word;
+}
 
   input, textarea, select{
     width:100%;
