@@ -187,6 +187,31 @@
     #cardActivity .mealOpts{ gap:8px; }
     #cardActivity .mealOpts label{ font-size:13px; }
   }
+    /* ====== 禁止左右滑動 / 固定畫面不左右移動 ====== */
+html, body{
+  width:100%;
+  max-width:100%;
+  overflow-x:hidden;          /* 直接關掉水平捲動 */
+}
+
+/* 避免某些元件撐爆畫面造成水平溢出 */
+*{
+  box-sizing:border-box;
+}
+
+/* 長字串/連結不撐爆（例如 linkBox、備註貼很多字） */
+.linkBox,
+input, textarea{
+  max-width:100%;
+  overflow-wrap:anywhere;
+  word-break:break-word;
+}
+
+/* 表格也不要撐出螢幕 */
+#cardActivity .recordTable{
+  width:100%;
+  max-width:100%;
+}
   </style>
 </head>
 
@@ -591,8 +616,8 @@
   function resetFeeCommon(){
     feeRowsEl.innerHTML = "";
     feeRowsEl.appendChild(feeRowTpl("住宿費", "", "1"));
-    feeRowsEl.appendChild(feeRowTpl("加購項目", "", "1"));
     feeRowsEl.appendChild(feeRowTpl("洗澡/美容", "", "1"));
+    feeRowsEl.appendChild(feeRowTpl("加購項目", "", "1"));
     calcFee();
   }
 
