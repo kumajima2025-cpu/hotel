@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>CAMA CAMA｜住宿明細確認</title>
-<style>
+  <style>
   :root{
     --bg:#F6F1E9;
     --card:#ffffff;
@@ -28,6 +28,7 @@
     font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
     touch-action: pan-y;
     -webkit-text-size-adjust: 100%;
+
     overflow-x:hidden;
   }
 
@@ -64,71 +65,13 @@
   .cardTitle{background:var(--title); padding:12px 14px; font-weight:800;}
   .cardBody{padding:14px; min-width:0;}
 
-  /* ================= Grid layout ================= */
-  .grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:14px 18px;          /* 上下 / 左右 */
-    min-width:0;
-    align-items:center;
-  }
-
-  .grid3{
-    display:grid;
-    grid-template-columns:repeat(3, 1fr);
-    gap:14px 18px;          /* 上下 / 左右 */
-    min-width:0;
-    align-items:center;
-  }
-
+  .grid{display:grid; grid-template-columns:1fr 1fr; gap:10px; min-width:0;}
+  .grid3{display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; min-width:0;}
   @media (max-width:920px){ .grid3{grid-template-columns:repeat(2, 1fr);} }
   @media (max-width:520px){ .grid3{grid-template-columns:1fr;} }
   @media (max-width:760px){ .grid{grid-template-columns:1fr;} }
 
-  /* ✅ 全域 label：給欄位標題用（保留你原本的設計） */
-  label{
-    display:block;
-    font-size:13px;
-    margin:2px 0 6px;
-    color:var(--muted);
-  }
-
-  /* ✅ checkbox 區（grid/grid3 內）統一每行高度與間距 */
-  .grid label,
-  .grid3 label{
-    display:flex;             /* 覆蓋全域 label:block */
-    align-items:center;
-    gap:10px;
-    min-height:34px;          /* 每一行固定高度（想更鬆改 38~42） */
-    line-height:1.35;
-    margin:0;                 /* 覆蓋全域 label margin */
-    color:var(--text);        /* checkbox 文字不要太淡（可改回 muted） */
-    font-size:14px;
-  }
-
-  /* checkbox 尺寸統一（避免高低不齊） */
-.grid input[type="checkbox"],
-.grid3 input[type="checkbox"]{
-  width:18px;
-  height:18px;
-  flex:0 0 auto;
-  margin:0;              /* ✅ 避免預設 margin 造成上下變大 */
-}
-
-/* ✅ 文字那塊：不管你有沒有 span 都吃得到 */
-.grid label,
-.grid3 label,
-.grid .opt,
-.grid3 .opt{
-  line-height:1.25;      /* ✅ 緊一點 */
-}
-
-/* ✅ 如果有 span 就套，沒有也不影響 */
-.grid label span,
-.grid3 label span{
-  min-width:0;
-  word-break:break-word;
-}
+  label{display:block; font-size:13px; margin:2px 0 6px; color:var(--muted);}
 
   input, textarea, select{
     width:100%;
@@ -143,7 +86,6 @@
   textarea{min-height:86px; resize:vertical;}
 
   .cellTitle{font-weight:800; margin-bottom:6px;}
-
   .opts{display:flex; flex-wrap:wrap; gap:10px; align-items:center; min-width:0;}
   .opt{display:flex; gap:6px; align-items:center; font-size:14px; min-width:0;}
   .opt input{width:auto;}
@@ -207,6 +149,7 @@
     overflow:hidden;
   }
 
+  
   #cardActivity .recordTable th:nth-child(1),
   #cardActivity .recordTable td:nth-child(1){ width:40%; }
   #cardActivity .recordTable th:nth-child(2),
@@ -290,7 +233,6 @@
 
   #cardActivity .boxSec .mealRow{ padding:8px 0; }
   #cardActivity .boxSec .mealRow + .mealRow{ border-top:1px dashed #E3D8C8; }
-
   #cardActivity textarea[id$="_remind"]{
     height:260px;
     min-height:260px;
@@ -330,7 +272,7 @@
     #cardActivity .recordTable th:nth-child(2),
     #cardActivity .recordTable td:nth-child(2){ width:56%; }
   }
-</style>
+  </style>
 </head>
 
 <body>
@@ -556,6 +498,7 @@
       <div class="cardTitle">額外附加</div>
       <div class="cardBody">
         <div class="grid3">
+          <!-- ✅ 這區全部改成「文字鍵盤」(不設 inputmode numeric) + id 唯一 -->
           <div><label>刷牙</label><input id="extra_brush_teeth" autocomplete="off" inputmode="text"></div>
           <div><label>餵藥/保養品</label><input id="extra_meds" autocomplete="off" inputmode="text"></div>
           <div><label>點眼藥水</label><input id="extra_eye" autocomplete="off" inputmode="text"></div>
@@ -567,6 +510,8 @@
           <div><label>傷口換藥</label><input id="extra_wound_change" autocomplete="off" inputmode="text"></div>
           <div><label>針管餵水</label><input id="extra_syringe" autocomplete="off" inputmode="text"></div>
           <div><label>手餵飯</label><input id="extra_handfeed" autocomplete="off" inputmode="text"></div>
+
+          <!-- ✅ 你新增的欄位：同步加進資料收集/回填 -->
           <div><label>退房後有無其它注意事項</label><input id="extra_aftercare_note" autocomplete="off" inputmode="text"></div>
         </div>
       </div>
@@ -651,8 +596,6 @@
         <div class="status" id="status"></div>
       </div>
     </div>
-
-  </div>
 
 <script>
 (() => {
@@ -1124,7 +1067,6 @@
     applyVisibility();
   });
 
-  // Day 日期自動補 /
   tbody.addEventListener("input", (e)=>{
     const el = e.target;
     if(!(el instanceof HTMLInputElement)) return;
@@ -1133,7 +1075,6 @@
     if(el.value !== after) el.value = after;
   });
 
-  // stay_date：刪除時不強制補 ~
   stay?.addEventListener("input", (e)=>{
     const inputType = e && e.inputType ? e.inputType : "";
     const isDeleting = inputType.startsWith("delete");
