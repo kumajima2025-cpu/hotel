@@ -33,6 +33,9 @@ body{
     body{
   touch-action: pan-y; /* ✅ 觸控/觸控板：只允許上下滑 */
 }
+    body{
+  -webkit-text-size-adjust: 100%;
+}
 
   *{ box-sizing:border-box; }
   img, canvas{ max-width:100%; display:block; }
@@ -78,7 +81,7 @@ body{
     border-radius:12px;
     border:1px solid var(--line);
     background:#fff;
-    font-size:15px;
+    font-size:16px;
     color:var(--text);
   }
   textarea{min-height:86px; resize:vertical;}
