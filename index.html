@@ -54,7 +54,6 @@
       contain:layout paint;
     }
 
-    /* ===== Header（跟住宿明細確認一致）===== */
     .brand{ text-align:center; font-weight:800; letter-spacing:1px; margin:6px 0 10px; }
     .barTitle{
       background:var(--btn); color:#fff; text-align:center;
@@ -69,14 +68,14 @@
       text-align:center;
     }
 
-    /* ===== Cards（新版外觀）===== */
+
     .card{
       background:var(--card);
       border:1px solid var(--line);
       border-radius:18px;
       overflow:hidden;
       margin:12px 0;
-      padding:14px; /* ✅ 先保留舊版的內距，避免你後面 HTML 還沒改 cardBody 就貼邊 */
+      padding:14px;
     }
 
     .secTitle{font-weight:700; margin-bottom:10px;}
@@ -135,15 +134,8 @@
     <div class="brand">CAMACAMA</div>
     <div class="barTitle">— 基本資料表 —</div>
     <div class="hint">請於住宿前填寫完成本資料表！</div>
-
-    <!-- ✅ 你原本下面的內容從這裡接下去貼（原本的 <div class="wrap"> 也不要重複） -->
 </head>
 <body>
-  <div class="wrap">
-    <h1>基本資料表</h1>
-    <div class="hint">
-      請於住宿前填寫完成本資料表!
-    </div>
 
 <div class="card">
   <div class="secTitle">飼主資料</div>
@@ -314,11 +306,13 @@
   <div style="height:10px"></div>
   <div class="grid">
     <div>
-      <label>配合動物醫院</label>
-        惟心動物醫院<br>
-        地址：桃園市桃園區大興路207號<br>
-        電話：03—3259001
-      </div>
+<label>配合動物醫院</label>
+
+<div class="infoBox">
+  <div class="infoTitle">惟心動物醫院</div>
+  <div class="infoLine">地址：桃園市桃園區大興路207號</div>
+  <div class="infoLine">電話：03-3259001</div>
+</div>
     </div>
 
     <div>
