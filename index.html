@@ -51,11 +51,13 @@
 }
 @media (max-width:520px){
   .wrap{
-    padding-left:max(22px, env(safe-area-inset-left));
-    padding-right:max(22px, env(safe-area-inset-right));
-    margin:18px auto;
+    width:100%;
+    max-width:900px;
+    margin:0 auto;
+    padding:18px;
+    overflow-x:hidden;
+    contain:layout paint;
   }
-}
     /* ===== Header（跟住宿明細確認一致）===== */
     .brand{ text-align:center; font-weight:800; letter-spacing:1px; margin:6px 0 10px; }
     .barTitle{
