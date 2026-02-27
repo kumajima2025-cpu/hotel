@@ -28,7 +28,6 @@
     font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
     touch-action: pan-y;
     -webkit-text-size-adjust: 100%;
-
     overflow-x:hidden;
   }
 
@@ -66,9 +65,56 @@
   .cardBody{padding:14px; min-width:0;}
 
   .grid{display:grid; grid-template-columns:1fr 1fr; gap:10px; min-width:0;}
-  .grid3{display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; min-width:0;}
-  @media (max-width:920px){ .grid3{grid-template-columns:repeat(2, 1fr);} }
-  @media (max-width:520px){ .grid3{grid-template-columns:1fr;} }
+
+  /* ✅ 住宿時個性觀察：只改這一區（grid3） */
+  .grid3{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    column-gap:18px;   /* 左右距離 */
+    row-gap:10px;      /* 上下距離：五行一致就是靠這個 */
+    min-width:0;
+    align-items:start;
+  }
+
+  /* ✅ 只影響 grid3 裡的選項 label，不影響其他欄位的 label */
+  .grid3 > label{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin:0;
+    font-size:14px;
+    color:var(--text);
+    line-height:1.35;
+    min-width:0;
+  }
+
+  /* ✅ checkbox 回到接近原本大小，不會變小 */
+  .grid3 > label input[type="checkbox"]{
+    width:20px;
+    height:20px;
+    margin:0;
+    flex:0 0 auto;
+  }
+
+  .grid3 > label span{
+    min-width:0;
+    word-break:break-word;
+  }
+
+  /* ⭐ 讓「互動良好自在，性格穩定」獨佔一排，避免撐高同排造成行距不一致
+     ⚠️ 預設第 7 個是它；若你的順序不同我再幫你改數字 */
+  .grid3 > label:nth-child(7){
+    grid-column:1 / -1;
+  }
+
+  @media (max-width:920px){
+    .grid3{grid-template-columns:repeat(2, 1fr);}
+    .grid3 > label:nth-child(7){ grid-column:1 / -1; }
+  }
+  @media (max-width:520px){
+    .grid3{grid-template-columns:1fr;}
+    .grid3 > label:nth-child(7){ grid-column:auto; }
+  }
   @media (max-width:760px){ .grid{grid-template-columns:1fr;} }
 
   label{display:block; font-size:13px; margin:2px 0 6px; color:var(--muted);}
@@ -149,7 +195,6 @@
     overflow:hidden;
   }
 
-  
   #cardActivity .recordTable th:nth-child(1),
   #cardActivity .recordTable td:nth-child(1){ width:40%; }
   #cardActivity .recordTable th:nth-child(2),
@@ -272,7 +317,7 @@
     #cardActivity .recordTable th:nth-child(2),
     #cardActivity .recordTable td:nth-child(2){ width:56%; }
   }
-  </style>
+</style>
 </head>
 
 <body>
