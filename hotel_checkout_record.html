@@ -272,6 +272,39 @@
     #cardActivity .recordTable th:nth-child(2),
     #cardActivity .recordTable td:nth-child(2){ width:56%; }
   }
+    /* ===== 只修：住宿時期個性觀察（行距一致）===== */
+#cardPersonality .opts{
+  display:grid !important;
+  grid-template-columns:repeat(3, minmax(0, 1fr)) !important;
+  column-gap:18px !important;
+  row-gap:10px !important;   /* ⭐ 五行距離一致靠這個 */
+  align-items:center !important;
+}
+
+/* 每個選項（綠框那個） */
+#cardPersonality .opt,
+#cardPersonality label{
+  margin:0 !important;
+  display:flex !important;
+  align-items:center !important;
+  gap:10px !important;
+  line-height:1.35 !important;
+}
+
+/* checkbox 大小回正常 */
+#cardPersonality input[type="checkbox"]{
+  width:20px !important;
+  height:20px !important;
+  margin:0 !important;
+  flex:0 0 auto !important;
+}
+
+/* RWD */
+@media (max-width:920px){
+  #cardPersonality .opts{ grid-template-columns:repeat(2, minmax(0, 1fr)) !important; }
+}
+@media (max-width:520px){
+  #cardPersonality .opts{ grid-template-columns:1fr !important; }
 }
   </style>
 </head>
@@ -467,7 +500,7 @@
       </div>
     </div>
 
-    <div class="card">
+    <div class="card" id="cardPersonality">
       <div class="cardTitle">住宿時期個性觀察（可多選）</div>
       <div class="cardBody">
         <div class="opts">
