@@ -272,13 +272,11 @@
     #cardActivity .recordTable th:nth-child(2),
     #cardActivity .recordTable td:nth-child(2){ width:56%; }
   }
-
-    /* ===== 只修：住宿時期個性觀察（可多選）行距一致 ===== */
 #cardPersonality .opts{
   display:flex !important;
   flex-wrap:wrap !important;
-  gap:10px 18px !important;        /* 上下 10、左右 18 */
-  align-content:flex-start !important; /* ⭐ 關鍵：不要把每一行拉開 */
+  gap:10px 18px !important;
+  align-content:flex-start !important;
   height:auto !important;
   min-height:0 !important;
 }
@@ -293,15 +291,6 @@
   height:20px !important;
   margin:0 !important;
 }
-.leftCard{
-  grid-row: span 2;
-}
-
-@media (max-width:760px){
-  .leftCard{
-    grid-row:auto;
-  }
-} 
   </style>
 </head>
 
@@ -352,7 +341,6 @@
         <table class="recordTable">
           <thead>
             <tr>
-              <div class="card leftCard">
               <th>日期 / 提醒</th>
               <th>日常紀錄</th>
             </tr>
@@ -640,8 +628,6 @@
   let mode = qs.get("mode");
   let dataParam = qs.get("data");
   let idParam = qs.get("id");
-
-  // LINE/LIFF 可能把 query 包進 liff.state
   const liffState = qs.get("liff.state");
   if ((!mode && !dataParam && !idParam) && liffState) {
     const decoded = decodeURIComponent(liffState);
@@ -1255,7 +1241,8 @@
 
   (async function initMode(){
     if (isCreate) {
-      hintEl.innerHTML = "【店家填寫模式】填完後按「產生確認連結」，把連結傳給客人簽名回傳。";
+      hintEl.innerHTML = "【店家填寫模式】<br>
+        填完後按「產生確認連結」，複製連結給客人簽名回傳。";
       modeTagEl.textContent = "MODE: 店家填寫";
       document.getElementById("cardConfirmActions").style.display = "none";
       document.getElementById("cardCreateActions").style.display = "block";
