@@ -15,27 +15,30 @@
     --btn:#2f2d2a;
   }
 
- html, body{
-  width:100%;
-  max-width:100%;
-  overflow-x:hidden;          /* ✅ 基本鎖 */
-}
+  html, body{
+    width:100%;
+    max-width:100%;
+    overflow-x:hidden; /* ✅ 基本鎖 */
+  }
 
-body{
-  margin:0;
-  background:var(--bg);
-  color:var(--text);
-  font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
-}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+
+    /* ✅ 觸控/觸控板：只允許上下滑 */
+    touch-action: pan-y;
+
+    /* ✅ iOS 避免 focus 放大導致水平滑 */
+    -webkit-text-size-adjust: 100%;
+
+    overflow-x:hidden;
+  }
+
   @supports not (overflow: clip){
     body{ overflow-x:hidden; }
   }
-    body{
-  touch-action: pan-y; /* ✅ 觸控/觸控板：只允許上下滑 */
-}
-    body{
-  -webkit-text-size-adjust: 100%;
-}
 
   *{ box-sizing:border-box; }
   img, canvas{ max-width:100%; display:block; }
@@ -81,7 +84,7 @@ body{
     border-radius:12px;
     border:1px solid var(--line);
     background:#fff;
-    font-size:16px;
+    font-size:16px; /* ✅ iOS 避免 focus 放大 */
     color:var(--text);
   }
   textarea{min-height:86px; resize:vertical;}
@@ -169,6 +172,7 @@ body{
     line-height:1.25;
     padding:11px 10px;
     font-variant-numeric: tabular-nums;
+    min-width:0;
   }
 
   #cardActivity .leftStack textarea{ min-height:110px; }
@@ -236,7 +240,7 @@ body{
   #cardActivity .boxSec .mealRow{ padding:8px 0; }
   #cardActivity .boxSec .mealRow + .mealRow{ border-top:1px dashed #E3D8C8; }
 
-  /* ✅ 備註固定高度（妳原本的紅框） */
+  /* ✅ 備註固定高度 */
   #cardActivity textarea[id$="_remind"]{
     height:260px;
     min-height:260px;
@@ -248,7 +252,7 @@ body{
     display:flex;
     justify-content:flex-end;
     gap:10px;
-    flex-wrap:nowrap;     /* 不換行 */
+    flex-wrap:nowrap;
     margin:0 0 10px;
     min-width:0;
   }
@@ -272,43 +276,11 @@ body{
     #cardActivity .mealOpts{ gap:8px; }
     #cardActivity .mealOpts label{ font-size:13px; }
 
-    /* 小螢幕左欄再稍微加寬避免日期裁切 */
     #cardActivity .recordTable th:nth-child(1),
     #cardActivity .recordTable td:nth-child(1){ width:44%; }
     #cardActivity .recordTable th:nth-child(2),
     #cardActivity .recordTable td:nth-child(2){ width:56%; }
   }
-/* ✅ 最硬鎖：把任何水平溢出直接裁掉（iOS/Android/桌機都有效） */
-body, .wrap{
-  overflow-x: hidden;
-}
-
-#cardActivity,
-#cardActivity .cardBody,
-#cardActivity .recordTable{
-  overflow-x: hidden;
-}
-
-/* ✅ table 固定版型下，防止內容把欄位撐破 */
-#cardActivity .recordTable{
-  width:100%;
-  table-layout: fixed;
-}
-
-#cardActivity .recordTable th,
-#cardActivity .recordTable td{
-  min-width:0;
-}
-
-/* ✅ 日期 input 常常被字元撐破：強制可縮 */
-#cardActivity input[id$="_date"]{
-  min-width:0;
-}
-
-/* ✅ 如果某些地方仍然溢出：最後保險（很有效） */
-*{
-  max-width:100%;
-}
   </style>
 </head>
 
@@ -535,18 +507,21 @@ body, .wrap{
       <div class="cardTitle">額外附加</div>
       <div class="cardBody">
         <div class="grid3">
-          <div><label>刷牙</label><input id="extra_brush_teeth" autocomplete="off"></div>
-          <div><label>餵藥/保養品</label><input id="extra_brush_teeth" autocomplete="off"></div>
-          <div><label>點眼藥水</label><input id="extra_brush_teeth" autocomplete="off"></div>
-          <div><label>散步</label><input id="extra_brush_teeth" autocomplete="off"></div>
-          <div><label>梳毛</label><input id="extra_brush_teeth" autocomplete="off"></div>
-          <div><label>特殊照顧</label><input id="extra_brush_teeth" autocomplete="off"></div>
-          <div><label>陪診服務</label><input id="extra_brush_teeth" autocomplete="off"></div>
-          <div><label>傷口擦藥</label><input id="extra_brush_teeth" autocomplete="off"></div>
-          <div><label>傷口換藥</label><input id="extra_brush_teeth" autocomplete="off"></div>
-          <div><label>針管餵水</label><input id="extra_brush_teeth" autocomplete="off"></div>
-          <div><label>手餵飯</label><input id="extra_brush_teeth" autocomplete="off"></div>
-          <div><label>退房後有無其它注意事項</label><input id="extra_brush_teeth" autocomplete="off"></div>
+          <!-- ✅ 這區全部改成「文字鍵盤」(不設 inputmode numeric) + id 唯一 -->
+          <div><label>刷牙</label><input id="extra_brush_teeth" autocomplete="off" inputmode="text"></div>
+          <div><label>餵藥/保養品</label><input id="extra_meds" autocomplete="off" inputmode="text"></div>
+          <div><label>點眼藥水</label><input id="extra_eye" autocomplete="off" inputmode="text"></div>
+          <div><label>散步</label><input id="extra_walk" autocomplete="off" inputmode="text"></div>
+          <div><label>梳毛</label><input id="extra_brush" autocomplete="off" inputmode="text"></div>
+          <div><label>特殊照顧</label><input id="extra_special" autocomplete="off" inputmode="text"></div>
+          <div><label>陪診服務</label><input id="extra_hospital" autocomplete="off" inputmode="text"></div>
+          <div><label>傷口擦藥</label><input id="extra_wound_med" autocomplete="off" inputmode="text"></div>
+          <div><label>傷口換藥</label><input id="extra_wound_change" autocomplete="off" inputmode="text"></div>
+          <div><label>針管餵水</label><input id="extra_syringe" autocomplete="off" inputmode="text"></div>
+          <div><label>手餵飯</label><input id="extra_handfeed" autocomplete="off" inputmode="text"></div>
+
+          <!-- ✅ 你新增的欄位：同步加進資料收集/回填 -->
+          <div><label>退房後有無其它注意事項</label><input id="extra_aftercare_note" autocomplete="off" inputmode="text"></div>
         </div>
       </div>
     </div>
@@ -646,6 +621,7 @@ body, .wrap{
   let dataParam = qs.get("data");
   let idParam = qs.get("id");
 
+  // LINE/LIFF 可能把 query 包進 liff.state
   const liffState = qs.get("liff.state");
   if ((!mode && !dataParam && !idParam) && liffState) {
     const decoded = decodeURIComponent(liffState);
@@ -743,8 +719,8 @@ body, .wrap{
     calcFee();
   }
 
-  document.getElementById("addFeeBtn").addEventListener("click", addFeeRow);
-  document.getElementById("resetFeeBtn").addEventListener("click", resetFeeCommon);
+  document.getElementById("addFeeBtn")?.addEventListener("click", addFeeRow);
+  document.getElementById("resetFeeBtn")?.addEventListener("click", resetFeeCommon);
   resetFeeCommon();
 
   // ========= signature =========
@@ -817,8 +793,7 @@ body, .wrap{
     return true;
   }
 
-  const clearBtn = document.getElementById('clearBtn');
-  if(clearBtn) clearBtn.addEventListener('click', clearSig);
+  document.getElementById('clearBtn')?.addEventListener('click', clearSig);
 
   if(canvas){
     canvas.addEventListener('mousedown', start);
@@ -911,6 +886,7 @@ body, .wrap{
         wound_change: val("extra_wound_change"),
         syringe: val("extra_syringe"),
         handfeed: val("extra_handfeed"),
+        aftercare_note: val("extra_aftercare_note"),
       },
 
       days,
@@ -936,13 +912,15 @@ body, .wrap{
   const btnDel = document.getElementById("actDelDay");
   const btnShowAll = document.getElementById("actShowAll");
 
+  // ✅ 客人模式：鎖住活動日按鈕（不顯示）
   if (isConfirm) {
-  [btnAdd, btnDel, btnShowAll].forEach(b => {
-    if (!b) return;
-    b.disabled = true;
-    b.style.display = "none"; // 直接不顯示，最不會被誤按
-  });
-}
+    [btnAdd, btnDel, btnShowAll].forEach(b => {
+      if (!b) return;
+      b.disabled = true;
+      b.style.display = "none";
+    });
+  }
+
   let showAll = false;
 
   function getRows(){ return Array.from(tbody.querySelectorAll("tr")); }
@@ -1080,8 +1058,8 @@ body, .wrap{
     applyVisibility();
     const last = getRows()[getRows().length-1];
     if(last){
-  last.scrollIntoView({behavior:"smooth", block:"start", inline:"nearest"});
-}
+      last.scrollIntoView({behavior:"smooth", block:"start", inline:"nearest"});
+    }
   }
 
   function deleteLastDay(){
@@ -1091,18 +1069,15 @@ body, .wrap{
       return;
     }
     tbody.removeChild(rows[rows.length - 1]);
-
-    // 重新編號（保險）
     const afterRows = getRows();
     afterRows.forEach((row, idx)=> renameRow(row, idx + 1));
-
     patchDateInputs();
     applyVisibility();
   }
 
-  btnAdd.addEventListener("click", addDayManual);
-  btnDel.addEventListener("click", deleteLastDay);
-  btnShowAll.addEventListener("click", ()=>{
+  btnAdd?.addEventListener("click", addDayManual);
+  btnDel?.addEventListener("click", deleteLastDay);
+  btnShowAll?.addEventListener("click", ()=>{
     showAll = !showAll;
     applyVisibility();
   });
@@ -1116,8 +1091,8 @@ body, .wrap{
     if(el.value !== after) el.value = after;
   });
 
-  // ✅ stay_date：刪除時不強制補 ~（現在從尾巴刪很順）
-  stay.addEventListener("input", (e)=>{
+  // stay_date：刪除時不強制補 ~
+  stay?.addEventListener("input", (e)=>{
     const inputType = e && e.inputType ? e.inputType : "";
     const isDeleting = inputType.startsWith("delete");
 
@@ -1134,14 +1109,12 @@ body, .wrap{
     const hasTilde = value.includes("~");
 
     if(!hasTilde){
-      // 沒有 ~：只顯示左邊日期；非刪除狀態且輸入滿 8 碼才自動補 ~
       if(!isDeleting && leftDigits.length === 8){
         stay.value = leftFormatted + "~";
       }else{
         stay.value = leftFormatted;
       }
     }else{
-      // 有 ~：照實顯示左右（右邊可空）
       stay.value = leftFormatted + "~" + rightFormatted;
     }
 
@@ -1248,7 +1221,9 @@ body, .wrap{
     setVal("extra_wound_change", ex.wound_change);
     setVal("extra_syringe", ex.syringe);
     setVal("extra_handfeed", ex.handfeed);
+    setVal("extra_aftercare_note", ex.aftercare_note);
 
+    // fee
     feeRowsEl.innerHTML = "";
     (data.fee_items || []).forEach(x=>{
       feeRowsEl.appendChild(feeRowTpl(x.item || "", x.price || "", x.qty || "1"));
