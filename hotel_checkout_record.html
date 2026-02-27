@@ -16,10 +16,11 @@
   }
 
   /* ✅ 防止整頁水平溢出（左右滑動） */
-  html{
-    width:100%;
-    overflow-x:hidden;
-  }
+ html, body{
+  width:100%;
+  overflow-x:hidden;
+  overscroll-behavior-x: none;
+}
   body{
     margin:0;
     width:100%;
@@ -31,6 +32,9 @@
   @supports not (overflow: clip){
     body{ overflow-x:hidden; }
   }
+    body{
+  touch-action: pan-y; /* ✅ 觸控/觸控板：只允許上下滑 */
+}
 
   *{ box-sizing:border-box; }
   img, canvas{ max-width:100%; display:block; }
