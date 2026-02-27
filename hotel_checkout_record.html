@@ -272,13 +272,11 @@
     #cardActivity .recordTable th:nth-child(2),
     #cardActivity .recordTable td:nth-child(2){ width:56%; }
   }
-
-    /* ===== 只修：住宿時期個性觀察（可多選）行距一致 ===== */
-#cardPersonality .opts{
+    #cardPersonality .opts{
   display:flex !important;
   flex-wrap:wrap !important;
-  gap:10px 18px !important;        /* 上下 10、左右 18 */
-  align-content:flex-start !important; /* ⭐ 關鍵：不要把每一行拉開 */
+  gap:10px 18px !important; 
+  align-content:flex-start !important;
   height:auto !important;
   min-height:0 !important;
 }
@@ -624,14 +622,10 @@
 <script>
 (() => {
   const GAS_URL = "https://script.google.com/macros/s/AKfycbwthZQ08MWZjihctVxqOh9_MYUg83iS6YFtWYnXMC5cZUKR8o7AvoiCVDajRjorICaqpg/exec";
-
-  // ========= helpers =========
   const qs = new URLSearchParams(location.search);
   let mode = qs.get("mode");
   let dataParam = qs.get("data");
   let idParam = qs.get("id");
-
-  // LINE/LIFF 可能把 query 包進 liff.state
   const liffState = qs.get("liff.state");
   if ((!mode && !dataParam && !idParam) && liffState) {
     const decoded = decodeURIComponent(liffState);
@@ -644,7 +638,6 @@
 
   const isCreate = mode === "create" && !dataParam && !idParam;
   const isConfirm = !!dataParam || !!idParam;
-
   const pad = n => String(n).padStart(2,'0');
   function setStatus(msg, ok=false){
     const el = document.getElementById('status');
@@ -686,9 +679,7 @@
     document.body.classList.add("ro");
   }
 
-  // ========= fee =========
   const feeRowsEl = document.getElementById("feeRows");
-
   function feeRowTpl(item="", price="", qty="1"){
     const row = document.createElement("div");
     row.className = "feeRow";
@@ -733,7 +724,6 @@
   document.getElementById("resetFeeBtn")?.addEventListener("click", resetFeeCommon);
   resetFeeCommon();
 
-  // ========= signature =========
   const canvas = document.getElementById('sig');
   const ctx = canvas ? canvas.getContext('2d') : null;
 
@@ -814,10 +804,8 @@
     canvas.addEventListener('touchend', end, {passive:false});
   }
 
-  // ========= data collect / apply =========
   function cb(id){ return !!document.getElementById(id)?.checked; }
   function val(id){ return document.getElementById(id)?.value?.trim?.() || ""; }
-
   function collectAllData(){
     const feeItems = [];
     feeRowsEl.querySelectorAll(".feeRow").forEach(row=>{
@@ -915,7 +903,6 @@
     if(el) el.value = v || "";
   }
 
-  // ========= Activity days + Date formatting =========
   const stay = document.getElementById("stay_date");
   const tbody = document.getElementById("activityBody");
   const btnAdd = document.getElementById("actAddDay");
@@ -1134,12 +1121,11 @@
     }
   });
 
-  // 初始化
+
   patchDateInputs();
   showAll = false;
   applyVisibility();
 
-  // ========= applyAllData =========
   function applyAllData(data){
     setVal("owner_name", data.owner_name);
     setVal("pet_name", data.pet_name);
@@ -1230,7 +1216,7 @@
     setVal("extra_handfeed", ex.handfeed);
     setVal("extra_aftercare_note", ex.aftercare_note);
 
-    // fee
+
     feeRowsEl.innerHTML = "";
     (data.fee_items || []).forEach(x=>{
       feeRowsEl.appendChild(feeRowTpl(x.item || "", x.price || "", x.qty || "1"));
@@ -1245,7 +1231,9 @@
 
   (async function initMode(){
     if (isCreate) {
-      hintEl.innerHTML = "【店家填寫模式】填完後按「產生確認連結」，把連結傳給客人簽名回傳。";
+      hintEl.innerHTML = "【店家填寫模式】<br>
+        填完後按「產生確認連結」，<br>
+        把連結傳給客人簽名回傳。";
       modeTagEl.textContent = "MODE: 店家填寫";
       document.getElementById("cardConfirmActions").style.display = "none";
       document.getElementById("cardCreateActions").style.display = "block";
@@ -1295,7 +1283,6 @@
     document.getElementById("cardCreateActions").style.display = "none";
   })();
 
-  // ========= create: generate link =========
   const genBtn = document.getElementById("genLinkBtn");
   const linkBox = document.getElementById("linkBox");
   const copyBtn = document.getElementById("copyLinkBtn");
@@ -1338,7 +1325,6 @@
     });
   }
 
-  // ========= confirm: submit =========
   const submitBtn = document.getElementById("submitBtn");
   if(submitBtn){
     submitBtn.addEventListener("click", async ()=>{
