@@ -268,11 +268,7 @@
     min-height:70px;
   }
 
-  #cardActivity textarea[id$="_remind"]{
-    height:260px;
-    min-height:260px;
-    resize:vertical;
-  }
+
 
   .actBar{
     display:flex;
@@ -328,10 +324,6 @@
     height:20px !important;
     margin:0 !important;
   }
-#cardActivity textarea[id$="_remind"]{
-  height:clamp(320px, 58vh, 620px);
-  min-height:320px;
-}
 </style>
 </head>
 
@@ -396,14 +388,6 @@
                     <label>日期</label>
                     <input id="d1_date" placeholder="YYYY/MM/DD" inputmode="numeric" pattern="\d*" autocomplete="off" maxlength="10">
                   </div>
-
-                  <div>
-                    <label>提醒 / 備註</label>
-                    <textarea id="d1_remind" placeholder="備註"></textarea>
-                  </div>
-                </div>
-              </td>
-
               <td>
                 <div class="dailyWrap">
                   <div class="boxSec">
