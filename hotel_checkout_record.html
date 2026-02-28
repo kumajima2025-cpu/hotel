@@ -15,7 +15,6 @@
     --btn:#2f2d2a;
   }
 
-  /* ===== 基礎 / Reset ===== */
   html, body{
     width:100%;
     max-width:100%;
@@ -39,7 +38,6 @@
     margin:0 auto;
     padding:18px;
     overflow-x:hidden;
-    /* contain:layout paint;  ← 若未遇到特殊排版問題，可保留或移除。先保守移除以免副作用 */
   }
 
   .brand{ text-align:center; font-weight:800; letter-spacing:1px; margin:6px 0 10px; }
@@ -49,7 +47,7 @@
   }
   .hint{color:var(--muted); font-size:13px; line-height:1.5; margin:10px 0 14px;}
 
-  /* ===== 卡片 ===== */
+
   .card{
     background:var(--card);
     border:1px solid var(--line);
@@ -59,18 +57,14 @@
   }
   .cardTitle{background:var(--title); padding:12px 14px; font-weight:800;}
   .cardBody{padding:14px; min-width:0;}
-
-  /* ===== Grid ===== */
+    
   .grid{display:grid; grid-template-columns:1fr 1fr; gap:10px; min-width:0;}
   .grid3{display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; min-width:0;}
   @media (max-width:920px){ .grid3{grid-template-columns:repeat(2, 1fr);} }
   @media (max-width:520px){ .grid3{grid-template-columns:1fr;} }
   @media (max-width:760px){ .grid{grid-template-columns:1fr;} }
 
-  /* ===== 表單元件 ===== */
-  /* 注意：全域 label 會影響 radio/checkbox 選項行距，所以後面對「選項區」會做局部覆蓋 */
   label{display:block; font-size:13px; margin:2px 0 6px; color:var(--muted);}
-
   input, textarea, select{
     width:100%;
     min-width:0;
@@ -84,20 +78,14 @@
   textarea{min-height:86px; resize:vertical;}
 
   .cellTitle{font-weight:800; margin-bottom:6px;}
-
-  /* 通用選項（如果其他卡片也用 .opts/.opt） */
   .opts{display:flex; flex-wrap:wrap; gap:10px; align-items:center; min-width:0;}
   .opt{display:flex; gap:6px; align-items:center; font-size:14px; min-width:0;}
   .opt input{width:auto;}
-
-  /* ===== 費用區 ===== */
   .feeRow{display:grid; grid-template-columns:1fr 120px 120px 120px; gap:10px; margin-bottom:10px; min-width:0;}
   @media (max-width:760px){ .feeRow{grid-template-columns:1fr 1fr; } }
   .mono{font-variant-numeric: tabular-nums;}
   .feeTotal{display:flex; justify-content:flex-end; gap:10px; align-items:center; margin-top:8px; font-weight:900;}
   .feeTotal span{font-size:18px;}
-
-  /* ===== 按鈕 ===== */
   .btns{display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; min-width:0;}
   button{
     padding:11px 14px; border:0; border-radius:14px;
@@ -133,7 +121,6 @@
     background:#fbfaf7;
   }
 
-  /* ================= 活動紀錄（#cardActivity） ================= */
   #cardActivity .recordTable{
     width:100%;
     max-width:100%;
@@ -205,7 +192,6 @@
     display:inline-block;
   }
 
-  /* 食慾列：早/中/晚 + 選項 */
   #cardActivity .mealRow{
     display:grid;
     grid-template-columns: 44px 1fr;
@@ -213,7 +199,7 @@
     align-items:center;
     min-width:0;
   }
-  /* 原本用 margin-top + padding 造成列距較大；合併成更可控的版本 */
+
   #cardActivity .boxSec .mealRow{
     padding:4px 0;
     margin-top:6px;
@@ -225,7 +211,6 @@
     border-top:1px dashed #E3D8C8;
   }
 
-  /* 早/中/晚：置中＋徽章感 */
   #cardActivity .mealTag{
     font-weight:900;
     color:var(--muted);
@@ -239,8 +224,6 @@
     border-radius:8px;
     padding:4px 0;
   }
-
-  /* 良好/普通/不吃：縮間距 + 避免被全域 label 撐開 */
   #cardActivity .mealOpts{
     display:flex;
     flex-wrap:wrap;
@@ -250,8 +233,6 @@
   }
   #cardActivity .mealOpts label{
     white-space:nowrap;
-
-    /* 覆蓋全域 label 的 block + margin，避免行距被撐開 */
     display:inline-flex;
     align-items:center;
     margin:0;
@@ -267,8 +248,6 @@
     margin-top:8px;
     min-height:70px;
   }
-
-
 
   .actBar{
     display:flex;
@@ -304,7 +283,6 @@
     #cardActivity .recordTable td:nth-child(2){ width:56%; }
   }
 
-  /* ================= 個性多選（#cardPersonality） ================= */
   #cardPersonality .opts{
     display:flex !important;
     flex-wrap:wrap !important;
@@ -338,7 +316,6 @@
     <div class="hint" id="hint"></div>
     <div class="modeTag" id="modeTag">MODE: 讀取中…</div>
 
-    <!-- 基本資訊 -->
     <div class="card" id="cardBase">
       <div class="cardTitle">基本資訊</div>
       <div class="cardBody">
@@ -365,7 +342,6 @@
       </div>
     </div>
 
-    <!-- 活動紀錄 -->
     <div class="card" id="cardActivity">
       <div class="cardTitle">活動紀錄</div>
       <div class="cardBody">
@@ -440,7 +416,6 @@
       </div>
     </div>
 
-    <!-- 照顧細節 -->
     <div class="card" id="cardCare">
       <div class="cardTitle">照顧細節</div>
       <div class="cardBody">
@@ -567,7 +542,6 @@
       </div>
     </div>
 
-    <!-- 費用明細 -->
     <div class="card" id="cardFee">
       <div class="cardTitle">費用明細</div>
       <div class="cardBody">
@@ -586,7 +560,6 @@
       </div>
     </div>
 
-    <!-- 店家模式：產生連結 -->
     <div class="card" id="cardCreateActions">
       <div class="cardTitle">產生客人確認連結</div>
       <div class="cardBody">
@@ -599,7 +572,6 @@
       </div>
     </div>
 
-    <!-- 客人模式：確認＋簽名 -->
     <div class="card" id="cardConfirmActions" style="display:none;">
       <div class="cardTitle">飼主確認與簽名</div>
       <div class="cardBody">
@@ -649,7 +621,7 @@
 
 <script>
 (() => {
-  const GAS_URL = "https://script.google.com/macros/s/AKfycbwthZQ08MWZjihctVxqOh9_MYUg83iS6YFtWYnXMC5cZUKR8o7AvoiCVDajRjorICaqpg/exec";
+  const GAS_URL = "https://script.google.com/macros/s/AKfycbzO2boflMqCcU70L2eJTgnJYWG0ZlzyX6CAALrvk6DrApB-W_Wfiwibx1mRLFaZEfOi/exec";
 
   // ========= helpers =========
   const qs = new URLSearchParams(location.search);
