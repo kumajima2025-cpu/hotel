@@ -729,7 +729,6 @@
   document.getElementById("resetFeeBtn")?.addEventListener("click", resetFeeCommon);
   resetFeeCommon();
 
-  // ========= signature =========
   const canvas = document.getElementById('sig');
   const ctx = canvas ? canvas.getContext('2d') : null;
 
@@ -810,7 +809,6 @@
     canvas.addEventListener('touchend', end, {passive:false});
   }
 
-  // ========= data collect / apply =========
   function cb(id){ return !!document.getElementById(id)?.checked; }
   function val(id){ return document.getElementById(id)?.value?.trim?.() || ""; }
 
@@ -911,7 +909,6 @@
     if(el) el.value = v || "";
   }
 
-  // ========= Activity days + Date formatting =========
   const stay = document.getElementById("stay_date");
   const tbody = document.getElementById("activityBody");
   const btnAdd = document.getElementById("actAddDay");
@@ -1130,12 +1127,10 @@
     }
   });
 
-  // 初始化
   patchDateInputs();
   showAll = false;
   applyVisibility();
 
-  // ========= applyAllData =========
   function applyAllData(data){
     setVal("owner_name", data.owner_name);
     setVal("pet_name", data.pet_name);
@@ -1226,7 +1221,6 @@
     setVal("extra_handfeed", ex.handfeed);
     setVal("extra_aftercare_note", ex.aftercare_note);
 
-    // fee
     feeRowsEl.innerHTML = "";
     (data.fee_items || []).forEach(x=>{
       feeRowsEl.appendChild(feeRowTpl(x.item || "", x.price || "", x.qty || "1"));
@@ -1235,7 +1229,6 @@
     calcFee();
   }
 
-  // ========= mode UI =========
   const hintEl = document.getElementById("hint");
   const modeTagEl = document.getElementById("modeTag");
 
@@ -1293,7 +1286,6 @@ if (isCreate) {
     document.getElementById("cardCreateActions").style.display = "none";
   })();
 
-  // ========= create: generate link =========
   const genBtn = document.getElementById("genLinkBtn");
   const linkBox = document.getElementById("linkBox");
   const copyBtn = document.getElementById("copyLinkBtn");
@@ -1336,7 +1328,6 @@ if (isCreate) {
     });
   }
 
-  // ========= confirm: submit =========
   const submitBtn = document.getElementById("submitBtn");
   if(submitBtn){
     submitBtn.addEventListener("click", async ()=>{
