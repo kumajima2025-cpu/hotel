@@ -4,8 +4,6 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>CAMACAMA｜基本資料表</title>
-  <!doctype html>
-<html lang="zh-Hant">
 
   <style>
     :root{
@@ -160,7 +158,6 @@
     <div class="brand">CAMACAMA</div>
     <div class="barTitle">— 基本資料表 —</div>
     <div class="hint">請於住宿前填寫完成本資料表！</div>
-<body>
 
 <div class="card">
   <div class="secTitle">飼主資料</div>
@@ -392,7 +389,7 @@
   </div>
 
 <script>
-  const GAS_URL = "https://script.google.com/macros/s/AKfycbzS2VVSi6i-TVeyQSrnQ_YS_qdrM4zmI_3226Jxra1G_w9jvCYjr0witQ1BxH5bVOwQ/exec";
+  const GAS_URL = "https://script.google.com/macros/s/AKfycbxtNgDgQjOdNC2CZ7bmNw3b38leTDLYD3CYQSzjfuc92j0ISp3h3X0ngEdCCL5ADLLu/exec";
   const d = new Date();
   const pad = n => String(n).padStart(2,'0');
   document.getElementById("signed_date").value = `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
@@ -469,7 +466,9 @@
     return [...document.querySelectorAll('#disease_row input[type="checkbox"]:checked')].map(x=>x.value);
   }
 
-  function val(id){ return document.getElementById(id).value.trim(); }
+ function val(id){
+  return (document.getElementById(id)?.value || "").trim();
+}
 
   function setStatus(msg, ok=false){
     const el = document.getElementById('status');
@@ -509,15 +508,26 @@ if (rabiesInput) {
   
   document.getElementById('submitBtn').addEventListener('click', async ()=>{
     try{
-      const required = [
-        ["owner_name","請填主要聯絡人姓名"],
-        ["owner_phone","請填手機"],
-        ["pet_name","請填寵物名字"],
-        ["pet_sex","請選擇性別"],
-        ["pet_breed","請填品種"],
-        ["emergency_consent","請選擇緊急情況授權"],
-        ["signed_date","請填簽名日期"],
-      ];
+     const required = [
+  ["owner_name","請填主要聯絡人姓名"],
+  ["owner_phone","請填手機"],
+  ["owner_email","請填 Email"],
+  ["owner_address","請填現居地址"],
+  ["backup_name","請填備用聯絡人"],
+  ["backup_phone","請填備用聯絡人手機"],
+  ["pet_name","請填寵物名字"],
+  ["pet_sex","請選擇性別"],
+  ["pet_breed","請填品種"],
+  ["pet_color","請填毛色"],
+  ["pet_birth_date","請填出生日期"],
+  ["pet_neutered","請選擇是否已絕育"],
+  ["pet_deworm_date","請填體外驅蟲時間"],
+  ["pet_deworm_way","請選擇體外驅蟲方式"],
+  ["pet_chip","請填晶片號碼"],
+  ["pet_rabies","請填狂犬疫苗注射時間"],
+  ["emergency_consent","請選擇緊急情況授權"],
+  ["signed_date","請填簽名日期"],
+];
       for(const [id,msg] of required){
         if(!val(id)){ setStatus(msg); return; }
       }
